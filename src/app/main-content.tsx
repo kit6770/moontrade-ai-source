@@ -1,3 +1,4 @@
+import { BASE_PATH } from '@/lib/constants'
 import { CreateIcon, FeedsIcon, FromVIcon, GoldSmartMoneyIcon, LogoIcon, MCIcon, TelegramIcon, TwitterIcon, TwitterWhiteIcon, WebsiteIcon } from '@/lib/icons'
 import classNames from 'classnames'
 export default function MainContent() {
@@ -40,7 +41,7 @@ function Section1() {
         <div className="relative">
           <div className="bg-gray-500 w-[64px] h-[64px] rounded-full"></div>
           <div className="absolute bottom-0 right-0 w-[20px] h-[20px] bg-black rounded-full border-2 border-white">
-            <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png" alt="" className="rounded-full"/>
+            <img src={BASE_PATH + "/image/solana.png"} alt="" className="rounded-full"/>
           </div>
         </div>
         <div className="flex flex-col gap-[8px]">
@@ -61,7 +62,7 @@ function Section1() {
             </div>
             <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px] gap-[4px]"><CreateIcon/>30m</div>
             <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
-              <img src='/image/pump.png' width={16} height={16} alt=''/>
+              <img src={BASE_PATH+"/image/pump.png"} width={16} height={16} alt=''/>
             </div>
             <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
               <TwitterIcon color={'#666666'} className='scale-[0.6]'/>
@@ -139,7 +140,7 @@ function Section3() {
           </div>
         </div>
         <div className="bg-[#ECECEC] rounded-[6px] p-[4px] w-[30px] h-[30px]">
-          <img src="/image/logo_1.png" width={22} height={22} alt=''/>
+          <img src={BASE_PATH+"/image/logo_1.png"} width={22} height={22} alt=''/>
         </div>
       </div>
     </div>

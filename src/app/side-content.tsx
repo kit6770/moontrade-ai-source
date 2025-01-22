@@ -1,6 +1,7 @@
+import { BASE_PATH } from "@/lib/constants";
 import { CommentIcon, LikeIcon, LogoIcon, ShareIcon, SmartMoneyIcon, TrendingIcon, TwitterIcon, TwitterVIcon, ViewIcon } from "@/lib/icons";
 import classNames from "classnames";
-import React from "react";
+import React, { useState } from "react";
 
 const DATA_TYPE_LIST = [{
   key: 'smartmoney',
@@ -11,7 +12,9 @@ const DATA_TYPE_LIST = [{
 }]
 
 export default function SideContent() {
-  const dataType = 'smartmoney'
+
+  const [dataType, setDataType] = useState<string>('smartmoney')
+
   return (
     <aside className="flex flex-none flex-col gap-[16px] w-[452px] rounded-[20px] shadow-md">
       <div className="flex flex-col gap-[8px] bg-[#C8FF00] rounded-[20px] px-[16px] py-[12px]">
@@ -31,19 +34,21 @@ export default function SideContent() {
       <div className="flex flex-col gap-[8px] rounded-[20px] px-[16px] py-[12px]">
         <div className="flex flex-row gap-[16px]">
           {DATA_TYPE_LIST?.map(item=>{
-            return <TabSetItem key={item?.key} name="data-type-tab" value={item?.key} icon={<div className="h-[36px] flex items-center">{item?.icon}</div>} defaultChecked={dataType===item?.key} />
+            return <TabSetItem key={item?.key} name="data-type-tab" value={item?.key} icon={<div className="h-[36px] flex items-center">{item?.icon}</div>} defaultChecked={dataType===item?.key} onChange={()=>{
+              setDataType(item?.key)
+            }}/>
           })}
         </div>
-        <SmartMoneyContent tokenAddress={''}/>
-        <TwitterListContent />
+        {dataType==='smartmoney' && <SmartMoneyContent tokenAddress={''}/>}
+        {dataType==='twitter' && <TwitterListContent />}
       </div>
     </aside>
   );
 }
 
-function TabSetItem({ value, name,  icon, defaultChecked = false }: { value: string, name: string, icon?: React.JSX.Element, defaultChecked?: boolean }) {
+function TabSetItem({ value, name,  icon, defaultChecked = false, onChange }: { value: string, name: string, icon?: React.JSX.Element, defaultChecked?: boolean, onChange?: React.ChangeEventHandler<HTMLInputElement>}) {
   return <label className="cursor-pointer flex justify-stretch items-center">
-    <input type="radio" className='peer hidden' name={name} value={value} defaultChecked={defaultChecked} />
+    <input type="radio" className='peer hidden' name={name} value={value} defaultChecked={defaultChecked} onChange={onChange}/>
     <div className={
       classNames(
         'bg-[#F9F9F9] rounded-[6px] px-[20px] py-[4px]',
@@ -73,7 +78,7 @@ function SmartMoneyContent({ tokenAddress }: { tokenAddress: string }) {
 function SmartMoneyItem() {
   return <div className="flex flex-col gap-[10px] py-[10px] border-b-[1px] border-[#F3F3F3]">
     <div className="flex flex-row gap-[4px] items-center">
-      <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png" alt="" width={24} height={24} className="rounded-full"/>
+      <img src={BASE_PATH + "/image/solana.png"} alt="" width={24} height={24} className="rounded-full"/>
       <div className="text-[24px]">🟢</div>
       <div className="text-[16px] font-semibold text-[#049046]">Dq7js...ump</div>
       <div className="text-[16px] font-semibold text-[#666666]">(Dq7)</div>
