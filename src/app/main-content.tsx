@@ -1,4 +1,4 @@
-import { LogoIcon } from '@/lib/icons'
+import { CreateIcon, FeedsIcon, FromVIcon, GoldSmartMoneyIcon, LogoIcon, MCIcon, TelegramIcon, TwitterIcon, TwitterWhiteIcon, WebsiteIcon } from '@/lib/icons'
 import classNames from 'classnames'
 export default function MainContent() {
   return (
@@ -18,6 +18,7 @@ export default function MainContent() {
 }
 
 function Item({ className = '', isFirst = false }: { className?: string, isFirst?: boolean }) {
+  console.log(isFirst)
   return (
     <div className={classNames(
       'relative flex flex-col gap-[16px] rounded-[20px] p-[20px] hover:p-[19px] shadow-[0_4px_12px_0_rgba(0,0,0,0.06)] transition-colors duration-300',
@@ -39,19 +40,39 @@ function Section1() {
       <div className="flex flex-row gap-[16px]">
         <div className="relative">
           <div className="bg-gray-500 w-[64px] h-[64px] rounded-full"></div>
-          <div className="absolute bottom-0 right-0 w-[20px] h-[20px] bg-black rounded-full border-2 border-white"></div>
+          <div className="absolute bottom-0 right-0 w-[20px] h-[20px] bg-black rounded-full border-2 border-white">
+            <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png" alt="" className="rounded-full"/>
+          </div>
         </div>
         <div className="flex flex-col gap-[8px]">
           <div className="text-[18px] font-semibold flex flex-row gap-[4px] items-center">
             <div className="text-[24px] font-bold">VEILL</div>
-            <div className="text-[12px] text-[#9E7A28]">{'Ultra Sigma · 5VwjS...ump'}</div>
+            <div className="text-[12px] text-black">{'Ultra Sigma · 5VwjS...ump'}</div>
           </div>
           <div className="text-[12px] font-semibold flex flex-row gap-[6px] justify-start">
-            <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">Form: Trump</div>
-            <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">30m</div>
-            <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]"> </div>
-            <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]"> </div>
-            <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]"> </div>
+            <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px] gap-[4px]">
+              <FromVIcon/>
+              <div>Form: Trump</div>
+              <div className='relative w-[23px]'>
+                <div className='w-[18px] h-[18px] rounded-full bg-[#666]'></div>
+                <div className='absolute bottom-0 left-[14px] w-[10px] h-[10px] rounded-full flex items-center justify-center bg-black overflow-hidden'>
+                  <TwitterWhiteIcon/>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px] gap-[4px]"><CreateIcon/>30m</div>
+            <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
+              <img src='/image/pump.png' width={16} height={16} alt=''/>
+            </div>
+            <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
+              <TwitterIcon color={'#666666'} className='scale-[0.6]'/>
+            </div>
+            <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
+              <WebsiteIcon/>
+            </div>
+            <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
+              <TelegramIcon/>
+            </div>
           </div>
         </div>
       </div>
@@ -61,12 +82,47 @@ function Section1() {
   )
 }
 
-function Section2() {
+function Section2({isSelected = false}: {isSelected?: boolean}) {
+  const list = [{
+    title: 'SmartMoney',
+    type: 'smartmoney',
+    icon: <GoldSmartMoneyIcon/>,
+    value: '563',
+    isPositive: true,
+    change: '+25'
+  }, {
+    title: 'Feeds',
+    type: 'feeds',
+    icon: <FeedsIcon/>,
+    value: '4,345',
+    isPositive: true,
+    change: '+163'
+  }, {
+    title: 'MC',
+    type: 'mc',
+    icon: <MCIcon/>,
+    value: '5.63M',
+    isPositive: false,
+    change: '-3.20%'
+  }]
   return (
-    <div className="flex flex-row justify-start gap-[16px]">
-        <div className="flex flex-row gap-[16px] bg-[#F2FEC5] w-[115px] h-[51px] rounded-[6px]"></div>
-        <div className="flex flex-row gap-[16px] bg-[#F2FEC5] w-[115px] h-[51px] rounded-[6px]"></div>
-        <div className="flex flex-row gap-[16px] bg-[#F2FEC5] w-[115px] h-[51px] rounded-[6px]"></div>
+    <div className="flex flex-row justify-start gap-[16px] cursor-pointer">
+      {list?.map(item=>{
+        return <div key={item?.title} className={classNames("flex flex-row gap-[4px] justify-center p-[8px] h-[51px] rounded-[6px]", 
+          item?.type==='mc' ? '' : isSelected ? 'bg-[#F2FEC5]': '',
+          item?.type!=='mc' && 'hover:bg-[#F2FEC5]'
+        )}>
+           {item?.icon}
+           <div className='flex flex-col'>
+            <div className='text-[12px] font-semibold'>{item?.title}</div>
+            <div className='flex flex-row items-center gap-[4px] text-[16px] '>
+              <div className='font-bold text-[#000]'>{item?.value}</div>
+              {item?.change ? <div className={classNames(item?.isPositive ? 'text-[#00B953]' : 'text-[#FF543D]')}>{item?.change}</div> : ''}
+            </div>
+          </div>
+        </div>
+      })}
+        
       </div>
   )
 }
@@ -84,9 +140,7 @@ function Section3() {
           </div>
         </div>
         <div className="bg-[#ECECEC] rounded-[6px] p-[4px] w-[30px] h-[30px]">
-          <div className="bg-black rounded-[3px] w-full h-full">
-            
-          </div>
+          <img src="/image/logo_1.png" width={22} height={22} alt=''/>
         </div>
       </div>
     </div>

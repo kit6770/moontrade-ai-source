@@ -11,7 +11,7 @@ const DATA_TYPE_LIST = [{
 }]
 
 export default function SideContent() {
-  let dataType = 'smartmoney'
+  const dataType = 'smartmoney'
   return (
     <aside className="flex flex-none flex-col gap-[16px] w-[452px] rounded-[20px] shadow-md">
       <div className="flex flex-col gap-[8px] bg-[#C8FF00] rounded-[20px] px-[16px] py-[12px]">
@@ -57,6 +57,7 @@ function TabSetItem({ value, name,  icon, defaultChecked = false }: { value: str
 }
 
 function SmartMoneyContent({ tokenAddress }: { tokenAddress: string }) {
+  console.log(tokenAddress)
   return <div className="w-full flex flex-col">
     <SmartMoneyItem/>
     <SmartMoneyItem/>
@@ -72,7 +73,7 @@ function SmartMoneyContent({ tokenAddress }: { tokenAddress: string }) {
 function SmartMoneyItem() {
   return <div className="flex flex-col gap-[10px] py-[10px] border-b-[1px] border-[#F3F3F3]">
     <div className="flex flex-row gap-[4px] items-center">
-      <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png" width={24} height={24} className="rounded-full"/>
+      <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png" alt="" width={24} height={24} className="rounded-full"/>
       <div className="text-[24px]">🟢</div>
       <div className="text-[16px] font-semibold text-[#049046]">Dq7js...ump</div>
       <div className="text-[16px] font-semibold text-[#666666]">(Dq7)</div>
@@ -92,7 +93,7 @@ function TwitterListContent() {
       <TabSetItem name="twitter-sort-tab" value="follower" icon={<div className="text-[16px] font-bold text-[#666]">Follower</div>}/>
       <TabSetItem name="twitter-sort-tab" value="official" icon={<div className="text-[16px] font-bold text-[#666]">Official</div>}/>
     </div>
-    <div>
+    <div className="flex flex-col gap-[16px]">
       <TwitterItem/>
       <TwitterItem/>
       <TwitterItem/>
@@ -113,13 +114,13 @@ function TwitterItem() {
       <div className="w-[48px] h-[48px] rounded-full bg-black"></div>
       <div className="flex flex-col">
         <div className="flex flex-row items-center text-[16px] font-bold text-black gap-[6px]">Minch<span><TwitterVIcon/></span></div>
-        <div className="text-[12px] text-[#666]">@minchTHEfinch · Followers: 2327 · 17min ago</div>
+        <div className="text-[12px] text-[#666]">@minchTHEfinch · Followers: 2327 · 17min ago</div>
       </div>
     </div>
-    <div className="text-[16px] text-black pb-[6px]">chart is honestly looking really good, if we can surpass ATH and break out, we'll see that $1M I'm going tokeep bull posting this until we see it happen. $PAOFU5o9knHKztdtms ovyDQymEYF8CfgL6wV6hgt2zrhpump</div>
+    <div className="text-[16px] text-black pb-[6px]">chart is honestly looking really good, if we can surpass ATH and break out, well see that $1M Im going tokeep bull posting this until we see it happen. $PAOFU5o9knHKztdtms ovyDQymEYF8CfgL6wV6hgt2zrhpump</div>
     <div className="grid grid-cols-2 gap-[8px] pb-[6px]">
-      <img src="https://pbs.twimg.com/media/GdAF7inWsAQ7Coq?format=png&name=900x900" className="rounded-[10px]"/>
-      <img src="https://pbs.twimg.com/media/GdAF7inWsAQ7Coq?format=png&name=900x900" className="rounded-[10px]"/>
+      <img src="https://pbs.twimg.com/media/GdAF7inWsAQ7Coq?format=png&name=900x900" alt="" className="rounded-[10px]"/>
+      <img src="https://pbs.twimg.com/media/GdAF7inWsAQ7Coq?format=png&name=900x900" alt="" className="rounded-[10px]"/>
     </div>
     <div className="flex flex-row items-center gap-[16px]">
       <TwitterActionItem icon={<CommentIcon/>} value={'45'}/>
