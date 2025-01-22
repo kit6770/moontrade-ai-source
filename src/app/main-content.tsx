@@ -1,3 +1,4 @@
+import { LogoIcon } from '@/lib/icons'
 import classNames from 'classnames'
 export default function MainContent() {
   return (
@@ -78,10 +79,14 @@ function Section3() {
       </div>
       <div className="flex flex-row gap-[10px]">
         <div className="bg-[#ECECEC] rounded-[6px] p-[4px] w-[30px] h-[30px]">
-          <div className="bg-black rounded-[3px] w-full h-full"></div>
+          <div className="bg-black rounded-[3px] w-full h-full flex items-center justify-center">
+            <LogoIcon className='scale-[1.5]'/>
+          </div>
         </div>
         <div className="bg-[#ECECEC] rounded-[6px] p-[4px] w-[30px] h-[30px]">
-          <div className="bg-black rounded-[3px] w-full h-full"></div>
+          <div className="bg-black rounded-[3px] w-full h-full">
+            
+          </div>
         </div>
       </div>
     </div>

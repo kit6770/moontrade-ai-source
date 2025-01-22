@@ -1,6 +1,7 @@
 import SideContent from './side-content'
 import MainContent from './main-content'
 import classNames from 'classnames'
+import { LogoWithTextIcon } from '@/lib/icons';
 
 export default function Home() {
   return (
@@ -15,7 +16,7 @@ function Header() {
   return (
     <header className="flex flex-row h-[80px] bg-white justify-between items-stretch border-b border-[#F3F3F3] min-w-[1176px]">
       <div className="flex items-center gap-[16px] px-[16px]">
-        <div className="bg-gray-500 w-[120px] h-[40px]"></div>
+        <LogoWithTextIcon/>
         <div className="text-[18px] font-semibold">AI Rank</div>
       </div>
       <div className="flex items-center gap-[16px] px-[16px]">
