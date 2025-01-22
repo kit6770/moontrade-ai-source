@@ -1,101 +1,81 @@
-import Image from "next/image";
+import SideContent from './side-content'
+import MainContent from './main-content'
+import classNames from 'classnames'
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+    <main>
+      <Header />
+      <Content />
+    </main>
   );
+}
+
+function Header() {
+  return (
+    <header className="flex flex-row h-[80px] bg-white justify-between items-stretch border-b border-[#F3F3F3] min-w-[1176px]">
+      <div className="flex items-center gap-[16px] px-[16px]">
+        <div className="bg-gray-500 w-[120px] h-[40px]"></div>
+        <div className="text-[18px] font-semibold">AI Rank</div>
+      </div>
+      <div className="flex items-center gap-[16px] px-[16px]">
+        <button className="font-semibold bg-[#FAF5E3] text-[#9E7A28] text-[16px] rounded-[12px] px-[20px] h-[50px]">
+          Invite code
+        </button>
+        <button className="font-semibold bg-[#C8FF00] text-black text-[16px] rounded-[12px] px-[20px] h-[50px]">
+          Login
+        </button>
+        <div>
+          <button className="font-semibold text-black text-[16px]">EN v</button>
+        </div>
+      </div>
+    </header>
+  )
+}
+
+function Content() {
+  return (
+    <div className="flex flex-col w-[1176px] mx-auto gap-[16px]">
+      <h2 className="text-[32px] font-semibold text-center py-[16px]">Trending Tokens Powered By AI</h2>
+      <TabSet />
+      <section className="flex flex-row gap-[16px] justify-start items-start">
+        <MainContent />
+        <SideContent />
+      </section>
+    </div>
+  )
+}
+
+function TabSetItem({ value, defaultChecked = false }: { value: string, defaultChecked?: boolean }) {
+  return (
+    <label className="cursor-pointer flex flex-1 justify-stretch items-center">
+      <input type="radio" className='peer hidden' name="time-tab" value={value} defaultChecked={defaultChecked} />
+      <div className={
+        classNames(
+          'text-center w-full h-full flex items-center justify-center text-[#666666] rounded-[8px] text-[16px] font-semibold transition-all duration-300',
+          'peer-checked:text-[#000000] peer-checked:bg-white',
+          "hover:bg-white hover:text-[#000000]"
+        )
+      }>
+        {value}
+      </div>
+    </label>
+  )
+}
+
+function TabSet() {
+  return (
+    <div className="flex flex-row justify-between gap-[19px] h-[48px]">
+      <div className="flex flex-auto flex-row justify-between items-stretch bg-[#F6F6F6] rounded-[12px] p-[4px] gap-[4px]">
+        <TabSetItem value="5m" defaultChecked={true} />
+        <TabSetItem value="1h" />
+        <TabSetItem value="6h" />
+        <TabSetItem value="24h" />
+      </div>
+
+      <div className="flex items-center justify-center bg-[#F6F6F6] w-[175px] rounded-[12px] opacity-50">
+        <div className="w-full text-center text-[16px] text-black font-semibold">Filter</div>
+      </div>
+    </div>
+  )
 }
