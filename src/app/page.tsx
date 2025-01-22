@@ -1,14 +1,23 @@
+'use client'
+
 import SideContent from './side-content'
 import MainContent from './main-content'
 import classNames from 'classnames'
-import { LogoWithTextIcon } from '@/lib/icons';
+import { LogoWithTextIcon } from '@/lib/icons'
+import { SWRConfig } from 'swr'
+
+async function fetcher(url: string) {
+  return fetch(url).then(res => res.json())
+}
 
 export default function Home() {
   return (
-    <main>
-      <Header />
-      <Content />
-    </main>
+    <SWRConfig value={{ fetcher }}>
+      <main>
+        <Header />
+        <Content />
+      </main>
+    </SWRConfig>
   );
 }
 
@@ -20,15 +29,15 @@ function Header() {
         <div className="text-[18px] font-semibold">AI Rank</div>
       </div>
       <div className="flex items-center gap-[16px] px-[16px]">
-        <button className="font-semibold bg-[#FAF5E3] text-[#9E7A28] text-[16px] rounded-[12px] px-[20px] h-[50px]">
+        {/* <button className="font-semibold bg-[#FAF5E3] text-[#9E7A28] text-[16px] rounded-[12px] px-[20px] h-[50px]">
           Invite code
-        </button>
+        </button> */}
         <button className="font-semibold bg-[#C8FF00] text-black text-[16px] rounded-[12px] px-[20px] h-[50px]">
           Login
         </button>
-        <div>
+        {/* <div>
           <button className="font-semibold text-black text-[16px]">EN v</button>
-        </div>
+        </div> */}
       </div>
     </header>
   )

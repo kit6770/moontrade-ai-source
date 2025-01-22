@@ -17,8 +17,7 @@ export default function MainContent() {
   )
 }
 
-function Item({ className = '', isFirst = false }: { className?: string, isFirst?: boolean }) {
-  console.log(isFirst)
+function Item({ className = '' }: { className?: string, isFirst?: boolean }) {
   return (
     <div className={classNames(
       'relative flex flex-col gap-[16px] rounded-[20px] p-[20px] hover:p-[19px] shadow-[0_4px_12px_0_rgba(0,0,0,0.06)] transition-colors duration-300',
