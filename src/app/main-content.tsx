@@ -6,17 +6,13 @@ import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 import useSWRMutation from 'swr/mutation'
 
-type MainIProps = {
-  timeType:string; 
-  selected?: SmartMoneyInfo;
-  setSelected: (value: SmartMoneyInfo)=>void
-}
-export default function MainContent({ timeType, selected, setSelected } : MainIProps) {
+export default function MainContent() {
   // const { data, isLoading, error } = useSWR('api:/get-token-info')
   // console.log('.... get 请求这样发', data, isLoading, error)
 
   // const { data: localData } = useSWR('本地状态，会存进localStorage')
   // console.log('.... localData', localData)
+  const { data: timeType } = useSWR('timeType')
 
   const [list, setList] = useState<SmartMoneyInfo[]>([])
 
@@ -24,18 +20,18 @@ export default function MainContent({ timeType, selected, setSelected } : MainIP
     const temp = [
       {id: 1,address: '2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump'},
       {id: 2,address: 'GJAFwWjJ3vnTsrQVabjBVK2TYB1YtRCQXRDfDgUnpump'},
-      {id: 3,address: '2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump'},
-      {id: 4,address: 'GJAFwWjJ3vnTsrQVabjBVK2TYB1YtRCQXRDfDgUnpump'}
     ]
     setList(temp)
-    setSelected(temp[0])
+    updateSelectedToken(temp[0]?.address)
   }, [timeType])
+
+  const {trigger: updateSelectedToken } = useSWRMutation<string>('selectedToken')
 
   return (
     <div className="flex flex-auto flex-col gap-[16px]">
       {list?.map((item, index)=>{
-        return <div key={item?.id} className='relative' onClick={()=>setSelected(item)}>
-          <Item {...item} className={selected?.address?.toLowerCase() === item?.address?.toLowerCase() ? 'border-[#C8FF00] bg-[#FBFFEC]': ''} />
+        return <div key={item?.id} className='relative' onClick={()=>updateSelectedToken(item?.address)}>
+          <Item {...item}/>
           <div className="absolute top-[-1px] left-[-1px] bg-black text-[#C8FF00] text-[14px] font-medium rounded-tl-[20px] rounded-br-[20px] px-[12px] h-[24px] flex items-center justify-center"># {index+1}</div>
         </div>
       })}
@@ -43,13 +39,14 @@ export default function MainContent({ timeType, selected, setSelected } : MainIP
   )
 }
 
-function Item({ className = '' }: { className?: string, isFirst?: boolean }) {
-  // const { trigger: postTrigger, isMutating } = useSWRMutation(`api:/post-token-info`)
+function Item(props: SmartMoneyInfo) {
+  const { data: selectedToken } = useSWR('selectedToken')
+  
   return (
     <div className={classNames(
       'relative flex flex-col gap-[16px] rounded-[20px] p-[20px] shadow-[0_4px_12px_0_rgba(0,0,0,0.06)] transition-colors duration-300 cursor-pointer',
-      'border-[2px] border-[#F1F1F1] hover:border-[#C8FF00] bg-[#FFFFFF] hover:bg-[#FBFFEC]',
-      className
+      'border-[2px] hover:border-[#C8FF00] hover:bg-[#FBFFEC]',
+      selectedToken?.toLowerCase() === props?.address?.toLowerCase() ? 'border-[#C8FF00] bg-[#FBFFEC]': 'border-[#F1F1F1] bg-[#FFFFFF]',
     )}>
       <Section1 />
       <Section2 />

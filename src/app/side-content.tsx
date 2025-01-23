@@ -6,6 +6,7 @@ import classNames from "classnames";
 import React, { useEffect, useState } from "react";
 import useSWRMutation from "swr/mutation";
 import Loader from "./loader";
+import useSWR from "swr";
 
 const DATA_TYPE_LIST = [{
   key: 'smartmoney',
@@ -17,7 +18,9 @@ const DATA_TYPE_LIST = [{
   icon: <TwitterIcon/>
 }]
 
-export default function SideContent({ tokenAddress }: { tokenAddress?: string }) {
+export default function SideContent() {
+  const { data: selectedToken } = useSWR('selectedToken')
+  
   const [dataType, setDataType] = useState<string>('smartmoney')
 
   const { trigger: summaryTrigger, data: summaryData } = useSWRMutation<any>(`api:/trending_tokens/summary`)
@@ -26,10 +29,12 @@ export default function SideContent({ tokenAddress }: { tokenAddress?: string })
     summaryTrigger({
       method: 'POST',
       body: JSON.stringify({
-        token_address: tokenAddress,
+        token_address: selectedToken,
       }),
     })
-  }, [tokenAddress])
+  }, [selectedToken])
+
+  console.log('SideContent', selectedToken)
 
   return (
     <aside className="flex flex-none flex-col gap-[16px] w-[452px] rounded-[20px] shadow-md">
@@ -62,8 +67,8 @@ export default function SideContent({ tokenAddress }: { tokenAddress?: string })
             </div>
           })}
         </div>
-        {dataType==='smartmoney' && <TradeListContent tokenAddress={tokenAddress}/>}
-        {dataType==='twitter' && <TwitterListContent tokenAddress={tokenAddress}/>}
+        {dataType==='smartmoney' && <TradeListContent/>}
+        {dataType==='twitter' && <TwitterListContent/>}
       </div>
     </aside>
   );
@@ -84,7 +89,8 @@ function TabSetItem({ value, name, icon, defaultChecked = false, onChange }: { v
   </label>
 }
 
-function TradeListContent({ tokenAddress } : { tokenAddress?: string }) {
+function TradeListContent() {
+  const { data: tokenAddress } = useSWR('selectedToken')
   const [pageNo, setPageNo] = useState<number>(1)
   const [tradeList, setTradeList] = React.useState<TradeInfo[]>([])
   const [hasMore, setHasMore] = useState<boolean>(false)
@@ -143,7 +149,8 @@ function SmartMoneyItem(props: TradeInfo) {
   </div>
 }
 
-function TwitterListContent({ tokenAddress } : { tokenAddress?: string }) {
+function TwitterListContent() {
+  const { data: tokenAddress } = useSWR('selectedToken')
   const { trigger: twitterTrigger, isMutating } = useSWRMutation<TwitterFeedInfo[]>(`api:/trending_tokens/twitter_tweets`)
 
   const [pageNo, setPageNo] = useState<number>(1)

@@ -5,10 +5,9 @@ import MainContent from './main-content'
 import classNames from 'classnames'
 import { LogoWithTextIcon } from '@/lib/icons'
 import GlobalContextProvider from './app-context'
-import useSWR from 'swr'
-import { useState } from 'react'
-import { SmartMoneyInfo } from '@/types'
 import { getPlatformInfo } from '@/lib/getPlatformInfo'
+import useSWRMutation from 'swr/mutation'
+import { useEffect } from 'react'
 
 export default function Home() {
   return (
@@ -47,27 +46,30 @@ function Header() {
 
 function Content() {
   const isMobile = getPlatformInfo()?.isMobile;
-  
-  const [selected, setSelected] = useState<SmartMoneyInfo>()
-  const [timeType, setTimeType] = useState<string>('5m')
 
   return (
     <div className="flex flex-col lg:w-[1176px] px-[10px] mx-auto gap-[16px]">
       <h2 className="text-[32px] font-semibold text-center py-[16px]">Trending Tokens Powered By AI</h2>
-      <TabSet setTimeType={setTimeType}/>
+      <TabSet/>
       <section className="flex flex-row gap-[16px] justify-start items-start">
-        <MainContent timeType={timeType} selected={selected} setSelected={setSelected}/>
-        {!isMobile && <SideContent tokenAddress={selected?.address}/>}
+        <MainContent/>
+        {!isMobile && <SideContent />}
       </section>
     </div>
   )
 }
 
-function TabSetItem({ value, defaultChecked = false, onChange }: { value: string, defaultChecked?: boolean, onChange: (value: string) => void}) {
+function TabSetItem({ value, defaultChecked = false }: { value: string, defaultChecked?: boolean }) {
+  const {trigger: updateTimeType } = useSWRMutation<string>('timeType')
+
+  useEffect(()=>{
+    updateTimeType('5m')
+  }, [])
+
   return (
     <label className="cursor-pointer flex flex-1 justify-stretch items-center">
       <input type="radio" className='peer hidden' name="time-tab" value={value} defaultChecked={defaultChecked} onChange={(e)=>{
-        onChange(e.target.value)
+        updateTimeType(e.target.value);
       }}/>
       <div className={
         classNames(
@@ -82,14 +84,14 @@ function TabSetItem({ value, defaultChecked = false, onChange }: { value: string
   )
 }
 
-function TabSet({ setTimeType }: { setTimeType: (value: string) => void }) {
+function TabSet() {
   return (
     <div className="flex flex-row justify-between gap-[19px] h-[48px]">
       <div className="flex flex-auto flex-row justify-between items-stretch bg-[#F6F6F6] rounded-[12px] p-[4px] gap-[4px]">
-        <TabSetItem value="5m" defaultChecked={true} onChange={setTimeType}/>
-        <TabSetItem value="1h" onChange={setTimeType}/>
-        <TabSetItem value="6h" onChange={setTimeType}/>
-        <TabSetItem value="24h" onChange={setTimeType}/>
+        <TabSetItem value="5m" defaultChecked={true}/>
+        <TabSetItem value="1h"/>
+        <TabSetItem value="6h"/>
+        <TabSetItem value="24h"/>
       </div>
 
       <div className="flex items-center justify-center bg-[#F6F6F6] lg:w-[175px] px-[10px] rounded-[12px] opacity-50">
