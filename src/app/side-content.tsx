@@ -9,7 +9,7 @@ const DATA_TYPE_LIST = [{
   icon: <SmartMoneyIcon/>
 }, {
   key: 'twitter',
-  name: 'Twitter',
+  name: 'X(Twitter)',
   icon: <TwitterIcon/>
 }]
 
@@ -20,12 +20,12 @@ export default function SideContent() {
   return (
     <aside className="flex flex-none flex-col gap-[16px] w-[452px] rounded-[20px] shadow-md">
       <div className="flex flex-col gap-[8px] bg-[#C8FF00] rounded-[20px] px-[16px] py-[12px]">
-        <h4 className="text-[24px] font-semibold">AI Summary</h4>
+        <h4 className="text-[20px] font-semibold">AI Summary</h4>
         <p className="text-[16px]">
           {`$PAOFU, representing Xiaohongshu's viral cat 'Wang Paofu', with 5 million followers, now a token. No detailed project features or roadmap provided.`}
         </p>
         <div className="flex flex-row rounded-[6px] bg-[#EEFFB0] items-center">
-          <div className="flex flex-row px-[16px] py-[8px] items-center gap-[8px]">
+          <div className="flex flex-row px-[16px] py-[8px] items-center gap-[4px]">
             <div className="flex w-[16px] h-[16px] rounded-full bg-black items-center justify-center"><LogoIcon/></div>
             <div className="text-[16px] font-semibold">PeerX</div>
           </div>
@@ -70,8 +70,8 @@ function TabSetItem({ value, name, icon, defaultChecked = false, onChange }: { v
   </label>
 }
 
-function SmartMoneyContent({ tokenAddress }: { tokenAddress: string }) {
-  console.log(tokenAddress)
+function SmartMoneyContent({  }: { tokenAddress: string }) {
+
   return <div className="w-full flex flex-col">
     <SmartMoneyItem/>
     <SmartMoneyItem/>
@@ -80,7 +80,7 @@ function SmartMoneyContent({ tokenAddress }: { tokenAddress: string }) {
     <SmartMoneyItem/>
     <SmartMoneyItem/>
     <SmartMoneyItem/>
-    <div className="w-full h-[48px] text-16px] font-bold rounded-[6px] text-black bg-[#C8FF00] flex items-center justify-center mt-[4px]">Learn more</div>
+    <div className="w-full h-[48px] text-[16px] font-bold rounded-[6px] text-black bg-[#C8FF00] flex items-center justify-center mt-[4px]">Learn more</div>
   </div>
 }
 
@@ -88,12 +88,12 @@ function SmartMoneyItem() {
   return <div className="flex flex-col gap-[10px] py-[10px] border-b-[1px] border-[#F3F3F3]">
     <div className="flex flex-row gap-[4px] items-center">
       <img src={BASE_PATH + "/image/solana.png"} alt="" width={24} height={24} className="rounded-full"/>
-      <div className="text-[24px]">🟢</div>
+      <div className="text-[24px]"><img src={BASE_PATH + "/image/green.png"} alt="" width={24} height={24}/></div>
       <div className="text-[16px] font-semibold text-[#049046]">Dq7js...ump</div>
       <div className="text-[16px] font-semibold text-[#666666]">(Dq7)</div>
     </div>
     <div className="flex flex-row gap-[4px] items-center justify-between text-[14px] font-semibold ">
-      <div className="text-[#666666]">Bought <span className="text-black">449,348</span> for <span className="text-black">14.64</span> SOL ($2,692.9)</div>
+      <div className="text-[#666666]">Bought <span className="text-black font-medium">449,348</span> for <span className="text-black font-medium">14.64</span> SOL ($2,692.9)</div>
       <div className="text-[#999]">1m ago</div>
     </div>
   </div>
@@ -120,7 +120,7 @@ function TwitterItem() {
     <div className="flex flex-row items-center justify-between">
       <div className="flex flex-row gap-[8px] items-center">
         <div className="w-[16px] h-[16px] rounded-full bg-black flex items-center justify-center"><LogoIcon/></div>
-        <div className="text-[16px] font-semibold">PeerX</div>
+        <div className="text-[16px] font-bold">PeerX</div>
       </div>
       <div><TwitterIcon/></div>
     </div>

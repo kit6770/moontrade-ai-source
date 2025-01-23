@@ -45,11 +45,11 @@ function Section1() {
           </div>
         </div>
         <div className="flex flex-col gap-[8px]">
-          <div className="text-[18px] font-semibold flex flex-row gap-[4px] items-center">
+          <div className="text-[18px] flex flex-row gap-[4px] items-center">
             <div className="text-[24px] font-bold">VEILL</div>
             <div className="text-[12px] text-black">{'Ultra Sigma · 5VwjS...ump'}</div>
           </div>
-          <div className="text-[12px] font-semibold flex flex-row gap-[6px] justify-start">
+          <div className="text-[12px] font-semibold text-[#666] flex flex-row gap-[6px] justify-start">
             <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px] gap-[4px]">
               <FromVIcon/>
               <div>Form: Trump</div>
@@ -60,7 +60,9 @@ function Section1() {
                 </div>
               </div>
             </div>
-            <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px] gap-[4px]"><CreateIcon/>30m</div>
+            <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px] gap-[4px]">
+              <CreateIcon/>30m
+            </div>
             <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
               <img src={BASE_PATH+"/image/pump.png"} width={16} height={16} alt=''/>
             </div>
@@ -115,7 +117,7 @@ function Section2({isSelected = false}: {isSelected?: boolean}) {
            {item?.icon}
            <div className='flex flex-col'>
             <div className='text-[12px] font-semibold'>{item?.title}</div>
-            <div className='flex flex-row items-center gap-[4px] text-[16px] '>
+            <div className='flex flex-row items-center gap-[4px] text-[16px]'>
               <div className='font-bold text-[#000]'>{item?.value}</div>
               {item?.change ? <div className={classNames(item?.isPositive ? 'text-[#00B953]' : 'text-[#FF543D]')}>{item?.change}</div> : ''}
             </div>
