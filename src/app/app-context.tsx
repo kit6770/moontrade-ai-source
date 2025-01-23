@@ -42,7 +42,7 @@ const apiMiddleware = next => (key: string, nextFetcher: unknown, config: unknow
       key,
       async (_key: string, payload: unknown) => {
         const apiAccessToken = await storageLoad('apiAccessToken')
-        const url = BASE_URL + '/dex-api/client/r0/' + key.substring(4)
+        const url = BASE_URL + '/dex-api/client/r0' + key.substring(4)
         const fetchConfig = {
           ...(payload?.arg ?? {}),
           headers: {

@@ -1,55 +1,56 @@
 import { BASE_PATH } from '@/lib/constants'
 import { CreateIcon, FeedsIcon, FromVIcon, GoldSmartMoneyIcon, LogoIcon, MCIcon, TelegramIcon, TwitterIcon, TwitterWhiteIcon, WebsiteIcon } from '@/lib/icons'
+import { SmartMoneyInfo } from '@/types'
 import classNames from 'classnames'
+import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 import useSWRMutation from 'swr/mutation'
 
-export default function MainContent() {
-  const { data, isLoading, error } = useSWR('api:/get-token-info')
-  console.log('.... get 请求这样发', data, isLoading, error)
+type MainIProps = {
+  timeType:string; 
+  selected?: SmartMoneyInfo;
+  setSelected: (value: SmartMoneyInfo)=>void
+}
+export default function MainContent({ timeType, selected, setSelected } : MainIProps) {
+  // const { data, isLoading, error } = useSWR('api:/get-token-info')
+  // console.log('.... get 请求这样发', data, isLoading, error)
 
-  const { data: localData } = useSWR('本地状态，会存进localStorage')
-  console.log('.... localData', localData)
+  // const { data: localData } = useSWR('本地状态，会存进localStorage')
+  // console.log('.... localData', localData)
+
+  const [list, setList] = useState<SmartMoneyInfo[]>([])
+
+  useEffect(()=>{
+    const temp = [
+      {id: 1,address: '2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump'},
+      {id: 2,address: 'GJAFwWjJ3vnTsrQVabjBVK2TYB1YtRCQXRDfDgUnpump'},
+      {id: 3,address: '2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump'},
+      {id: 4,address: 'GJAFwWjJ3vnTsrQVabjBVK2TYB1YtRCQXRDfDgUnpump'}
+    ]
+    setList(temp)
+    setSelected(temp[0])
+  }, [timeType])
 
   return (
     <div className="flex flex-auto flex-col gap-[16px]">
-      <Item />
-      <Item />
-      <Item />
-      <Item />
-      <Item />
-      <Item />
-      <Item />
-      <Item />
-      <Item />
-      <Item />
+      {list?.map((item, index)=>{
+        return <div key={item?.id} className='relative' onClick={()=>setSelected(item)}>
+          <Item {...item} className={selected?.address?.toLowerCase() === item?.address?.toLowerCase() ? 'border-[#C8FF00] bg-[#FBFFEC]': ''} />
+          <div className="absolute top-[-1px] left-[-1px] bg-black text-[#C8FF00] text-[14px] font-medium rounded-tl-[20px] rounded-br-[20px] px-[12px] h-[24px] flex items-center justify-center"># {index+1}</div>
+        </div>
+      })}
     </div>
   )
 }
 
 function Item({ className = '' }: { className?: string, isFirst?: boolean }) {
-  const { trigger: postTrigger, isMutating } = useSWRMutation(`api:/post-token-info`)
+  // const { trigger: postTrigger, isMutating } = useSWRMutation(`api:/post-token-info`)
   return (
     <div className={classNames(
-      'relative flex flex-col gap-[16px] rounded-[20px] p-[20px] shadow-[0_4px_12px_0_rgba(0,0,0,0.06)] transition-colors duration-300',
+      'relative flex flex-col gap-[16px] rounded-[20px] p-[20px] shadow-[0_4px_12px_0_rgba(0,0,0,0.06)] transition-colors duration-300 cursor-pointer',
       'border-[2px] border-[#F1F1F1] hover:border-[#C8FF00] bg-[#FFFFFF] hover:bg-[#FBFFEC]',
       className
     )}>
-      <div
-        className="absolute top-[-1px] left-[-1px] bg-black text-[#C8FF00] text-[14px] font-medium rounded-tl-[20px] rounded-br-[20px] px-[12px] h-[24px] flex items-center justify-center"
-        onClick={() => {
-          console.log('.... post 请求这样发', isMutating)
-          postTrigger({
-            method: 'POST',
-            body: JSON.stringify({
-              token: '123',
-            })
-          }).then(res=>{
-            console.log('.... post 请求返回结果', res)
-          })
-        }}
-      ># 1</div>
-
       <Section1 />
       <Section2 />
       <Section3 />
@@ -62,18 +63,16 @@ function Section1() {
   return (
     <div>
       <div className="flex flex-row gap-[16px]">
-        <div className="relative">
-          <div className="bg-gray-500 w-[64px] h-[64px] rounded-full"></div>
-          <div className="absolute bottom-0 right-0 w-[20px] h-[20px] bg-black rounded-full border-2 border-white">
-            <img src={BASE_PATH + "/image/solana.png"} alt="" className="rounded-full"/>
-          </div>
+        <div className="relative w-[64px] h-[64px]">
+          <div className="relative bg-gray-500 w-[64px] h-[64px] rounded-full"></div>
+          <img src={BASE_PATH + "/image/solana.png"} alt="" width={20} height={20} className="rounded-full absolute bottom-0 right-0"/>
         </div>
         <div className="flex flex-col gap-[8px]">
           <div className="text-[18px] flex flex-row gap-[4px] items-center">
             <div className="text-[24px] font-bold">VEILL</div>
             <div className="text-[12px] text-black">{'Ultra Sigma · 5VwjS...ump'}</div>
           </div>
-          <div className="text-[12px] font-semibold text-[#666] flex flex-row gap-[6px] justify-start">
+          <div className="text-[12px] font-semibold text-[#666] flex flex-row gap-[6px] justify-start flex-wrap">
             <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px] gap-[4px]">
               <FromVIcon/>
               <div>Form: Trump</div>
@@ -138,7 +137,7 @@ function Section2({isSelected = false}: {isSelected?: boolean}) {
     change: '-3.20%'
   }]
   return (
-    <div className="flex flex-row justify-start gap-[16px] cursor-pointer">
+    <div className="flex flex-row justify-start gap-[16px] flex-wrap cursor-pointer">
       {list?.map(item=>{
         return <div key={item?.title} className={classNames("flex flex-row gap-[4px] justify-center p-[8px] h-[51px] rounded-[6px]", 
           item?.type==='mc' ? '' : isSelected ? 'bg-[#F2FEC5]': '',
