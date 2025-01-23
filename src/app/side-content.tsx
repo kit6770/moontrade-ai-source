@@ -5,9 +5,11 @@ import React, { useState } from "react";
 
 const DATA_TYPE_LIST = [{
   key: 'smartmoney',
+  name: 'Smart Money',
   icon: <SmartMoneyIcon/>
 }, {
   key: 'twitter',
+  name: 'Twitter',
   icon: <TwitterIcon/>
 }]
 
@@ -34,9 +36,16 @@ export default function SideContent() {
       <div className="flex flex-col gap-[8px] rounded-[20px] px-[16px] py-[12px]">
         <div className="flex flex-row gap-[16px]">
           {DATA_TYPE_LIST?.map(item=>{
-            return <TabSetItem key={item?.key} name="data-type-tab" value={item?.key} icon={<div className="h-[36px] flex items-center">{item?.icon}</div>} defaultChecked={dataType===item?.key} onChange={()=>{
-              setDataType(item?.key)
-            }}/>
+            return <div className="relative inline-block group" key={item?.key} >
+                <TabSetItem name="data-type-tab" value={item?.key} icon={<div className="h-[36px] flex items-center">{item?.icon}</div>} defaultChecked={dataType===item?.key} onChange={()=>{
+                setDataType(item?.key)
+              }}/>
+              {/* tooltip */}
+              <div className="whitespace-nowrap absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-black text-white text-[14px] px-2 py-1 rounded-[6px]">
+                {item?.name}
+                <div className="absolute bottom-[-4px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-t-black border-l-transparent border-r-transparent"></div>
+              </div>
+            </div>
           })}
         </div>
         {dataType==='smartmoney' && <SmartMoneyContent tokenAddress={''}/>}
@@ -46,7 +55,7 @@ export default function SideContent() {
   );
 }
 
-function TabSetItem({ value, name,  icon, defaultChecked = false, onChange }: { value: string, name: string, icon?: React.JSX.Element, defaultChecked?: boolean, onChange?: React.ChangeEventHandler<HTMLInputElement>}) {
+function TabSetItem({ value, name, icon, defaultChecked = false, onChange }: { value: string, name: string, icon?: React.JSX.Element, defaultChecked?: boolean, onChange?: React.ChangeEventHandler<HTMLInputElement>}) {
   return <label className="cursor-pointer flex justify-stretch items-center">
     <input type="radio" className='peer hidden' name={name} value={value} defaultChecked={defaultChecked} onChange={onChange}/>
     <div className={

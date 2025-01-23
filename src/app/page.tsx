@@ -32,7 +32,7 @@ function Header() {
         {/* <button className="font-semibold bg-[#FAF5E3] text-[#9E7A28] text-[16px] rounded-[12px] px-[20px] h-[50px]">
           Invite code
         </button> */}
-        <button className="font-semibold bg-[#C8FF00] text-black text-[16px] rounded-[12px] px-[20px] h-[50px]">
+        <button className="font-semibold bg-[#C8FF00] text-black text-[16px] rounded-[12px] px-[20px] h-[50px] opacity-50 cursor-not-allowed">
           Login
         </button>
         {/* <div>
@@ -84,7 +84,7 @@ function TabSet() {
       </div>
 
       <div className="flex items-center justify-center bg-[#F6F6F6] w-[175px] rounded-[12px] opacity-50">
-        <div className="w-full text-center text-[16px] text-black font-semibold">Filter</div>
+        <div className="w-full text-center text-[16px] text-black font-semibold opacity-50 cursor-not-allowed">Filter</div>
       </div>
     </div>
   )
