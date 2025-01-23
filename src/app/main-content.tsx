@@ -1,7 +1,16 @@
 import { BASE_PATH } from '@/lib/constants'
 import { CreateIcon, FeedsIcon, FromVIcon, GoldSmartMoneyIcon, LogoIcon, MCIcon, TelegramIcon, TwitterIcon, TwitterWhiteIcon, WebsiteIcon } from '@/lib/icons'
 import classNames from 'classnames'
+import useSWR from 'swr'
+import useSWRMutation from 'swr/mutation'
+
 export default function MainContent() {
+  const { data, isLoading, error } = useSWR('api:/get-token-info')
+  console.log('.... get 请求这样发', data, isLoading, error)
+
+  const { data: localData } = useSWR('本地状态，会存进localStorage')
+  console.log('.... localData', localData)
+
   return (
     <div className="flex flex-auto flex-col gap-[16px]">
       <Item />
@@ -19,13 +28,27 @@ export default function MainContent() {
 }
 
 function Item({ className = '' }: { className?: string, isFirst?: boolean }) {
+  const { trigger: postTrigger, isMutating } = useSWRMutation(`api:/post-token-info`)
   return (
     <div className={classNames(
       'relative flex flex-col gap-[16px] rounded-[20px] p-[20px] shadow-[0_4px_12px_0_rgba(0,0,0,0.06)] transition-colors duration-300',
       'border-[2px] border-[#F1F1F1] hover:border-[#C8FF00] bg-[#FFFFFF] hover:bg-[#FBFFEC]',
       className
     )}>
-      <div className="absolute top-[-1px] left-[-1px] bg-black text-[#C8FF00] text-[14px] font-medium rounded-tl-[20px] rounded-br-[20px] px-[12px] h-[24px] flex items-center justify-center"># 1</div>
+      <div
+        className="absolute top-[-1px] left-[-1px] bg-black text-[#C8FF00] text-[14px] font-medium rounded-tl-[20px] rounded-br-[20px] px-[12px] h-[24px] flex items-center justify-center"
+        onClick={() => {
+          console.log('.... post 请求这样发', isMutating)
+          postTrigger({
+            method: 'POST',
+            body: JSON.stringify({
+              token: '123',
+            })
+          }).then(res=>{
+            console.log('.... post 请求返回结果', res)
+          })
+        }}
+      ># 1</div>
 
       <Section1 />
       <Section2 />
@@ -35,6 +58,7 @@ function Item({ className = '' }: { className?: string, isFirst?: boolean }) {
 }
 
 function Section1() {
+  const { trigger: localDataTrigger } = useSWRMutation('本地状态，会存进localStorage')
   return (
     <div>
       <div className="flex flex-row gap-[16px]">
@@ -67,7 +91,13 @@ function Section1() {
               <img src={BASE_PATH+"/image/pump.png"} width={16} height={16} alt=''/>
             </div>
             <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
-              <TwitterIcon color={'#666666'} className='scale-[0.6]'/>
+              <TwitterIcon
+                onClick={() => {
+                  localDataTrigger(`本地状态传值更新 ${Math.random()}`)
+                }}
+                color={'#666666'}
+                className='scale-[0.6]'
+              />
             </div>
             <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
               <WebsiteIcon/>

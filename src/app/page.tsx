@@ -4,29 +4,28 @@ import SideContent from './side-content'
 import MainContent from './main-content'
 import classNames from 'classnames'
 import { LogoWithTextIcon } from '@/lib/icons'
-import { SWRConfig } from 'swr'
-
-async function fetcher(url: string) {
-  return fetch(url).then(res => res.json())
-}
+import GlobalContextProvider from './app-context'
+import useSWR from 'swr'
 
 export default function Home() {
   return (
-    <SWRConfig value={{ fetcher }}>
+    <GlobalContextProvider>
       <main>
         <Header />
         <Content />
       </main>
-    </SWRConfig>
+    </GlobalContextProvider>
   );
 }
 
 function Header() {
+  const { data: localData } = useSWR('本地状态，会存进localStorage')
+
   return (
     <header className="flex flex-row h-[80px] bg-white justify-between items-stretch border-b border-[#F3F3F3] min-w-[1176px]">
       <div className="flex items-center gap-[16px] px-[16px]">
         <LogoWithTextIcon/>
-        <div className="text-[18px] font-semibold">AI Rank</div>
+        <div className="text-[18px] font-semibold">AI Rank{localData}</div>
       </div>
       <div className="flex items-center gap-[16px] px-[16px]">
         {/* <button className="font-semibold bg-[#FAF5E3] text-[#9E7A28] text-[16px] rounded-[12px] px-[20px] h-[50px]">
