@@ -60,7 +60,7 @@ function Content() {
 }
 
 function TabSetItem({ value, defaultChecked = false }: { value: string, defaultChecked?: boolean }) {
-  const {trigger: updateTimeType } = useSWRMutation<string>('timeType')
+  const {trigger: updateTimeType} = useSWRMutation<string>('timeType')
 
   useEffect(()=>{
     updateTimeType('5m')
@@ -86,7 +86,7 @@ function TabSetItem({ value, defaultChecked = false }: { value: string, defaultC
 
 function TabSet() {
   return (
-    <div className="flex flex-row justify-between gap-[19px] h-[48px]">
+    <div className="flex flex-row justify-between gap-[19px] h-[48px] leading-[48px]">
       <div className="flex flex-auto flex-row justify-between items-stretch bg-[#F6F6F6] rounded-[12px] p-[4px] gap-[4px]">
         <TabSetItem value="5m" defaultChecked={true}/>
         <TabSetItem value="1h"/>

@@ -1,7 +1,26 @@
 
 export type SmartMoneyInfo = {
   id: number;
-  address: string
+  name?: string;
+  token_address: string;
+  symbol?: string;
+  logo?: string;
+  weight?: number,
+  chain_id?: number;
+  smart_wallet_count?: number;
+  smart_wallet_count_change?: number;
+  x_feed_num?: number;
+  x_feed_num_change?: number;
+  market_value?: number;
+  market_value_change?: number;
+  home_page?: string;
+  twitter_link?: string;
+  telegram_link?: string;
+  publisher?: string;
+  launch_plat_name?: string;
+  publish_time?: string;
+  description?: string;
+  
 }
 
 export type TwitterFeedInfo = {
@@ -21,6 +40,9 @@ export type TwitterFeedInfo = {
   token_address: string;
   user_name: string;
   name: string;
+
+  is_quote?: boolean
+  is_reply?: boolean
 }
 
 export type TradeInfo = {
@@ -43,4 +65,12 @@ export type TradeInfo = {
   wallet_tag: {
     address: string
   }
+}
+
+export type SummaryInfo = {
+  content: string;
+  source: string;
+  symbol: string;
+  logo: string;
+  token_address: string;
 }

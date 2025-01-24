@@ -1,7 +1,7 @@
 import { BASE_PATH, TWITTER_TYPE_LIST } from "@/lib/constants";
 import { CommentIcon, LikeIcon, LogoIcon, ShareIcon, SmartMoneyIcon, TwitterIcon, TwitterVIcon } from "@/lib/icons";
 import { formatAddress, formatNumber, timeAgo } from "@/lib/utils";
-import { TradeInfo, TwitterFeedInfo } from "@/types";
+import { SummaryInfo, TradeInfo, TwitterFeedInfo } from "@/types";
 import classNames from "classnames";
 import React, { useEffect, useState } from "react";
 import useSWRMutation from "swr/mutation";
@@ -23,18 +23,18 @@ export default function SideContent() {
   
   const [dataType, setDataType] = useState<string>('smartmoney')
 
-  const { trigger: summaryTrigger, data: summaryData } = useSWRMutation<any>(`api:/trending_tokens/summary`)
+  const { trigger: summaryTrigger, data: summaryData } = useSWRMutation<SummaryInfo>(`api:/trending_tokens/summary`)
 
   useEffect(()=>{
-    summaryTrigger({
-      method: 'POST',
-      body: JSON.stringify({
-        token_address: selectedToken,
-      }),
-    })
+    if (selectedToken) {
+      summaryTrigger({
+        method: 'POST',
+        body: JSON.stringify({
+          token_address: selectedToken,
+        }),
+      })
+    }
   }, [selectedToken])
-
-  console.log('SideContent', selectedToken)
 
   return (
     <aside className="flex flex-none flex-col gap-[16px] w-[452px] rounded-[20px] shadow-md">
@@ -52,7 +52,7 @@ export default function SideContent() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-[8px] rounded-[20px] px-[16px] py-[12px]">
+      <div className="flex flex-col gap-[8px] rounded-[20px] px-[16px]">
         <div className="flex flex-row gap-[16px]">
           {DATA_TYPE_LIST?.map(item=>{
             return <div className="relative inline-block group" key={item?.key} >
@@ -120,13 +120,13 @@ function TradeListContent() {
   }, [tokenAddress])
 
   return <div className="w-full flex flex-col relative">
-    <div className="w-full flex flex-col min-h-[300px]">
+    <div className={classNames("w-full flex flex-col min-h-[300px]",hasMore && tradeList?.length>0 ? '' : 'mt-[16px]')}>
       {tradeList?.map(item=>{
         return <SmartMoneyItem key={item?.tx_id} {...item}/>
       })}
     </div>
     {isMutating && <Loader/>}
-    {hasMore && tradeList?.length>0 && <div className="w-full h-[48px] text-[16px] font-bold rounded-[6px] text-black bg-[#C8FF00] flex items-center justify-center mt-[4px] cursor-pointer" onClick={getTradeList}>Learn more</div>}
+    {hasMore && tradeList?.length>0 && <div className="w-full h-[48px] text-[16px] font-bold rounded-[6px] text-black bg-[#C8FF00] flex items-center justify-center mt-[4px] mb-[16px] cursor-pointer" onClick={getTradeList}>Learn more</div>}
   </div>
 }
 
@@ -144,7 +144,7 @@ function SmartMoneyItem(props: TradeInfo) {
       <div className="text-[#666666]">
         Bought <span className="text-black font-medium">{props?.token_to_volume?.toLocaleString()}</span> for <span className="text-black font-medium">{props?.token_from_volume?.toLocaleString()}</span> {props?.price_token} ($)
       </div>
-      <div className="text-[#999]">{timeAgo(props?.data_time)}</div>
+      <div className="text-[#999]">{timeAgo(props?.data_time, false, true)}</div>
     </div>
   </div>
 }
@@ -194,17 +194,36 @@ function TwitterListContent() {
         return <TabSetItem key={item?.value} name="twitter-sort-tab" value={item?.value} defaultChecked={category===item?.value} icon={<div className={classNames("text-[16px] font-bold text-[#666]", category===item?.value && "text-black")}>{item?.name}</div>} onChange={()=>setCategory(item?.value)}/>
       })}
       </div>
-    <div className="flex flex-col gap-[16px] min-h-[300px]">
+    <div className={classNames("flex flex-col gap-[16px] min-h-[300px]", hasMore && twitterData?.length>0 ? '' : 'mb-[16px]')}>
       {twitterData?.map(item=>{
-        return <TwitterItem key={item?.id} {...item}/>
+        if (item?.is_quote) {
+          return <QuoteTwitterItem key={item?.id} {...item}/>
+        } else if (item?.is_reply) {
+          return <ReplyTwitterItem key={item?.id} {...item}/>
+        } else {
+          return <TwitterItem key={item?.id} {...item}/>
+        }
       })}
     </div>
     {isMutating && <Loader/>}
-    {hasMore && twitterData?.length>0 && <div className="w-full h-[48px] text-[16px] font-bold rounded-[6px] text-black bg-[#C8FF00] flex items-center justify-center mt-[4px] cursor-pointer" onClick={getTwitterList}>Learn more</div>}
+    {hasMore && twitterData?.length>0 && <div className="w-full h-[48px] text-[16px] font-bold rounded-[6px] text-black bg-[#C8FF00] flex items-center justify-center mt-[4px] cursor-pointer mb-[16px]" onClick={getTwitterList}>Learn more</div>}
   </div>
 }
 
-function TwitterItem(props: TwitterFeedInfo) {
+function TwitterItem(props: TwitterFeedInfo & {isQuote?:boolean}) {
+  const actionList = [{
+    key: 'relpy',
+    icon: <CommentIcon/>,
+    value: props?.reply_count
+  }, {
+    key: 'share',
+    icon: <ShareIcon/>,
+    value: ((props?.quote_count ?? 0) + (props?.retweet_count ?? 0))
+  }, {
+    key: 'like',
+    icon: <LikeIcon/>,
+    value: props?.favorite_count
+  }]
   return <div className="flex flex-col gap-[10px] rounded-[6px] p-[20px] bg-[#F9F9F9]">
     <div className="flex flex-row items-center justify-between">
       <div className="flex flex-row gap-[8px] items-center">
@@ -221,7 +240,7 @@ function TwitterItem(props: TwitterFeedInfo) {
         <div className="flex flex-row items-center text-[16px] font-bold text-black gap-[6px]">
           {props?.user_name}{props?.official ? <span><TwitterVIcon/></span> : ''}
         </div>
-        <div className="text-[12px] text-[#666]">@{props?.name} · Followers: {props?.followers_count} · {timeAgo(props?.create_at)}</div>
+        <div className="text-[12px] text-[#666]">@{props?.name} · Followers: {props?.followers_count} · {timeAgo(props?.create_at, true, true)}</div>
       </div>
     </div>
     <div className="text-[16px] text-black pb-[6px]">{props?.text}</div>
@@ -229,19 +248,51 @@ function TwitterItem(props: TwitterFeedInfo) {
       <img src="https://pbs.twimg.com/media/GdAF7inWsAQ7Coq?format=png&name=900x900" alt="" className="rounded-[10px]"/>
       <img src="https://pbs.twimg.com/media/GdAF7inWsAQ7Coq?format=png&name=900x900" alt="" className="rounded-[10px]"/>
     </div> */}
+    {!props?.isQuote && <div className="flex flex-row items-center gap-[16px]">
+      {actionList?.map((item, index)=>{
+        return <div key={item?.key} className={classNames("flex flex-row items-center gap-[4px]", index===2 ? '': 'flex-1')}>
+          <div>{item?.icon}</div>
+          <div className="text-[14px]">{formatNumber(item?.value)}</div>
+        </div>
+      })}
+    </div>}
+  </div>
+}
+
+function QuoteTwitterItem(props: TwitterFeedInfo) {
+  const actionList = [{
+    key: 'relpy',
+    icon: <CommentIcon/>,
+    value: props?.reply_count
+  }, {
+    key: 'share',
+    icon: <ShareIcon/>,
+    value: ((props?.quote_count ?? 0) + (props?.retweet_count ?? 0))
+  }, {
+    key: 'like',
+    icon: <LikeIcon/>,
+    value: props?.favorite_count
+  }]
+  return <div className="flex flex-col gap-[16px]">
+    <TwitterItem {...props} isQuote />
+    <div className="flex p-[10px] my-[16px] border-1 border-[#DEDEDE]">
+      <TwitterItem {...props} isQuote/>
+    </div>
     <div className="flex flex-row items-center gap-[16px]">
-      <TwitterActionItem icon={<CommentIcon/>} value={props?.reply_count}/>
-      <TwitterActionItem icon={<ShareIcon/>} value={(props?.quote_count + props?.retweet_count)}/>
-      <TwitterActionItem icon={<LikeIcon/>} value={props?.favorite_count}/>
-      {/* <TwitterActionItem icon={<ViewIcon/>} value={0}/>
-      <TwitterActionItem icon={<TrendingIcon/>} value={0}/> */}
+      {actionList?.map((item, index)=>{
+        return <div key={item?.key} className={classNames("flex flex-row items-center gap-[4px]", index===2 ? '': 'flex-1')}>
+          <div>{item?.icon}</div>
+          <div className="text-[14px]">{formatNumber(item?.value)}</div>
+        </div>
+      })}
     </div>
   </div>
 }
 
-function TwitterActionItem({value, icon} : {value: number, icon: React.JSX.Element}) {
-  return <div className="flex flex-1 flex-row items-center gap-[4px]">
-    <div>{icon}</div>
-    <div className="text-[14px]">{formatNumber(value)}</div>
+function ReplyTwitterItem(props: TwitterFeedInfo) {
+  return <div className="flex flex-col">
+    <TwitterItem {...props}/>
+    <TwitterItem {...props}/>
+    <div className="flex p-[10px] my-[16px] border-1 border-[#DEDEDE]"></div>
   </div>
 }
