@@ -37,7 +37,7 @@ export default function SideContent() {
   }, [selectedToken])
 
   return (
-    <aside className="flex flex-none flex-col gap-[16px] w-[452px] rounded-[20px] shadow-md">
+    <aside className="flex flex-none flex-col gap-[16px] w-[452px] rounded-[20px] shadow-md overflow-auto" style={{height: `calc(100vh - 250px)`}}>
       <div className="flex flex-col gap-[8px] bg-[#C8FF00] rounded-[20px] px-[16px] py-[12px]">
         <h4 className="text-[20px] font-semibold">AI Summary</h4>
         <p className="text-[16px]">
@@ -116,11 +116,15 @@ function TradeListContent() {
     setHasMore(false)
     if (tokenAddress) {
       getTradeList()
+      const interval = setInterval(() => {
+        getTradeList()
+      }, 300000);
+      return () => clearInterval(interval);
     }
   }, [tokenAddress])
 
   return <div className="w-full flex flex-col relative">
-    <div className={classNames("w-full flex flex-col min-h-[300px]",hasMore && tradeList?.length>0 ? '' : 'mt-[16px]')}>
+    <div className={classNames("w-full flex flex-col min-h-[200px]",hasMore && tradeList?.length>0 ? '' : 'mt-[16px]')}>
       {tradeList?.map(item=>{
         return <SmartMoneyItem key={item?.tx_id} {...item}/>
       })}
@@ -185,6 +189,10 @@ function TwitterListContent() {
     setHasMore(false)
     if (tokenAddress && category) {
       getTwitterList()
+      const interval = setInterval(() => {
+        getTwitterList()
+      }, 300000);
+      return () => clearInterval(interval);
     }
   }, [tokenAddress, category])
 
@@ -194,7 +202,7 @@ function TwitterListContent() {
         return <TabSetItem key={item?.value} name="twitter-sort-tab" value={item?.value} defaultChecked={category===item?.value} icon={<div className={classNames("text-[16px] font-bold text-[#666]", category===item?.value && "text-black")}>{item?.name}</div>} onChange={()=>setCategory(item?.value)}/>
       })}
       </div>
-    <div className={classNames("flex flex-col gap-[16px] min-h-[300px]", hasMore && twitterData?.length>0 ? '' : 'mb-[16px]')}>
+    <div className={classNames("flex flex-col gap-[16px] min-h-[160px]", hasMore && twitterData?.length>0 ? '' : 'mb-[16px]')}>
       {twitterData?.map(item=>{
         if (item?.is_quote) {
           return <QuoteTwitterItem key={item?.id} {...item}/>

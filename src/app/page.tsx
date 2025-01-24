@@ -12,7 +12,7 @@ import { useEffect } from 'react'
 export default function Home() {
   return (
     <GlobalContextProvider>
-      <main>
+      <main className='h-screen overflow-hidden'>
         <Header />
         <Content />
       </main>
@@ -51,7 +51,7 @@ function Content() {
     <div className="flex flex-col lg:w-[1176px] px-[10px] mx-auto gap-[16px]">
       <h2 className="text-[32px] font-semibold text-center py-[16px]">Trending Tokens Powered By AI</h2>
       <TabSet/>
-      <section className="flex flex-row gap-[16px] justify-start items-start">
+      <section className="flex flex-row justify-start items-start">
         <MainContent/>
         {!isMobile && <SideContent />}
       </section>

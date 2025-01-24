@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${sans.className} antialiased pb-[60px]`}
+        className={`${sans.className} antialiased`}
       >
         {children}
       </body>

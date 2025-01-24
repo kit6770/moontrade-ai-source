@@ -35,10 +35,10 @@ export default function MainContent() {
     setTokenData([])
     if (timeType) {
       getTokenList()
-      // const interval = setInterval(() => {
-      //   getTokenList()
-      // }, 10000);
-      // return () => clearInterval(interval);
+      const interval = setInterval(() => {
+        getTokenList()
+      }, 60000);
+      return () => clearInterval(interval);
     }
   }, [timeType])
 
@@ -60,7 +60,7 @@ export default function MainContent() {
   const {trigger: updateSelectedToken } = useSWRMutation<string>('selectedToken')
 
   return (
-    <div className="relative flex flex-auto flex-col gap-[16px] h-full overflow-auto pb-[180px]">
+    <div className="relative flex flex-auto flex-col gap-[16px] h-full overflow-auto pb-[150px] md:pr-[16px]" style={{height: `calc(100vh - 144px)`}}>
       {tokenData?.map((item, index)=>{
         return <div key={item?.id} className='relative' onClick={()=>updateSelectedToken(item?.token_address)}>
           <Item {...item}/>
@@ -229,7 +229,7 @@ function Section3(props: SmartMoneyInfo) {
 const TextDisplay = ({ text }: {text: string}) => {
   const [shown, setShown] = useState(false);
   const [showBtn, setShowBtn] = useState(false);
-  const textRef = React.useRef<any>(null)
+  const textRef = React.useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (textRef.current) {
       const pHeight = textRef.current.offsetHeight;
@@ -244,7 +244,7 @@ const TextDisplay = ({ text }: {text: string}) => {
 
   return (
     <div className="flex flex-row w-full text-[14px] mr-[16px]">
-      <div ref={textRef} style={{ lineHeight: "20px" }} className={classNames('flex-1', shown ? "" : "line-clamp-1")}>
+      <div ref={textRef} style={{ lineHeight: "20px",wordBreak: 'break-all' }} className={classNames('flex-1', shown ? "" : "line-clamp-1")}>
         {text}
       </div>
       {showBtn && (
