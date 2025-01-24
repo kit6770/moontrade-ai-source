@@ -53,7 +53,7 @@ function Content() {
       <TabSet/>
       <section className="flex flex-row justify-start items-start">
         <MainContent/>
-        {!isMobile && <SideContent />}
+        {!isMobile ? <SideContent />: null}
       </section>
     </div>
   )

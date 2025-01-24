@@ -8,8 +8,11 @@ import useSWRMutation from 'swr/mutation'
 import Loader from './loader'
 import { formatAddress, formatNumber, timeAgo } from '@/lib/utils'
 import React from 'react'
+import Link from 'next/link'
+import { getPlatformInfo } from '@/lib/getPlatformInfo'
 
 export default function MainContent() {
+  const isMobile = getPlatformInfo()?.isMobile
   const { data: timeType } = useSWR('timeType', {fallbackData: '5m'})
   const { trigger: tokenListTrigger, isMutating } = useSWRMutation<SmartMoneyInfo[]>(`api:/trending_tokens/rank`)
 
@@ -62,25 +65,33 @@ export default function MainContent() {
   return (
     <div className="relative flex flex-auto flex-col gap-[16px] h-full overflow-auto pb-[150px] md:pr-[16px]" style={{height: `calc(100vh - 144px)`}}>
       {tokenData?.map((item, index)=>{
-        return <div key={item?.id} className='relative' onClick={()=>updateSelectedToken(item?.token_address)}>
-          <Item {...item}/>
-          <div className="absolute top-[-1px] left-[-1px] bg-black text-[#C8FF00] text-[14px] font-medium rounded-tl-[20px] rounded-br-[20px] px-[12px] h-[24px] flex items-center justify-center"># {index+1}</div>
-        </div>
+        if (isMobile) {
+          return <div key={item?.id} className='relative' onClick={()=>updateSelectedToken(item?.token_address)}>
+            <Link href={'/summary'} className='relative'>
+              <Item {...item} index={index}/>
+            </Link>
+          </div>
+        } else {
+          return <div key={item?.id} className='relative' onClick={()=>updateSelectedToken(item?.token_address)}>
+            <Item {...item} index={index}/>
+          </div>
+        }
       })}
       {isMutating && <Loader/>}
     </div>
   )
 }
 
-function Item(props: SmartMoneyInfo) {
+function Item(props: SmartMoneyInfo&{index: number}) {
   const { data: selectedToken } = useSWR('selectedToken')
-  
   return (
     <div className={classNames(
       'relative flex flex-col gap-[16px] rounded-[20px] p-[20px] shadow-[0_4px_12px_0_rgba(0,0,0,0.06)] transition-colors duration-300 cursor-pointer',
       'border-[2px] hover:border-[#C8FF00] hover:bg-[#FBFFEC]',
       selectedToken?.toLowerCase() === props?.token_address?.toLowerCase() ? 'border-[#C8FF00] bg-[#FBFFEC]': 'border-[#F1F1F1] bg-[#FFFFFF]',
-    )}>
+    )}
+    >
+      <div className="absolute top-[-1px] left-[-1px] bg-black text-[#C8FF00] text-[14px] font-medium rounded-tl-[20px] rounded-br-[20px] px-[12px] h-[24px] flex items-center justify-center"># {props?.index+1}</div>
       <Section1 {...props}/>
       <Section2 {...props}/>
       <Section3 {...props}/>

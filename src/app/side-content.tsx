@@ -1,5 +1,5 @@
 import { BASE_PATH, TWITTER_TYPE_LIST } from "@/lib/constants";
-import { CommentIcon, LikeIcon, LogoIcon, ShareIcon, SmartMoneyIcon, TwitterIcon, TwitterVIcon } from "@/lib/icons";
+import { BackIcon, CommentIcon, LikeIcon, LogoIcon, ShareIcon, SmartMoneyIcon, TwitterIcon, TwitterVIcon } from "@/lib/icons";
 import { formatAddress, formatNumber, timeAgo } from "@/lib/utils";
 import { SummaryInfo, TradeInfo, TwitterFeedInfo } from "@/types";
 import classNames from "classnames";
@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import useSWRMutation from "swr/mutation";
 import Loader from "./loader";
 import useSWR from "swr";
+import { getPlatformInfo } from "@/lib/getPlatformInfo";
 
 const DATA_TYPE_LIST = [{
   key: 'smartmoney',
@@ -19,6 +20,8 @@ const DATA_TYPE_LIST = [{
 }]
 
 export default function SideContent() {
+  const isMobile = getPlatformInfo()?.isMobile
+
   const { data: selectedToken } = useSWR('selectedToken')
   
   const [dataType, setDataType] = useState<string>('smartmoney')
@@ -37,9 +40,16 @@ export default function SideContent() {
   }, [selectedToken])
 
   return (
-    <aside className="flex flex-none flex-col gap-[16px] w-[452px] rounded-[20px] shadow-md overflow-auto" style={{height: `calc(100vh - 250px)`}}>
+    <aside className="flex flex-none flex-col gap-[16px] md:w-[452px] rounded-[20px] shadow-md overflow-auto" style={{height: isMobile ? 'calc(100vh - 90px)' : `calc(100vh - 250px)`}}>
       <div className="flex flex-col gap-[8px] bg-[#C8FF00] rounded-[20px] px-[16px] py-[12px]">
-        <h4 className="text-[20px] font-semibold">AI Summary</h4>
+        <div className="flex flex-row items-center gap-[10px]">
+          {isMobile && <button className="text-black rounded-full w-[24px] h-[24px] flex items-center justify-center cursor-pointer" onClick={()=>{
+            window.history.back()
+          }}>
+            <BackIcon className='w-[24px] h-[24px]'/>
+          </button>}
+          <h4 className="text-[20px] font-semibold">AI Summary</h4>
+        </div>
         <p className="text-[16px]">
           {summaryData?.content}
         </p>
