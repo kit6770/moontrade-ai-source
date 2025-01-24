@@ -1,7 +1,7 @@
 import { BASE_PATH, TWITTER_TYPE_LIST } from "@/lib/constants";
 import { BackIcon, CommentIcon, LikeIcon, LogoIcon, ShareIcon, SmartMoneyIcon, TwitterIcon, TwitterVIcon } from "@/lib/icons";
 import { formatAddress, formatNumber, timeAgo } from "@/lib/utils";
-import { SummaryInfo, TradeInfo, TwitterFeedInfo } from "@/types";
+import { FeedInfo, SummaryInfo, TradeInfo, TwitterFeedInfo } from "@/types";
 import classNames from "classnames";
 import React, { useEffect, useState } from "react";
 import useSWRMutation from "swr/mutation";
@@ -214,10 +214,16 @@ function TwitterListContent() {
       </div>
     <div className={classNames("flex flex-col gap-[16px] min-h-[160px]", hasMore && twitterData?.length>0 ? '' : 'mb-[16px]')}>
       {twitterData?.map(item=>{
-        if (item?.is_quote) {
-          return <QuoteTwitterItem key={item?.id} {...item}/>
-        } else if (item?.is_reply) {
-          return <ReplyTwitterItem key={item?.id} {...item}/>
+        if (item?.related_tweets && item?.related_tweets?.length > 0) {
+          if (item?.related_tweets?.length === 1) {
+            if (item?.related_tweets?.[0]?.type === 'replied_to') {
+              return <ReplyTwitterItem key={item?.id} {...item}/>
+            } else {
+              return <QuoteTwitterItem key={item?.id} {...item}/>
+            }
+          } else {
+            return <QuoteTwitterItem key={item?.id} {...item}/>
+          }
         } else {
           return <TwitterItem key={item?.id} {...item}/>
         }
@@ -228,7 +234,7 @@ function TwitterListContent() {
   </div>
 }
 
-function TwitterItem(props: TwitterFeedInfo & {isQuote?:boolean}) {
+function TwitterItem(props: FeedInfo & {isQuote?:boolean, isReply?:boolean}) {
   const actionList = [{
     key: 'relpy',
     icon: <CommentIcon/>,
@@ -242,18 +248,18 @@ function TwitterItem(props: TwitterFeedInfo & {isQuote?:boolean}) {
     icon: <LikeIcon/>,
     value: props?.favorite_count
   }]
-  return <div className="flex flex-col gap-[10px] rounded-[6px] p-[20px] bg-[#F9F9F9]">
-    <div className="flex flex-row items-center justify-between">
+  return <div className={classNames("flex flex-col gap-[10px] rounded-[6px] bg-[#F9F9F9]", (props?.isQuote || props?.isReply) ? '' : 'p-[20px]')}>
+    {!(props?.isQuote || props?.isReply) && <div className="flex flex-row items-center justify-between">
       <div className="flex flex-row gap-[8px] items-center">
         <div className="w-[16px] h-[16px] rounded-full bg-black flex items-center justify-center"><LogoIcon/></div>
         <div className="text-[16px] font-bold">PeerX</div>
       </div>
       <div className="cursor-pointer" onClick={()=>{window.open(props?.text_url, '_blank')}}><TwitterIcon/></div>
-    </div>
+    </div>}
     <div className="flex flex-row items-center gap-[10px]">
-      <div className="w-[48px] h-[48px] rounded-full bg-black">
-        <img src={props?.profile_image_url} width={48} height={48} alt=""/>
-      </div>
+      {!props?.isReply && <div className="w-[48px] h-[48px] rounded-full bg-black">
+        <img src={props?.profile_image_url} width={48} height={48} alt="" className="w-[48px] h-[48px] rounded-full"/>
+      </div>}
       <div className="flex flex-col">
         <div className="flex flex-row items-center text-[16px] font-bold text-black gap-[6px]">
           {props?.user_name}{props?.official ? <span><TwitterVIcon/></span> : ''}
@@ -261,7 +267,7 @@ function TwitterItem(props: TwitterFeedInfo & {isQuote?:boolean}) {
         <div className="text-[12px] text-[#666]">@{props?.name} · Followers: {props?.followers_count} · {timeAgo(props?.create_at, true, true)}</div>
       </div>
     </div>
-    <div className="text-[16px] text-black pb-[6px]">{props?.text}</div>
+    <div className="text-[16px] text-black pb-[6px] break-all">{props?.text}</div>
     {/* <div className="grid grid-cols-2 gap-[8px] pb-[6px]">
       <img src="https://pbs.twimg.com/media/GdAF7inWsAQ7Coq?format=png&name=900x900" alt="" className="rounded-[10px]"/>
       <img src="https://pbs.twimg.com/media/GdAF7inWsAQ7Coq?format=png&name=900x900" alt="" className="rounded-[10px]"/>
@@ -291,10 +297,17 @@ function QuoteTwitterItem(props: TwitterFeedInfo) {
     icon: <LikeIcon/>,
     value: props?.favorite_count
   }]
-  return <div className="flex flex-col gap-[16px]">
+  return <div className="flex flex-col p-[20px] gap-[10px] bg-[#F9F9F9]">
+    <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-row gap-[8px] items-center">
+        <div className="w-[16px] h-[16px] rounded-full bg-black flex items-center justify-center"><LogoIcon/></div>
+        <div className="text-[16px] font-bold">PeerX</div>
+      </div>
+      <div className="cursor-pointer" onClick={()=>{window.open(props?.text_url, '_blank')}}><TwitterIcon/></div>
+    </div>
     <TwitterItem {...props} isQuote />
-    <div className="flex p-[10px] my-[16px] border-1 border-[#DEDEDE]">
-      <TwitterItem {...props} isQuote/>
+    <div className="flex mb-[10px] p-[10px] rounded-[6px] border-[1px] border-[#DEDEDE]">
+      <TwitterItem {...props?.related_tweets?.[0]} isQuote/>
     </div>
     <div className="flex flex-row items-center gap-[16px]">
       {actionList?.map((item, index)=>{
@@ -307,10 +320,26 @@ function QuoteTwitterItem(props: TwitterFeedInfo) {
   </div>
 }
 
-function ReplyTwitterItem(props: TwitterFeedInfo) {
-  return <div className="flex flex-col">
-    <TwitterItem {...props}/>
-    <TwitterItem {...props}/>
-    <div className="flex p-[10px] my-[16px] border-1 border-[#DEDEDE]"></div>
+function ReplyTwitterItem(props: TwitterFeedInfo & {hasReply?: boolean}) {
+  return <div className="flex flex-col p-[20px] gap-[10px] bg-[#F9F9F9]">
+    {!props?.hasReply && <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-row gap-[8px] items-center">
+        <div className="w-[16px] h-[16px] rounded-full bg-black flex items-center justify-center"><LogoIcon/></div>
+        <div className="text-[16px] font-bold">PeerX -----</div>
+      </div>
+      <div className="cursor-pointer" onClick={()=>{window.open(props?.text_url, '_blank')}}><TwitterIcon/></div>
+    </div>}
+    <div className="relative flex flex-row items-start justify-between gap-[10px]">
+      <img src={props?.profile_image_url} width={48} height={48} alt="" className="w-[48px] h-[48px] rounded-full z-[2]"/>
+      <div className="flex-1">
+        <TwitterItem {...props} isReply/>
+      </div>
+      <div className="absolute w-[2px] bg-[#DEDEDE] h-full left-[24px] top-[24px] z-[1]"/>
+    </div>
+    <div className="flex flex-row items-start justify-between gap-[10px]">
+      <img src={props?.related_tweets?.[0]?.profile_image_url} width={48} height={48} alt="" className="w-[48px] h-[48px] rounded-full z-[2]"/>
+      <TwitterItem {...props?.related_tweets?.[0]} isReply/>
+    </div>
+    
   </div>
 }

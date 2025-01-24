@@ -23,26 +23,30 @@ export type SmartMoneyInfo = {
   
 }
 
-export type TwitterFeedInfo = {
-  author_id: string;
-  create_at: string;
-  favorite_count: number;
-  followers_count: number;
-  id: number;
-  official: number;
-  profile_image_url: string;
-  quote_count: number;
-  reply_count: number;
-  retweet_count: number;
-  status: number;
-  text: string;
-  text_url: string;
-  token_address: string;
-  user_name: string;
-  name: string;
+export interface FeedInfo {
+  author_id?: string;
+  create_at?: string;
+  favorite_count?: number;
+  followers_count?: number;
+  id?: number;
+  official?: number;
+  profile_image_url?: string;
+  quote_count?: number;
+  reply_count?: number;
+  retweet_count?: number;
+  status?: number;
+  text?: string;
+  text_url?: string;
+  token_address?: string;
+  user_name?: string;
+  name?: string;
+  tweet_id?: string
+  referenced_tweet_id?: string;
+  type?: string; // replied_to quoted
+}
 
-  is_quote?: boolean
-  is_reply?: boolean
+export interface TwitterFeedInfo extends FeedInfo {
+  related_tweets?: FeedInfo[]
 }
 
 export type TradeInfo = {
