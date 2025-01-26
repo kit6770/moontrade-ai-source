@@ -40,7 +40,7 @@ export default function SideContent() {
   }, [selectedToken])
 
   return (
-    <aside className="flex flex-none flex-col gap-[16px] md:w-[452px] rounded-[20px] shadow-md overflow-hidden hover:overflow-auto" style={{height: isMobile ? 'calc(100vh - 90px)' : `calc(100vh - 250px)`}}>
+    <aside className="flex flex-none flex-col gap-[16px] md:w-[452px] rounded-[20px] shadow-md overflow-hidden hover:overflow-auto" style={{height: isMobile ? 'h-full' : `calc(100vh - 250px)`}}>
       <div className="flex flex-col gap-[8px] bg-[#C8FF00] rounded-[20px] px-[16px] py-[12px]">
         <div className="flex flex-row items-center gap-[10px]">
           {isMobile && <button className="text-black rounded-full w-[24px] h-[24px] flex items-center justify-center cursor-pointer" onClick={()=>{
@@ -88,7 +88,7 @@ export default function SideContent() {
               <CloseIcon/>
             </button>
           </div>
-          <img id="modal-image" src="" alt="Big Image" className="w-full h-auto rounded-lg shadow-lg"/>
+          <img id="modal-image" src={undefined} alt="Big Image" className="w-full h-auto rounded-lg shadow-lg"/>
         </div>
       </div>
     </aside>
@@ -166,7 +166,7 @@ function TradeItem(props: TradeInfo) {
       <div className="text-[16px] font-semibold text-[#666666]">({props?.wallet_tag.address?.slice(0, 3)})</div>
     </div>
     <div className="flex flex-row gap-[4px] items-center justify-between text-[14px] font-semibold ">
-      <div className="text-[#666666]">
+      <div className="text-[#666666] flex-1">
         Bought <span className="text-black font-medium">{props?.token_to_volume?.toLocaleString()}</span> for <span className="text-black font-medium">{props?.token_from_volume?.toLocaleString()}</span> {props?.price_token} (${props?.price?.toLocaleString()})
       </div>
       <div className="text-[#999]">{timeAgo(props?.data_time, false, true)}</div>
@@ -218,11 +218,11 @@ function TwitterListContent() {
   }, [tokenAddress, category])
 
   return <div className="w-full flex flex-col gap-[16px] relative">
-    <div className="flex flex-row items-center gap-[16px]">
+    <div className="flex flex-row items-center gap-[16px] overflow-auto md:overflow-hidden">
       {TWITTER_TYPE_LIST?.map(item=>{
         return <TabSetItem key={item?.value} name="twitter-sort-tab" value={item?.value} defaultChecked={category===item?.value} icon={<div className={classNames("text-[16px] font-bold text-[#666]", category===item?.value && "text-black")}>{item?.name}</div>} onChange={()=>setCategory(item?.value)}/>
       })}
-      </div>
+    </div>
     <div className={classNames("flex flex-col gap-[16px] min-h-[160px]", hasMore && twitterData?.length>0 ? '' : 'mb-[16px]')}>
       {twitterData?.map(item=>{
         if (item?.related_tweets && item?.related_tweets?.length > 0) {

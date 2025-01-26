@@ -63,7 +63,7 @@ export default function MainContent() {
   const {trigger: updateSelectedToken } = useSWRMutation<string>('selectedToken')
 
   return (
-    <div className="relative flex flex-auto flex-col gap-[16px] h-full overflow-hidden hover:overflow-auto pb-[150px] md:pr-[16px]" style={{height: `calc(100vh - 144px)`}}>
+    <div className={classNames("relative flex flex-auto flex-col gap-[16px] pb-[150px] md:pr-[16px]", isMobile ? 'h-full overflow-auto':'overflow-hidden hover:overflow-auto')} style={{height: `calc(100vh - 144px)`}}>
       {tokenData?.map((item, index)=>{
         if (isMobile) {
           return <div key={item?.id} className='relative' onClick={()=>updateSelectedToken(item?.token_address)}>
@@ -115,7 +115,7 @@ function Section1(props: SmartMoneyInfo) {
         </div>
         <div className="text-[12px] font-semibold text-[#666] flex flex-row gap-[6px] justify-start flex-wrap">
           <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px] gap-[4px]">
-            <FromVIcon/>
+            {<FromVIcon/>}
             <div>From: {props?.publisher}</div>
             <div className='relative w-[23px]'>
               <div className='w-[18px] h-[18px] rounded-full bg-[#666]'></div>

@@ -90,7 +90,7 @@ function TabSet() {
     if (timeType === null) {
       updateTimeType('5m')
     }
-  }, [])
+  }, [timeType])
   
   return (
     <div className="flex flex-row justify-between gap-[19px] h-[48px] leading-[48px]">
