@@ -111,12 +111,12 @@ function Section1(props: SmartMoneyInfo) {
       <div className="flex flex-col gap-[8px]">
         <div className="text-[18px] flex flex-row gap-[4px] items-center">
           <div className="text-[24px] font-bold">{props?.symbol}</div>
-          <div className="text-[12px] text-black">{`Ultra Sigma · ${formatAddress(props?.token_address)}`}</div>
+          <div className="text-[12px] text-black">{`${props?.name} · ${formatAddress(props?.token_address)}`}</div>
         </div>
         <div className="text-[12px] font-semibold text-[#666] flex flex-row gap-[6px] justify-start flex-wrap">
           <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px] gap-[4px]">
             <FromVIcon/>
-            <div>From: Trump</div>
+            <div>From: {props?.publisher}</div>
             <div className='relative w-[23px]'>
               <div className='w-[18px] h-[18px] rounded-full bg-[#666]'></div>
               <div className='absolute bottom-0 left-[14px] w-[10px] h-[10px] rounded-full flex items-center justify-center bg-black overflow-hidden'>

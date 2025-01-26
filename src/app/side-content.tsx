@@ -1,5 +1,5 @@
 import { BASE_PATH, TWITTER_TYPE_LIST } from "@/lib/constants";
-import { BackIcon, CommentIcon, LikeIcon, LogoIcon, ShareIcon, SmartMoneyIcon, TwitterIcon, TwitterVIcon } from "@/lib/icons";
+import { BackIcon, CloseIcon, CommentIcon, LikeIcon, LogoIcon, ShareIcon, SmartMoneyIcon, TwitterIcon, TwitterVIcon } from "@/lib/icons";
 import { formatAddress, formatNumber, timeAgo } from "@/lib/utils";
 import { FeedInfo, SummaryInfo, TradeInfo, TwitterFeedInfo } from "@/types";
 import classNames from "classnames";
@@ -80,6 +80,17 @@ export default function SideContent() {
         {dataType==='smartmoney' && <TradeListContent/>}
         {dataType==='twitter' && <TwitterListContent/>}
       </div>
+
+      <div id="modal" className="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center">
+        <div className="max-w-3xl mx-auto bg-transparent rounded-lg flex flex-col gap-[16px]">
+          <div className="flex justify-end mt-[50px]">
+            <button className=" text-white bg-gray-800 rounded-full w-[24px] h-[24px] flex items-center justify-center hover:opacity-50" onClick={closeModal}>
+              <CloseIcon/>
+            </button>
+          </div>
+          <img id="modal-image" src="" alt="Big Image" className="w-full h-auto rounded-lg shadow-lg"/>
+        </div>
+      </div>
     </aside>
   );
 }
@@ -136,7 +147,7 @@ function TradeListContent() {
   return <div className="w-full flex flex-col relative">
     <div className={classNames("w-full flex flex-col min-h-[200px]",hasMore && tradeList?.length>0 ? '' : 'mt-[16px]')}>
       {tradeList?.map(item=>{
-        return <SmartMoneyItem key={item?.tx_id} {...item}/>
+        return <TradeItem key={item?.tx_id} {...item}/>
       })}
     </div>
     {isMutating && <Loader/>}
@@ -144,7 +155,7 @@ function TradeListContent() {
   </div>
 }
 
-function SmartMoneyItem(props: TradeInfo) {
+function TradeItem(props: TradeInfo) {
   return <div className="flex flex-col gap-[10px] py-[10px] border-b-[1px] border-[#F3F3F3]">
     <div className="flex flex-row gap-[4px] items-center">
       <img src={BASE_PATH + "/image/solana.png"} alt="" width={24} height={24} className="rounded-full"/>
@@ -156,7 +167,7 @@ function SmartMoneyItem(props: TradeInfo) {
     </div>
     <div className="flex flex-row gap-[4px] items-center justify-between text-[14px] font-semibold ">
       <div className="text-[#666666]">
-        Bought <span className="text-black font-medium">{props?.token_to_volume?.toLocaleString()}</span> for <span className="text-black font-medium">{props?.token_from_volume?.toLocaleString()}</span> {props?.price_token} ($)
+        Bought <span className="text-black font-medium">{props?.token_to_volume?.toLocaleString()}</span> for <span className="text-black font-medium">{props?.token_from_volume?.toLocaleString()}</span> {props?.price_token} (${props?.price?.toLocaleString()})
       </div>
       <div className="text-[#999]">{timeAgo(props?.data_time, false, true)}</div>
     </div>
@@ -272,7 +283,7 @@ function TwitterItem(props: FeedInfo & {isQuote?:boolean, isReply?:boolean}) {
     <div className="grid grid-cols-2 gap-[8px] pb-[6px]">
       {props?.medias?.map((item, index)=>{
         const isLast = mediaLength%2 === 1 && index === mediaLength - 1
-        return <img key={item?.media_key} src={item?.url} alt="" className={classNames("rounded-[10px]", isLast&&'col-span-2')}/>
+        return <img key={item?.media_key} src={item?.url} alt="" className={classNames("rounded-[10px] cursor-pointer", isLast&&'col-span-2')}  onClick={()=>openModal(item?.url)}/>
         })
       }
     </div>
@@ -347,4 +358,18 @@ function ReplyTwitterItem(props: TwitterFeedInfo & {hasReply?: boolean}) {
       </div>
     </div>
   </div>
+}
+
+function openModal(imageUrl: string) {
+  if (!imageUrl || imageUrl==='') return;
+  const modal = document.getElementById('modal');
+  const modalImage = document.getElementById('modal-image') as HTMLImageElement;
+  modal?.classList.remove('hidden');
+  modalImage!.src = imageUrl;
+}
+
+// Function to close the modal
+function closeModal() {
+  const modal = document.getElementById('modal');
+  modal?.classList.add('hidden');
 }

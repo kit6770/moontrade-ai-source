@@ -62,7 +62,7 @@ export type TradeInfo = {
   fee_token: string;
   market_id: string;
   pool_address: string;
-  price: string;
+  price?: string;
   price_token: string;
   token_from_address: string;
   token_from_volume: string;
@@ -72,7 +72,7 @@ export type TradeInfo = {
   tx_id: string;
   wallet_tag: {
     address: string
-  }
+  };
 }
 
 export type SummaryInfo = {
