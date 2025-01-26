@@ -13,7 +13,7 @@ import { getPlatformInfo } from '@/lib/getPlatformInfo'
 
 export default function MainContent() {
   const isMobile = getPlatformInfo()?.isMobile
-  const { data: timeType } = useSWR('timeType', {fallbackData: '5m'})
+  const { data: timeType } = useSWR('timeType')
   const { trigger: tokenListTrigger, isMutating } = useSWRMutation<SmartMoneyInfo[]>(`api:/trending_tokens/rank`)
 
   const [tokenData, setTokenData] = useState<SmartMoneyInfo[]>([])
@@ -63,7 +63,7 @@ export default function MainContent() {
   const {trigger: updateSelectedToken } = useSWRMutation<string>('selectedToken')
 
   return (
-    <div className="relative flex flex-auto flex-col gap-[16px] h-full overflow-auto pb-[150px] md:pr-[16px]" style={{height: `calc(100vh - 144px)`}}>
+    <div className="relative flex flex-auto flex-col gap-[16px] h-full overflow-hidden hover:overflow-auto pb-[150px] md:pr-[16px]" style={{height: `calc(100vh - 144px)`}}>
       {tokenData?.map((item, index)=>{
         if (isMobile) {
           return <div key={item?.id} className='relative' onClick={()=>updateSelectedToken(item?.token_address)}>

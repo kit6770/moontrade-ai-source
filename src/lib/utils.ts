@@ -22,14 +22,14 @@ export function timeAgo(time?: string | Date, isLong?: boolean, isAgo?: boolean)
   const days = Math.floor(diffInSeconds / 86400);
 
   if (minutes < 60) {
-    return `${minutes} ${isLong? `min${minutes > 1 ? 's' : ''}` : 'm'} ${isAgo ? 'ago' : ''}`;
+    return `${minutes}${isLong? ` min${minutes > 1 ? 's' : ''}` : 'm'} ${isAgo ? 'ago' : ''}`;
   } else if (hours < 24) {
-    return `${hours} ${isLong ? `hour${hours > 1 ? 's' : ''}` : 'h'} ${isAgo ? 'ago' : ''}`;
+    return `${hours}${isLong ? ` hour${hours > 1 ? 's' : ''}` : 'h'} ${isAgo ? 'ago' : ''}`;
   } else if (days < 30) {
-    return `${days} ${isLong ? `day${days > 1 ? 's' : ''}` : 'd'} ${isAgo ? 'ago' : ''}`;
+    return `${days}${isLong ? ` day${days > 1 ? 's' : ''}` : 'd'} ${isAgo ? 'ago' : ''}`;
   } else {
     const months = Math.floor(days / 30);
-    return `${months} ${isLong ? `month${months > 1 ? 's' : ''}` : '' } ${isAgo ? 'ago' : ''}`;
+    return `${months}${isLong ? ` month${months > 1 ? 's' : ''}` : '' } ${isAgo ? 'ago' : ''}`;
   }
 }
 

@@ -8,6 +8,7 @@ import GlobalContextProvider from './app-context'
 import { getPlatformInfo } from '@/lib/getPlatformInfo'
 import useSWRMutation from 'swr/mutation'
 import { useEffect } from 'react'
+import useSWR from 'swr'
 
 export default function Home() {
   return (
@@ -59,12 +60,8 @@ function Content() {
   )
 }
 
-function TabSetItem({ value, defaultChecked = false }: { value: string, defaultChecked?: boolean }) {
+function TabSetItem({ value, defaultChecked = false }: { value: string, defaultChecked?: boolean}) {
   const {trigger: updateTimeType} = useSWRMutation<string>('timeType')
-
-  useEffect(()=>{
-    updateTimeType('5m')
-  }, [])
 
   return (
     <label className="cursor-pointer flex flex-1 justify-stretch items-center">
@@ -75,6 +72,7 @@ function TabSetItem({ value, defaultChecked = false }: { value: string, defaultC
         classNames(
           'text-center w-full h-full flex items-center justify-center text-[#666666] rounded-[8px] text-[16px] font-semibold transition-all duration-300',
           'peer-checked:text-[#000000] peer-checked:bg-white',
+          defaultChecked && 'text-[#000000] bg-white',
           "hover:bg-white hover:text-[#000000]"
         )
       }>
@@ -85,13 +83,22 @@ function TabSetItem({ value, defaultChecked = false }: { value: string, defaultC
 }
 
 function TabSet() {
+  const { data: timeType } = useSWR('timeType')
+  const {trigger: updateTimeType} = useSWRMutation<string>('timeType')
+
+  useEffect(()=>{
+    if (timeType === null) {
+      updateTimeType('5m')
+    }
+  }, [])
+  
   return (
     <div className="flex flex-row justify-between gap-[19px] h-[48px] leading-[48px]">
       <div className="flex flex-auto flex-row justify-between items-stretch bg-[#F6F6F6] rounded-[12px] p-[4px] gap-[4px]">
-        <TabSetItem value="5m" defaultChecked={true}/>
-        <TabSetItem value="1h"/>
-        <TabSetItem value="6h"/>
-        <TabSetItem value="24h"/>
+        <TabSetItem value="5m" defaultChecked={timeType==='5m'}/>
+        <TabSetItem value="1h" defaultChecked={timeType==='1h'}/>
+        <TabSetItem value="6h" defaultChecked={timeType==='6h'}/>
+        <TabSetItem value="24h" defaultChecked={timeType==='24h'}/>
       </div>
 
       <div className="flex items-center justify-center bg-[#F6F6F6] lg:w-[175px] px-[10px] rounded-[12px] opacity-50">

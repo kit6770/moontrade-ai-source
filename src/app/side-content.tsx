@@ -40,7 +40,7 @@ export default function SideContent() {
   }, [selectedToken])
 
   return (
-    <aside className="flex flex-none flex-col gap-[16px] md:w-[452px] rounded-[20px] shadow-md overflow-auto" style={{height: isMobile ? 'calc(100vh - 90px)' : `calc(100vh - 250px)`}}>
+    <aside className="flex flex-none flex-col gap-[16px] md:w-[452px] rounded-[20px] shadow-md overflow-hidden hover:overflow-auto" style={{height: isMobile ? 'calc(100vh - 90px)' : `calc(100vh - 250px)`}}>
       <div className="flex flex-col gap-[8px] bg-[#C8FF00] rounded-[20px] px-[16px] py-[12px]">
         <div className="flex flex-row items-center gap-[10px]">
           {isMobile && <button className="text-black rounded-full w-[24px] h-[24px] flex items-center justify-center cursor-pointer" onClick={()=>{
@@ -262,9 +262,9 @@ function TwitterItem(props: FeedInfo & {isQuote?:boolean, isReply?:boolean}) {
       </div>}
       <div className="flex flex-col">
         <div className="flex flex-row items-center text-[16px] font-bold text-black gap-[6px]">
-          {props?.user_name}{props?.official ? <span><TwitterVIcon/></span> : ''}
+          {props?.name}{props?.official ? <span><TwitterVIcon/></span> : ''}
         </div>
-        <div className="text-[12px] text-[#666]">@{props?.name} · Followers: {props?.followers_count} · {timeAgo(props?.create_at, true, true)}</div>
+        <div className="text-[12px] text-[#666]">@{props?.user_name} · Followers: {props?.followers_count} · {timeAgo(props?.create_at, true, true)}</div>
       </div>
     </div>
     <div className="text-[16px] text-black pb-[6px] break-all">{props?.text}</div>
@@ -338,8 +338,9 @@ function ReplyTwitterItem(props: TwitterFeedInfo & {hasReply?: boolean}) {
     </div>
     <div className="flex flex-row items-start justify-between gap-[10px]">
       <img src={props?.related_tweets?.[0]?.profile_image_url} width={48} height={48} alt="" className="w-[48px] h-[48px] rounded-full z-[2]"/>
-      <TwitterItem {...props?.related_tweets?.[0]} isReply/>
+      <div className="flex-1">
+        <TwitterItem {...props?.related_tweets?.[0]} isReply/>
+      </div>
     </div>
-    
   </div>
 }
