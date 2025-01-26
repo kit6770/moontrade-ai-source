@@ -329,7 +329,7 @@ function ReplyTwitterItem(props: TwitterFeedInfo & {hasReply?: boolean}) {
     {!props?.hasReply && <div className="flex flex-row items-center justify-between">
       <div className="flex flex-row gap-[8px] items-center">
         <div className="w-[16px] h-[16px] rounded-full bg-black flex items-center justify-center"><LogoIcon/></div>
-        <div className="text-[16px] font-bold">PeerX -----</div>
+        <div className="text-[16px] font-bold">PeerX</div>
       </div>
       <div className="cursor-pointer" onClick={()=>{window.open(props?.text_url, '_blank')}}><TwitterIcon/></div>
     </div>}
