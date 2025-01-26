@@ -70,7 +70,7 @@ export default function SideContent() {
                 setDataType(item?.key)
               }}/>
               {/* tooltip */}
-              <div className="whitespace-nowrap absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-black text-white text-[14px] px-2 py-1 rounded-[6px]">
+              <div className="whitespace-nowrap absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-black text-white text-[14px] ml-[2px] px-[2px] py-[1px] rounded-[6px]">
                 {item?.name}
                 <div className="absolute bottom-[-4px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-t-black border-l-transparent border-r-transparent"></div>
               </div>
@@ -248,6 +248,7 @@ function TwitterItem(props: FeedInfo & {isQuote?:boolean, isReply?:boolean}) {
     icon: <LikeIcon/>,
     value: props?.favorite_count
   }]
+  const mediaLength = (props?.medias || [])?.length
   return <div className={classNames("flex flex-col gap-[10px] rounded-[6px] bg-[#F9F9F9]", (props?.isQuote || props?.isReply) ? '' : 'p-[20px]')}>
     {!(props?.isQuote || props?.isReply) && <div className="flex flex-row items-center justify-between">
       <div className="flex flex-row gap-[8px] items-center">
@@ -264,14 +265,17 @@ function TwitterItem(props: FeedInfo & {isQuote?:boolean, isReply?:boolean}) {
         <div className="flex flex-row items-center text-[16px] font-bold text-black gap-[6px]">
           {props?.name}{props?.official ? <span><TwitterVIcon/></span> : ''}
         </div>
-        <div className="text-[12px] text-[#666]">@{props?.user_name} · Followers: {props?.followers_count} · {timeAgo(props?.create_at, true, true)}</div>
+        <div className="text-[12px] text-[#666]">@{props?.user_name} · Followers: {formatNumber(props?.followers_count)} · {timeAgo(props?.create_at, true, true)}</div>
       </div>
     </div>
-    <div className="text-[16px] text-black pb-[6px] break-all">{props?.text}</div>
-    {/* <div className="grid grid-cols-2 gap-[8px] pb-[6px]">
-      <img src="https://pbs.twimg.com/media/GdAF7inWsAQ7Coq?format=png&name=900x900" alt="" className="rounded-[10px]"/>
-      <img src="https://pbs.twimg.com/media/GdAF7inWsAQ7Coq?format=png&name=900x900" alt="" className="rounded-[10px]"/>
-    </div> */}
+    <div className="text-[16px] text-black pb-[6px] break-all whitespace-pre-wrap">{props?.text}</div>
+    <div className="grid grid-cols-2 gap-[8px] pb-[6px]">
+      {props?.medias?.map((item, index)=>{
+        const isLast = mediaLength%2 === 1 && index === mediaLength - 1
+        return <img key={item?.media_key} src={item?.url} alt="" className={classNames("rounded-[10px]", isLast&&'col-span-2')}/>
+        })
+      }
+    </div>
     {!props?.isQuote && <div className="flex flex-row items-center gap-[16px]">
       {actionList?.map((item, index)=>{
         return <div key={item?.key} className={classNames("flex flex-row items-center gap-[4px]", index===2 ? '': 'flex-1')}>

@@ -215,7 +215,7 @@ function Section3(props: SmartMoneyInfo) {
               <LogoIcon className='scale-[1.5]'/>
             </div>
             {/* tooltip */}
-            <div className="whitespace-nowrap absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-black text-white text-[14px] px-2 py-1 rounded-[6px]">
+            <div className="whitespace-nowrap absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-black text-white text-[14px] px-[2px] py-[1px] rounded-[6px]">
               Coming soon...
               <div className="absolute bottom-[-4px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-t-black border-l-transparent border-r-transparent"></div>
             </div>
@@ -226,7 +226,7 @@ function Section3(props: SmartMoneyInfo) {
           <div className="bg-[#ECECEC] rounded-[6px] p-[4px] w-[30px] h-[30px]">
             <img src={BASE_PATH+"/image/logo_1.png"} width={22} height={22} alt=''/>
             {/* tooltip */}
-            <div className="whitespace-nowrap absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-black text-white text-[14px] px-2 py-1 rounded-[6px]">
+            <div className="whitespace-nowrap absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-black text-white text-[14px] px-[2px] py-[1px] rounded-[6px]">
               Coming soon...
               <div className="absolute bottom-[-4px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-t-black border-l-transparent border-r-transparent"></div>
             </div>

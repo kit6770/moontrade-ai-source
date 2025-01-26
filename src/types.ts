@@ -43,6 +43,10 @@ export interface FeedInfo {
   tweet_id?: string
   referenced_tweet_id?: string;
   type?: string; // replied_to quoted
+  medias?: {
+    media_key?: string;
+    url: string;
+  }[]
 }
 
 export interface TwitterFeedInfo extends FeedInfo {
