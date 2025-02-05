@@ -20,7 +20,10 @@ export type SmartMoneyInfo = {
   launch_plat_name?: string;
   publish_time?: string;
   description?: string;
-  
+  famous_twitter_image?: string;
+  famous_twitter_name?: string;
+  famous_twitter_uid?: string;
+  famous_confirmed?: boolean;
 }
 
 export interface FeedInfo {

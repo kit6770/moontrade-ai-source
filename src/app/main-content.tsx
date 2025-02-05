@@ -14,6 +14,7 @@ import { getPlatformInfo } from '@/lib/getPlatformInfo'
 export default function MainContent() {
   const isMobile = getPlatformInfo()?.isMobile
   const { data: timeType } = useSWR('timeType')
+  const { data: tokenAddress } = useSWR('selectedToken')
   const { trigger: tokenListTrigger, isMutating } = useSWRMutation<SmartMoneyInfo[]>(`api:/trending_tokens/rank`)
 
   const [tokenData, setTokenData] = useState<SmartMoneyInfo[]>([])
@@ -29,7 +30,9 @@ export default function MainContent() {
     }).then((list)=>{
       if (list && list.length > 0) {
         setTokenData(list)
-        updateSelectedToken(list[0]?.token_address)
+        if (tokenAddress === null) {
+          updateSelectedToken(list[0]?.token_address)
+        }
       }
     })
   }
@@ -114,22 +117,26 @@ function Section1(props: SmartMoneyInfo) {
           <div className="text-[12px] text-black">{`${props?.name} · ${formatAddress(props?.token_address)}`}</div>
         </div>
         <div className="text-[12px] font-semibold text-[#666] flex flex-row gap-[6px] justify-start flex-wrap">
-          <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px] gap-[4px]">
-            {<FromVIcon/>}
-            <div>From: {props?.publisher}</div>
-            <div className='relative w-[23px]'>
-              <div className='w-[18px] h-[18px] rounded-full bg-[#666]'></div>
-              <div className='absolute bottom-0 left-[14px] w-[10px] h-[10px] rounded-full flex items-center justify-center bg-black overflow-hidden'>
-                <TwitterWhiteIcon/>
+          {(props?.famous_confirmed || props?.famous_twitter_name) && <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px] gap-[4px]">
+            {props?.famous_confirmed && <FromVIcon/>}
+            {props?.famous_twitter_name && props?.famous_twitter_name !=='' && <div>From: {props?.famous_twitter_name}</div>}
+            {props?.famous_twitter_image && props?.famous_twitter_image !== '' && <div className='relative w-[23px]'>
+              <div className='w-[18px] h-[18px] rounded-full bg-[#666]'>
+                <img src={props?.famous_twitter_image} alt='' className='w-[18px] h-[18px] rounded-full'/>
               </div>
-            </div>
-          </div>
+              <div className='absolute bottom-0 left-[14px] w-[10px] h-[10px] rounded-full flex items-center justify-center bg-black overflow-hidden'>
+                <TwitterWhiteIcon />
+              </div>
+            </div>}
+          </div>}
           <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px] gap-[4px]">
             <CreateIcon/>{timeAgo(props?.publish_time)}
           </div>
-          {props?.launch_plat_name && props?.launch_plat_name !== '' && <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
-            <img src={BASE_PATH + "/image/pump.png"} width={16} height={16} alt='' />
-          </div>}
+          <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
+            <img src={BASE_PATH + "/image/pump.png"} width={16} height={16} alt='' onClick={()=>{
+                window.open(`https://pump.fun/coin/${props?.token_address}`, '_blank')
+              }}/>
+          </div>
           {props?.twitter_link && props?.twitter_link !== '' && <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
             <TwitterIcon 
               color={'#666666'}

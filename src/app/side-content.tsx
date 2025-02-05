@@ -177,6 +177,7 @@ function TradeItem(props: TradeInfo) {
 function TwitterListContent() {
   const { data: tokenAddress } = useSWR('selectedToken')
   const { trigger: twitterTrigger, isMutating } = useSWRMutation<TwitterFeedInfo[]>(`api:/trending_tokens/twitter_tweets`)
+  let interval: NodeJS.Timeout;
 
   const [pageNo, setPageNo] = useState<number>(1)
   const [category, setCategory] = useState<string>('top')
@@ -189,12 +190,13 @@ function TwitterListContent() {
       body: JSON.stringify({
         token_address: tokenAddress,
         category,
-        offset: pageNo - 1,
+        offset: 0, //pageNo - 1,
         limit: 10
       }),
     }).then((list)=>{
       if (list && list.length > 0) {
-        const newData = twitterData.concat(list || [])
+        // const newData = twitterData.concat(list || [])
+        const newData = list
         setTwitterData(newData)
         setPageNo(pageNo + 1)
         setHasMore(newData?.length < (10*pageNo) ? false : true)
@@ -210,7 +212,7 @@ function TwitterListContent() {
     setHasMore(false)
     if (tokenAddress && category) {
       getTwitterList()
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         getTwitterList()
       }, 300000);
       return () => clearInterval(interval);
@@ -279,7 +281,7 @@ function TwitterItem(props: FeedInfo & {isQuote?:boolean, isReply?:boolean}) {
         <div className="text-[12px] text-[#666]">@{props?.user_name} · Followers: {formatNumber(props?.followers_count)} · {timeAgo(props?.create_at, true, true)}</div>
       </div>
     </div>
-    <div className="text-[16px] text-black pb-[6px] break-all whitespace-pre-wrap">{props?.text}</div>
+    <div className="text-[16px] text-black pb-[6px] break-all whitespace-pre-wrap">{props?.text?.replaceAll('\n\n', '\n')}</div>
     <div className="grid grid-cols-2 gap-[8px] pb-[6px]">
       {props?.medias?.map((item, index)=>{
         const isLast = mediaLength%2 === 1 && index === mediaLength - 1
@@ -345,16 +347,16 @@ function ReplyTwitterItem(props: TwitterFeedInfo & {hasReply?: boolean}) {
       <div className="cursor-pointer" onClick={()=>{window.open(props?.text_url, '_blank')}}><TwitterIcon/></div>
     </div>}
     <div className="relative flex flex-row items-start justify-between gap-[10px]">
-      <img src={props?.profile_image_url} width={48} height={48} alt="" className="w-[48px] h-[48px] rounded-full z-[2]"/>
+      <img src={props?.related_tweets?.[0]?.profile_image_url} width={48} height={48} alt="" className="w-[48px] h-[48px] rounded-full z-[2]"/>
       <div className="flex-1">
-        <TwitterItem {...props} isReply/>
+        <TwitterItem {...props?.related_tweets?.[0]} isReply/>
       </div>
       <div className="absolute w-[2px] bg-[#DEDEDE] h-full left-[24px] top-[24px] z-[1]"/>
     </div>
     <div className="flex flex-row items-start justify-between gap-[10px]">
-      <img src={props?.related_tweets?.[0]?.profile_image_url} width={48} height={48} alt="" className="w-[48px] h-[48px] rounded-full z-[2]"/>
+      <img src={props?.profile_image_url} width={48} height={48} alt="" className="w-[48px] h-[48px] rounded-full z-[2]"/>
       <div className="flex-1">
-        <TwitterItem {...props?.related_tweets?.[0]} isReply/>
+        <TwitterItem {...props} isReply/>
       </div>
     </div>
   </div>
