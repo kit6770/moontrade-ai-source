@@ -30,7 +30,7 @@ export default function MainContent() {
     }).then((list)=>{
       if (list && list.length > 0) {
         setTokenData(list)
-        if (tokenAddress === null) {
+        if (tokenAddress === null || list?.find(o=>o?.token_address?.toLowerCase() === tokenAddress?.toLowerCase()) === undefined) {
           updateSelectedToken(list[0]?.token_address)
         }
       }

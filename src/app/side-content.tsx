@@ -40,55 +40,60 @@ export default function SideContent() {
   }, [selectedToken])
 
   return (
-    <aside className="flex flex-none flex-col gap-[16px] md:w-[452px] rounded-[20px] shadow-md overflow-hidden hover:overflow-auto" style={{height: isMobile ? 'h-full' : `calc(100vh - 250px)`}}>
-      <div className="flex flex-col gap-[8px] bg-[#C8FF00] rounded-[20px] px-[16px] py-[12px]">
-        <div className="flex flex-row items-center gap-[10px]">
-          {isMobile && <button className="text-black rounded-full w-[24px] h-[24px] flex items-center justify-center cursor-pointer" onClick={()=>{
-            window.history.back()
-          }}>
-            <BackIcon className='w-[24px] h-[24px]'/>
-          </button>}
-          <h4 className="text-[20px] font-semibold">AI Summary</h4>
-        </div>
-        <p className="text-[16px]">
-          {summaryData?.content}
-        </p>
-        <div className="flex flex-row rounded-[6px] bg-[#EEFFB0] items-center">
-          <div className="flex flex-row px-[16px] py-[8px] items-center gap-[4px]">
-            <div className="flex w-[16px] h-[16px] rounded-full bg-black items-center justify-center"><LogoIcon/></div>
-            <div className="text-[16px] font-semibold">PeerX</div>
+    <aside className="flex flex-none flex-col justify-between md:w-[452px] rounded-[20px] shadow-md border-[1px] border-[#F1F1F1]" style={{height: isMobile ? 'h-full' : `calc(100vh - 250px)`}}>
+      <div className="flex-1 flex flex-col overflow-hidden hover:overflow-auto">
+        <div className="flex flex-col gap-[8px] bg-[#C8FF00] rounded-[20px] px-[16px] py-[12px]">
+          <div className="flex flex-row items-center gap-[10px]">
+            {isMobile && <button className="text-black rounded-full w-[24px] h-[24px] flex items-center justify-center cursor-pointer" onClick={()=>{
+              window.history.back()
+            }}>
+              <BackIcon className='w-[24px] h-[24px]'/>
+            </button>}
+            <h4 className="text-[20px] font-semibold">AI Summary</h4>
           </div>
-          <div className="text-[12px]">{summaryData?.source}</div>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-[8px] rounded-[20px] px-[16px]">
-        <div className="flex flex-row gap-[16px]">
-          {DATA_TYPE_LIST?.map(item=>{
-            return <div className="relative inline-block group" key={item?.key} >
-                <TabSetItem name="data-type-tab" value={item?.key} icon={<div className="h-[36px] flex items-center">{item?.icon}</div>} defaultChecked={dataType===item?.key} onChange={()=>{
-                setDataType(item?.key)
-              }}/>
-              {/* tooltip */}
-              <div className="whitespace-nowrap absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-black text-white text-[14px] ml-[2px] px-[2px] py-[1px] rounded-[6px]">
-                {item?.name}
-                <div className="absolute bottom-[-4px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-t-black border-l-transparent border-r-transparent"></div>
-              </div>
+          <p className="text-[16px]">
+            {summaryData?.content}
+          </p>
+          <div className="flex flex-row rounded-[6px] bg-[#EEFFB0] items-center">
+            <div className="flex flex-row px-[16px] py-[8px] items-center gap-[4px]">
+              <div className="flex w-[16px] h-[16px] rounded-full bg-black items-center justify-center"><LogoIcon/></div>
+              <div className="text-[16px] font-semibold">PeerX</div>
             </div>
-          })}
+            <div className="text-[12px]">{summaryData?.source}</div>
+          </div>
         </div>
-        {dataType==='smartmoney' && <TradeListContent/>}
-        {dataType==='twitter' && <TwitterListContent/>}
+        <div className="flex flex-col rounded-[20px] px-[16px] mt-[16px]">
+          <div className="flex flex-row gap-[16px]">
+            {DATA_TYPE_LIST?.map(item=>{
+              return <div className="relative inline-block group" key={item?.key}>
+                  <TabSetItem name="data-type-tab" value={item?.key} icon={<div className="h-[36px] flex items-center">{item?.icon}</div>} defaultChecked={dataType===item?.key} onChange={()=>{
+                  setDataType(item?.key)
+                }}/>
+                {/* tooltip */}
+                <div className="whitespace-nowrap absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-black text-white text-[14px] ml-[2px] px-[2px] py-[1px] rounded-[6px]">
+                  {item?.name}
+                  <div className="absolute bottom-[-4px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-t-black border-l-transparent border-r-transparent"></div>
+                </div>
+              </div>
+            })}
+          </div>
+          {dataType==='smartmoney' && <TradeListContent/>}
+          {dataType==='twitter' && <TwitterListContent/>}
+        </div>
       </div>
-
-      <div id="modal" className="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center">
+      <div className="w-full px-[16px] leading-[48px]">
+        <div className="text-[16px] font-bold rounded-[6px] text-black bg-[#C8FF00] flex items-center justify-center mt-[4px] cursor-pointer mb-[16px]">
+          {/* Learn more */}
+        </div>
+      </div>
+      <div id="modal" className="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-[5]">
         <div className="max-w-3xl mx-auto bg-transparent rounded-lg flex flex-col gap-[16px]">
           <div className="flex justify-end mt-[50px]">
             <button className=" text-white bg-gray-800 rounded-full w-[24px] h-[24px] flex items-center justify-center hover:opacity-50" onClick={closeModal}>
               <CloseIcon/>
             </button>
           </div>
-          <img id="modal-image" src={undefined} alt="Big Image" className="w-full h-auto rounded-lg shadow-lg"/>
+          <img id="modal-image" src={undefined} alt="Big Image" className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-lg"/>
         </div>
       </div>
     </aside>
@@ -112,29 +117,29 @@ function TabSetItem({ value, name, icon, defaultChecked = false, onChange }: { v
 
 function TradeListContent() {
   const { data: tokenAddress } = useSWR('selectedToken')
-  const [pageNo, setPageNo] = useState<number>(1)
+  // const [pageNo, setPageNo] = useState<number>(1)
   const [tradeList, setTradeList] = React.useState<TradeInfo[]>([])
-  const [hasMore, setHasMore] = useState<boolean>(false)
+  // const [hasMore, setHasMore] = useState<boolean>(false)
 
-  const { trigger: tradeListTrigger, isMutating } = useSWRMutation<{trans_list: TradeInfo[]}>(`api:/trending_tokens/token_last_trades?token_address=${tokenAddress}&trans_type=1&address_filter=1&page_no=${pageNo}&page_size=10`)
+  const { trigger: tradeListTrigger, isMutating } = useSWRMutation<{trans_list: TradeInfo[]}>(`api:/trending_tokens/token_last_trades?token_address=${tokenAddress}&trans_type=1&address_filter=1&page_no=1&page_size=50`)
 
   const getTradeList = () => {
     tradeListTrigger().then(({trans_list: list}) => {
       if (list && list.length > 0) {
         const newData = tradeList.concat(list || [])
         setTradeList(newData)
-        setPageNo(pageNo + 1)
-        setHasMore(newData?.length < (10*pageNo) ? false : true)
+        // setPageNo(pageNo + 1)
+        // setHasMore(newData?.length < (10*pageNo) ? false : true)
       } else {
-        setHasMore(false)
+        // setHasMore(false)
       }
     })
   }
 
   React.useEffect(() => {
     setTradeList([])
-    setPageNo(1)
-    setHasMore(false)
+    // setPageNo(1)
+    // setHasMore(false)
     if (tokenAddress) {
       getTradeList()
       const interval = setInterval(() => {
@@ -145,13 +150,13 @@ function TradeListContent() {
   }, [tokenAddress])
 
   return <div className="w-full flex flex-col relative">
-    <div className={classNames("w-full flex flex-col min-h-[200px]",hasMore && tradeList?.length>0 ? '' : 'mt-[16px]')}>
+    <div className={classNames("w-full flex flex-col min-h-[200px] mt-[16px]")}>
       {tradeList?.map(item=>{
         return <TradeItem key={item?.tx_id} {...item}/>
       })}
     </div>
     {isMutating && <Loader/>}
-    {hasMore && tradeList?.length>0 && <div className="w-full h-[48px] text-[16px] font-bold rounded-[6px] text-black bg-[#C8FF00] flex items-center justify-center mt-[4px] mb-[16px] cursor-pointer" onClick={getTradeList}>Learn more</div>}
+    {/* {hasMore && tradeList?.length>0 && <div className="w-full h-[48px] text-[16px] font-bold rounded-[6px] text-black bg-[#C8FF00] flex items-center justify-center mt-[4px] mb-[16px] cursor-pointer" onClick={getTradeList}>Learn more</div>} */}
   </div>
 }
 
@@ -179,9 +184,9 @@ function TwitterListContent() {
   const { trigger: twitterTrigger, isMutating } = useSWRMutation<TwitterFeedInfo[]>(`api:/trending_tokens/twitter_tweets`)
   let interval: NodeJS.Timeout;
 
-  const [pageNo, setPageNo] = useState<number>(1)
+  // const [pageNo, setPageNo] = useState<number>(1)
   const [category, setCategory] = useState<string>('top')
-  const [hasMore, setHasMore] = useState<boolean>(true)
+  // const [hasMore, setHasMore] = useState<boolean>(true)
   const [twitterData, setTwitterData] = useState<TwitterFeedInfo[]>([])
 
   const getTwitterList = () => {
@@ -191,25 +196,25 @@ function TwitterListContent() {
         token_address: tokenAddress,
         category,
         offset: 0, //pageNo - 1,
-        limit: 10
+        limit: 50
       }),
     }).then((list)=>{
       if (list && list.length > 0) {
         // const newData = twitterData.concat(list || [])
         const newData = list
         setTwitterData(newData)
-        setPageNo(pageNo + 1)
-        setHasMore(newData?.length < (10*pageNo) ? false : true)
+        // setPageNo(pageNo + 1)
+        // setHasMore(newData?.length < (10*pageNo) ? false : true)
       } else {
-        setHasMore(false)
+        // setHasMore(false)
       }
     })
   }
 
   useEffect(()=>{
     setTwitterData([])
-    setPageNo(1)
-    setHasMore(false)
+    // setPageNo(1)
+    // setHasMore(false)
     if (tokenAddress && category) {
       getTwitterList()
       interval = setInterval(() => {
@@ -219,13 +224,13 @@ function TwitterListContent() {
     }
   }, [tokenAddress, category])
 
-  return <div className="w-full flex flex-col gap-[16px] relative">
-    <div className="flex flex-row items-center gap-[16px] overflow-auto md:overflow-hidden">
+  return <div className="w-full flex flex-col relative">
+    <div className="flex flex-row items-center justify-between sticky top-0 bg-white py-[16px] z-[3]">
       {TWITTER_TYPE_LIST?.map(item=>{
         return <TabSetItem key={item?.value} name="twitter-sort-tab" value={item?.value} defaultChecked={category===item?.value} icon={<div className={classNames("text-[16px] font-bold text-[#666]", category===item?.value && "text-black")}>{item?.name}</div>} onChange={()=>setCategory(item?.value)}/>
       })}
     </div>
-    <div className={classNames("flex flex-col gap-[16px] min-h-[160px]", hasMore && twitterData?.length>0 ? '' : 'mb-[16px]')}>
+    <div className={classNames("flex flex-col gap-[16px] min-h-[160px]")}>
       {twitterData?.map(item=>{
         if (item?.related_tweets && item?.related_tweets?.length > 0) {
           if (item?.related_tweets?.length === 1) {
@@ -243,7 +248,7 @@ function TwitterListContent() {
       })}
     </div>
     {isMutating && <Loader/>}
-    {hasMore && twitterData?.length>0 && <div className="w-full h-[48px] text-[16px] font-bold rounded-[6px] text-black bg-[#C8FF00] flex items-center justify-center mt-[4px] cursor-pointer mb-[16px]" onClick={getTwitterList}>Learn more</div>}
+    {/* {hasMore && twitterData?.length>0 && <div className="w-full h-[48px] text-[16px] font-bold rounded-[6px] text-black bg-[#C8FF00] flex items-center justify-center mt-[4px] cursor-pointer mb-[16px]" onClick={getTwitterList}>Learn more</div>} */}
   </div>
 }
 
