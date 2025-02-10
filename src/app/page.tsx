@@ -9,14 +9,17 @@ import { getPlatformInfo } from '@/lib/getPlatformInfo'
 import useSWRMutation from 'swr/mutation'
 import { useEffect } from 'react'
 import useSWR from 'swr'
+import { TooltipProvider } from '@/components/ui/tooltip'
 
 export default function Home() {
   return (
     <GlobalContextProvider>
-      <main className='h-screen overflow-hidden'>
-        <Header />
-        <Content />
-      </main>
+      <TooltipProvider >
+        <main className='h-screen overflow-hidden'>
+          <Header />
+          <Content />
+        </main>
+      </TooltipProvider>
     </GlobalContextProvider>
   );
 }

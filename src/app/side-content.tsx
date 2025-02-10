@@ -8,6 +8,7 @@ import useSWRMutation from "swr/mutation";
 import Loader from "./loader";
 import useSWR from "swr";
 import { getPlatformInfo } from "@/lib/getPlatformInfo";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipArrow } from "@/components/ui/tooltip"
 
 const DATA_TYPE_LIST = [{
   key: 'smartmoney',
@@ -40,8 +41,8 @@ export default function SideContent() {
   }, [selectedToken])
 
   return (
-    <aside className="flex flex-none flex-col justify-between md:w-[452px] rounded-[20px] shadow-md border-[1px] border-[#F1F1F1]" style={{height: isMobile ? 'h-full' : `calc(100vh - 250px)`}}>
-      <div className="flex-1 flex flex-col overflow-hidden hover:overflow-auto">
+    <aside className="flex flex-none flex-col justify-between md:w-[452px] rounded-[20px] shadow-md border-[1px] border-[#F1F1F1] overflow-hidden hover:overflow-auto" style={{height: isMobile ? 'h-full' : `calc(100vh - 250px)`}}>
+      <div className="flex-1 flex flex-col">
         <div className="flex flex-col gap-[8px] bg-[#C8FF00] rounded-[20px] px-[16px] py-[12px]">
           <div className="flex flex-row items-center gap-[10px]">
             {isMobile && <button className="text-black rounded-full w-[24px] h-[24px] flex items-center justify-center cursor-pointer" onClick={()=>{
@@ -62,19 +63,28 @@ export default function SideContent() {
             <div className="text-[12px]">{summaryData?.source}</div>
           </div>
         </div>
-        <div className="flex flex-col rounded-[20px] px-[16px] mt-[16px]">
-          <div className="flex flex-row gap-[16px]">
+        <div className="flex flex-col rounded-[20px] px-[16px] ">
+          <div className="flex flex-row gap-[16px] sticky top-0 bg-white pt-[16px] z-[3] ">
             {DATA_TYPE_LIST?.map(item=>{
-              return <div className="relative inline-block group" key={item?.key}>
-                  <TabSetItem name="data-type-tab" value={item?.key} icon={<div className="h-[36px] flex items-center">{item?.icon}</div>} defaultChecked={dataType===item?.key} onChange={()=>{
-                  setDataType(item?.key)
-                }}/>
-                {/* tooltip */}
-                <div className="whitespace-nowrap absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-black text-white text-[14px] ml-[2px] px-[2px] py-[1px] rounded-[6px]">
+              return <Tooltip key={item?.key}>
+                <TooltipTrigger asChild>
+                  <div>
+                    <TabSetItem 
+                      name="data-type-tab" 
+                      value={item?.key} 
+                      icon={<div className="h-[36px] flex items-center">{item?.icon}</div>} 
+                      defaultChecked={dataType===item?.key} 
+                      onChange={()=>{
+                        setDataType(item?.key)
+                      }}
+                    />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent className="bg-black text-white rounded-[6px] px-[8px] py-[2px] text-[14px] border-0">
                   {item?.name}
-                  <div className="absolute bottom-[-4px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-t-black border-l-transparent border-r-transparent"></div>
-                </div>
-              </div>
+                  <TooltipArrow className="fill-black" />
+                </TooltipContent>
+              </Tooltip>
             })}
           </div>
           {dataType==='smartmoney' && <TradeListContent/>}
@@ -224,8 +234,8 @@ function TwitterListContent() {
     }
   }, [tokenAddress, category])
 
-  return <div className="w-full flex flex-col relative">
-    <div className="flex flex-row items-center justify-between sticky top-0 bg-white py-[16px] z-[3]">
+  return <div className="w-full flex flex-col relative z-[1]">
+    <div className="flex flex-row items-center justify-between sticky top-[60px] py-[10px] bg-white z-[3]">
       {TWITTER_TYPE_LIST?.map(item=>{
         return <TabSetItem key={item?.value} name="twitter-sort-tab" value={item?.value} defaultChecked={category===item?.value} icon={<div className={classNames("text-[16px] font-bold text-[#666]", category===item?.value && "text-black")}>{item?.name}</div>} onChange={()=>setCategory(item?.value)}/>
       })}

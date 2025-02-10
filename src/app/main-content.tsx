@@ -10,6 +10,7 @@ import { formatAddress, formatNumber, timeAgo } from '@/lib/utils'
 import React from 'react'
 import Link from 'next/link'
 import { getPlatformInfo } from '@/lib/getPlatformInfo'
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipArrow } from '@/components/ui/tooltip'
 
 export default function MainContent() {
   const isMobile = getPlatformInfo()?.isMobile
@@ -216,29 +217,30 @@ function Section3(props: SmartMoneyInfo) {
     <div className="flex flex-row justify-between gap-[16px] items-center">
       <TextDisplay text={props?.description ?? ''}/>
       <div className="flex flex-row gap-[10px]">
-        <div className="relative inline-block group">
-          <div className="bg-[#ECECEC] rounded-[6px] p-[4px] w-[30px] h-[30px]">
-            <div className="bg-black rounded-[3px] w-full h-full flex items-center justify-center">
-              <LogoIcon className='scale-[1.5]'/>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="bg-[#ECECEC] rounded-[6px] p-[4px] w-[30px] h-[30px]">
+              <div className="bg-black rounded-[3px] w-full h-full flex items-center justify-center">
+                <LogoIcon className='scale-[1.5]'/>
+              </div>
             </div>
-            {/* tooltip */}
-            <div className="whitespace-nowrap absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-black text-white text-[14px] px-[2px] py-[1px] rounded-[6px]">
-              Coming soon...
-              <div className="absolute bottom-[-4px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-t-black border-l-transparent border-r-transparent"></div>
+          </TooltipTrigger>
+          <TooltipContent className="bg-black text-white rounded-[6px] px-[6px] py-[2px] text-[14px] border-0">
+            Coming soon...
+            <TooltipArrow className="fill-black" />
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="bg-[#ECECEC] rounded-[6px] p-[4px] w-[30px] h-[30px]">
+              <img src={BASE_PATH+"/image/logo_1.png"} width={22} height={22} alt=''/>            
             </div>
-          </div>
-        </div>
-
-        <div className="relative inline-block group">
-          <div className="bg-[#ECECEC] rounded-[6px] p-[4px] w-[30px] h-[30px]">
-            <img src={BASE_PATH+"/image/logo_1.png"} width={22} height={22} alt=''/>
-            {/* tooltip */}
-            <div className="whitespace-nowrap absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-black text-white text-[14px] px-[2px] py-[1px] rounded-[6px]">
-              Coming soon...
-              <div className="absolute bottom-[-4px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-t-black border-l-transparent border-r-transparent"></div>
-            </div>
-          </div>
-        </div>
+          </TooltipTrigger>
+          <TooltipContent className="bg-black text-white rounded-[6px] px-[6px] py-[2px] text-[14px] border-0">
+            Coming soon...
+            <TooltipArrow className="fill-black" />
+          </TooltipContent>
+        </Tooltip>
       </div>
     </div>
   )
