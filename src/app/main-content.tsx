@@ -31,7 +31,8 @@ export default function MainContent() {
     }).then((list)=>{
       if (list && list.length > 0) {
         setTokenData(list)
-        if (tokenAddress === null || list?.find(o=>o?.token_address?.toLowerCase() === tokenAddress?.toLowerCase()) === undefined) {
+        console.log('update------', tokenAddress, list?.findIndex(o=>o?.token_address?.toLowerCase() === tokenAddress?.toLowerCase()))
+        if (tokenAddress === null || list?.findIndex(o=>o?.token_address?.toLowerCase() === tokenAddress?.toLowerCase()) <= 0) {
           updateSelectedToken(list[0]?.token_address)
           updateSelectedTokenInfo(JSON.stringify(list[0]))
         }
@@ -114,17 +115,21 @@ function Section1(props: SmartMoneyInfo) {
             copied ? <div>
               <CopiedIcon/>
             </div> : 
-            <div className='cursor-pointer text-black hover:text-[#C8FF00]' onClick={()=>{
+            <div className='cursor-pointer text-black hover:text-[#C8FF00]' onClick={(e)=>{
               navigator.clipboard.writeText(props?.token_address)
               setCopied(true)
               setTimeout(()=>setCopied(false), 1000)
+              e.stopPropagation()
             }}>
               <CopyIcon/>
             </div>
           }
-          <div className='cursor-pointer text-black hover:text-[#C8FF00]' onClick={()=>{
+          <div className='cursor-pointer text-black hover:text-[#C8FF00]' onClick={(e)=>{
             window.open(`https://x.com/search?q=${props?.token_address}`)
-          }}><SearchOnXIcon/></div>
+            e.stopPropagation()
+          }}>
+            <SearchOnXIcon/>
+          </div>
         </div>
         <div className="text-[12px] font-semibold text-[#666] flex flex-row gap-[6px] justify-start flex-wrap">
           {(props?.famous_confirmed || props?.famous_twitter_name) && <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px] gap-[4px]">
@@ -143,30 +148,34 @@ function Section1(props: SmartMoneyInfo) {
             <CreateIcon/>{timeAgo(props?.publish_time)}
           </div>
           <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
-            <img src={BASE_PATH + "/image/pump.png"} width={16} height={16} alt='' onClick={()=>{
+            <img src={BASE_PATH + "/image/pump.png"} width={16} height={16} alt='' onClick={(e)=>{
                 window.open(`https://pump.fun/coin/${props?.token_address}`, '_blank')
+                e.stopPropagation()
               }}/>
           </div>
           {props?.twitter_link && props?.twitter_link !== '' && <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
             <TwitterIcon 
               color={'#666666'}
               className='scale-[0.6]' 
-              onClick={()=>{
+              onClick={(e)=>{
                 window.open(props?.twitter_link, '_blank')
+                e.stopPropagation()
               }}
             />
           </div>}
           {props?.home_page && props?.home_page !== '' && <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
             <WebsiteIcon 
-              onClick={()=>{
+              onClick={(e)=>{
                 window.open(props?.home_page, '_blank')
+                e.stopPropagation()
               }}
             />
           </div>}
           {props?.telegram_link && props?.telegram_link !== '' && <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
             <TelegramIcon
-              onClick={()=>{
+              onClick={(e)=>{
                 window.open(props?.telegram_link, '_blank')
+                e.stopPropagation()
               }}
             />
           </div>}
@@ -277,7 +286,10 @@ const TextDisplay = ({ text }: {text: string}) => {
         {text}
       </div>
       {showBtn && (
-        <div className='underline underline-offset-1 cursor-pointer' onClick={()=>setShown(!shown)}>{!shown ? 'more':'less'}</div>
+        <div className='ml-[5px] underline underline-offset-1 cursor-pointer hover:text-[#C8FF00]' onClick={(e)=>{
+          setShown(!shown)
+          e.stopPropagation()
+        }}>{!shown ? 'more':'less'}</div>
       )}
     </div>
   );

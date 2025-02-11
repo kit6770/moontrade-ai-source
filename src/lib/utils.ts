@@ -1,17 +1,17 @@
 export function formatNumber(number?: number): string {
   if (!number) return '';
   if (number >= 1e18) {
-    return (number / 1e18).toFixed(1) + 'E'; // 百亿亿（Exillion）
+    return (number / 1e18).toFixed(2)?.replace(/\.?0+$/, '') + 'E'; // 百亿亿（Exillion）
   } else if (number >= 1e15) {
-    return (number / 1e15).toFixed(1) + 'P'; // 千万亿（Quadrillion）
+    return (number / 1e15).toFixed(2)?.replace(/\.?0+$/, '') + 'P'; // 千万亿（Quadrillion）
   } else if (number >= 1e12) {
-    return (number / 1e12).toFixed(2) + 'T'; // 万亿
+    return (number / 1e12).toFixed(2)?.replace(/\.?0+$/, '') + 'T'; // 万亿
   } else if (number >= 1e9) {
-    return (number / 1e9).toFixed(2) + 'B'; // (Billion)
+    return (number / 1e9).toFixed(2)?.replace(/\.?0+$/, '') + 'B'; // (Billion)
   } else if (number >= 1e6) {
-    return (number / 1e6).toFixed(2) + 'M'; // (Million)
+    return (number / 1e6).toFixed(2)?.replace(/\.?0+$/, '') + 'M'; // (Million)
   } else if (number >= 1e3) {
-    return (number / 1e3).toFixed(2) + 'K'; // (Thousand)
+    return (number / 1e3).toFixed(2)?.replace(/\.?0+$/, '') + 'K'; // (Thousand)
   } else {
     return number.toString(); // 
   }
