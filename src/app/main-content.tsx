@@ -1,5 +1,5 @@
 import { BASE_PATH } from '@/lib/constants'
-import { CreateIcon, FeedsIcon, FromVIcon, GoldSmartMoneyIcon, LogoIcon, MCIcon, TelegramIcon, TwitterIcon, TwitterWhiteIcon, WebsiteIcon } from '@/lib/icons'
+import { CopiedIcon, CopyIcon, CreateIcon, FeedsIcon, FromVIcon, GoldSmartMoneyIcon, LogoIcon, MCIcon, SearchOnXIcon, TelegramIcon, TwitterIcon, TwitterWhiteIcon, WebsiteIcon } from '@/lib/icons'
 import { SmartMoneyInfo } from '@/types'
 import classNames from 'classnames'
 import { useEffect, useState } from 'react'
@@ -33,6 +33,7 @@ export default function MainContent() {
         setTokenData(list)
         if (tokenAddress === null || list?.find(o=>o?.token_address?.toLowerCase() === tokenAddress?.toLowerCase()) === undefined) {
           updateSelectedToken(list[0]?.token_address)
+          updateSelectedTokenInfo(JSON.stringify(list[0]))
         }
       }
     })
@@ -49,34 +50,26 @@ export default function MainContent() {
     }
   }, [timeType])
 
-  // useEffect(()=>{
-  //   const temp = [
-  //     {id: 1,token_address: '2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump'},
-  //     {id: 2,token_address: 'GJAFwWjJ3vnTsrQVabjBVK2TYB1YtRCQXRDfDgUnpump'},
-  //     {id: 3,token_address: '2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump'},
-  //     {id: 4,token_address: 'GJAFwWjJ3vnTsrQVabjBVK2TYB1YtRCQXRDfDgUnpump'},
-  //     {id: 5,token_address: '2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump'},
-  //     {id: 6,token_address: 'GJAFwWjJ3vnTsrQVabjBVK2TYB1YtRCQXRDfDgUnpump'},
-  //     {id: 7,token_address: '2qEHjDLDLbuBgRYvsxhc5D6uDWAivNFZGan56P1tpump'},
-  //     {id: 8,token_address: 'GJAFwWjJ3vnTsrQVabjBVK2TYB1YtRCQXRDfDgUnpump'},
-  //   ]
-  //   setTokenData(temp)
-  //   updateSelectedToken(temp[0]?.token_address)
-  // }, [timeType])
-
   const {trigger: updateSelectedToken } = useSWRMutation<string>('selectedToken')
+  const {trigger: updateSelectedTokenInfo } = useSWRMutation<SmartMoneyInfo>('selectedTokenInfo')
 
   return (
     <div className={classNames("relative flex flex-auto flex-col gap-[16px] pb-[150px] md:pr-[16px]", isMobile ? 'h-full overflow-auto':'overflow-hidden hover:overflow-auto')} style={{height: `calc(100vh - 144px)`}}>
       {tokenData?.map((item, index)=>{
         if (isMobile) {
-          return <div key={item?.id} className='relative' onClick={()=>updateSelectedToken(item?.token_address)}>
+          return <div key={item?.id} className='relative' onClick={()=>{
+            updateSelectedToken(item?.token_address)
+            updateSelectedTokenInfo(JSON.stringify(item))
+          }}>
             <Link href={'/summary'} className='relative'>
               <Item {...item} index={index}/>
             </Link>
           </div>
         } else {
-          return <div key={item?.id} className='relative' onClick={()=>updateSelectedToken(item?.token_address)}>
+          return <div key={item?.id} className='relative' onClick={()=>{
+            updateSelectedToken(item?.token_address)
+            updateSelectedTokenInfo(JSON.stringify(item))
+          }}>
             <Item {...item} index={index}/>
           </div>
         }
@@ -104,6 +97,7 @@ function Item(props: SmartMoneyInfo&{index: number}) {
 }
 
 function Section1(props: SmartMoneyInfo) {
+  const [copied, setCopied] = useState(false)
   return (
     <div className="w-full flex-1 flex flex-row gap-[16px]">
       <div className="relative w-[64px] h-[64px]">
@@ -113,9 +107,24 @@ function Section1(props: SmartMoneyInfo) {
         <img src={BASE_PATH + "/image/solana.png"} alt="" width={20} height={20} className="rounded-full absolute bottom-0 right-0"/>
       </div>
       <div className="flex flex-col gap-[8px]">
-        <div className="text-[18px] flex flex-row gap-[4px] items-center">
+        <div className="text-[18px] text-black flex flex-row gap-[4px] items-center">
           <div className="text-[24px] font-bold">{props?.symbol}</div>
-          <div className="text-[12px] text-black">{`${props?.name} · ${formatAddress(props?.token_address)}`}</div>
+          <div className="text-[12px]">{`${props?.name} · ${formatAddress(props?.token_address)}`}</div>
+          {
+            copied ? <div>
+              <CopiedIcon/>
+            </div> : 
+            <div className='cursor-pointer text-black hover:text-[#C8FF00]' onClick={()=>{
+              navigator.clipboard.writeText(props?.token_address)
+              setCopied(true)
+              setTimeout(()=>setCopied(false), 1000)
+            }}>
+              <CopyIcon/>
+            </div>
+          }
+          <div className='cursor-pointer text-black hover:text-[#C8FF00]' onClick={()=>{
+            window.open(`https://x.com/search?q=${props?.token_address}`)
+          }}><SearchOnXIcon/></div>
         </div>
         <div className="text-[12px] font-semibold text-[#666] flex flex-row gap-[6px] justify-start flex-wrap">
           {(props?.famous_confirmed || props?.famous_twitter_name) && <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px] gap-[4px]">
@@ -215,7 +224,7 @@ function Section2(props: SmartMoneyInfo) {
 function Section3(props: SmartMoneyInfo) {
   return (
     <div className="flex flex-row justify-between gap-[16px] items-center">
-      <TextDisplay text={props?.description ?? ''}/>
+      {props?.description && props?.description!=='' ? <TextDisplay text={props?.description ?? ''}/> : <div className='text-[14px]'>We are still analyzing...</div>}
       <div className="flex flex-row gap-[10px]">
         <Tooltip>
           <TooltipTrigger asChild>
