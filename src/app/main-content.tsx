@@ -186,37 +186,54 @@ function Section1(props: SmartMoneyInfo) {
 }
 
 function Section2(props: SmartMoneyInfo) {
+  const { data: selectedToken } = useSWR('selectedToken')
+  const {trigger: updateDataType } = useSWRMutation<string>('dataType')
   const list = [{
     title: 'SmartMoney',
     type: 'smartmoney',
     icon: <GoldSmartMoneyIcon/>,
     value: props?.smart_wallet_count,
     isPositive: props?.smart_wallet_count_change,
-    change: props?.smart_wallet_count_change
+    change: props?.smart_wallet_count_change,
+    onClick: ()=>{
+      updateDataType('smartmoney')
+    }
   }, {
     title: 'Feeds',
     type: 'feeds',
     icon: <FeedsIcon/>,
     value: props?.x_feed_num,
     isPositive: props?.x_feed_num_change,
-    change: props?.x_feed_num_change
+    change: props?.x_feed_num_change,
+    onClick: ()=>{
+      updateDataType('twitter')
+    }
   }, {
     title: 'MC',
     type: 'mc',
     icon: <MCIcon/>,
     value: props?.market_value,
     isPositive: props?.market_value_change,
-    change: props?.market_value_change
+    change: props?.market_value_change,
+    onClick: ()=>{
+      
+    }
   }]
   return (
     <div className="flex flex-row justify-start gap-[16px] flex-wrap cursor-pointer">
       {list?.map(item=>{
         return <div key={item?.title} className={classNames("flex flex-row gap-[4px] justify-center p-[8px] h-[51px] rounded-[6px]", 
-          // item?.type==='mc' ? '' : isSelected ? 'bg-[#F2FEC5]': '',
           item?.type!=='mc' && 'hover:bg-[#F2FEC5]'
-        )}>
-           {item?.icon}
-           <div className='flex flex-col'>
+        )}
+        onClick={(e)=> {
+          if (selectedToken?.toLowerCase() === props?.token_address?.toLowerCase()) {
+            item?.onClick();
+            e.stopPropagation();
+          }
+        }}
+        >
+          {item?.icon}
+          <div className='flex flex-col'>
             <div className='text-[12px] font-semibold'>{item?.title}</div>
             <div className='flex flex-row items-center gap-[4px] text-[16px]'>
               <div className='font-bold text-[#000]'>{formatNumber(item?.value)}</div>

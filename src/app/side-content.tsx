@@ -25,9 +25,10 @@ export default function SideContent() {
 
   // const { data: selectedToken } = useSWR('selectedToken')
   const { data: tokenInfo } = useSWR('selectedTokenInfo')
-  
-  const [dataType, setDataType] = useState<string>('smartmoney')
+  const { data: dataType } = useSWR('dataType', {fallbackData:'smartmoney'})
 
+  const {trigger: updateDataType } = useSWRMutation<string>('dataType')
+  
   // const { trigger: summaryTrigger, data: summaryData } = useSWRMutation<SummaryInfo>(`api:/trending_tokens/summary`)
 
   // useEffect(()=>{
@@ -40,6 +41,12 @@ export default function SideContent() {
   //     })
   //   }
   // }, [selectedToken])
+
+  useEffect(()=>{
+    if (dataType === null) {
+      updateDataType('smartmoney')
+    }
+  }, [dataType])
 
   return (
     <aside className="flex flex-none flex-col justify-between md:w-[452px] rounded-[20px] shadow-md border-[1px] border-[#F1F1F1] overflow-hidden hover:overflow-auto" style={{height: isMobile ? 'h-full' : `calc(100vh - 250px)`}}>
@@ -78,7 +85,8 @@ export default function SideContent() {
                       icon={<div className="h-[36px] flex items-center">{item?.icon}</div>} 
                       defaultChecked={dataType===item?.key} 
                       onChange={()=>{
-                        setDataType(item?.key)
+                        console.log('change to ', item?.key)
+                        updateDataType(item?.key)
                       }}
                     />
                   </div>
@@ -115,12 +123,13 @@ export default function SideContent() {
 
 function TabSetItem({ value, name, icon, defaultChecked = false, onChange }: { value: string, name: string, icon?: React.JSX.Element, defaultChecked?: boolean, onChange?: React.ChangeEventHandler<HTMLInputElement>}) {
   return <label className="cursor-pointer flex justify-stretch items-center">
-    <input type="radio" className='peer hidden' name={name} value={value} defaultChecked={defaultChecked} onChange={onChange}/>
+    <input type="radio" className=' hidden' name={name} value={value} defaultChecked={defaultChecked} onChange={onChange}/>
     <div className={
       classNames(
-        'bg-[#F9F9F9] rounded-[6px] px-[20px] py-[4px]',
-        'peer-checked:text-[#000000] peer-checked:bg-[#C8FF00]',
-        "hover:bg-white hover:text-[#000000]"
+        'rounded-[6px] px-[20px] py-[4px]',
+        // 'peer-checked:text-[#000000] peer-checked:bg-[#C8FF00]',
+        defaultChecked ? 'text-[#000000] bg-[#C8FF00]' : 'bg-[#F9F9F9]',
+        "hover:bg-[#C8FF00] hover:text-[#000000]"
       )
     }>
       {icon}
