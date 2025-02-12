@@ -304,11 +304,11 @@ function TwitterItem(props: FeedInfo & {isQuote?:boolean, isReply?:boolean}) {
     value: props?.favorite_count
   }]
   const mediaLength = (props?.medias || [])?.length
-  return <div className={classNames("flex flex-col gap-[10px] rounded-[6px] bg-[#F9F9F9]", (props?.isQuote || props?.isReply) ? '' : 'p-[20px]')}>
+  return <div className={classNames("flex flex-col gap-[10px] rounded-[6px] bg-[#F9F9F9]", (props?.isQuote || props?.isReply) ? '' : 'p-[16px]')}>
     {!(props?.isQuote || props?.isReply) && <div className="flex flex-row items-center justify-between">
-      <div className="flex flex-row gap-[8px] items-center">
-        <div className="w-[16px] h-[16px] rounded-full bg-black flex items-center justify-center"><LogoIcon/></div>
-        <div className="text-[16px] font-bold">PeerX</div>
+      <div className="flex flex-row items-center">
+        <LogoPumpIcon className="scale-[0.5] ml-[-5px]"/>
+        <div className="text-[16px] font-bold">Pump.now</div>
       </div>
       <Tooltip>
         <TooltipTrigger asChild>
