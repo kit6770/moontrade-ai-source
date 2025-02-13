@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 import useSWRMutation from 'swr/mutation'
 import Loader from './loader'
-import { formatAddress, formatNumber, timeAgo } from '@/lib/utils'
+import { formatAddress, formatNumber, isTimeExceed24Hours, timeAgo } from '@/lib/utils'
 import React from 'react'
 import Link from 'next/link'
 import { getPlatformInfo } from '@/lib/getPlatformInfo'
@@ -145,7 +145,8 @@ function Section1(props: SmartMoneyInfo) {
             </div>}
           </div>}
           <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px] gap-[4px]">
-            <CreateIcon/>{timeAgo(props?.publish_time)}
+            {props?.publish_time && isTimeExceed24Hours(props?.publish_time) && <CreateIcon/>}
+            {timeAgo(props?.publish_time)}
           </div>
           <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
             <img src={BASE_PATH + "/image/pump.png"} width={16} height={16} alt='' onClick={(e)=>{

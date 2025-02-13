@@ -31,12 +31,17 @@ export function timeAgo(time?: string | Date, isLong?: boolean, isAgo?: boolean)
     return `${minutes}${isLong? `min` : 'm'} ${isAgo ? 'ago' : ''}`;
   } else if (hours < 24) {
     return `${hours}${isLong ? `hour` : 'h'} ${isAgo ? 'ago' : ''}`;
-  } else if (days < 30) {
-    return `${days}${isLong ? `day` : 'd'} ${isAgo ? 'ago' : ''}`;
   } else {
-    const months = Math.floor(days / 30);
-    return `${months}${isLong ? `month` : '' } ${isAgo ? 'ago' : ''}`;
+    return `${days}${isLong ? `day` : 'd'} ${isAgo ? 'ago' : ''}`;
   }
+}
+
+export function isTimeExceed24Hours(time: string | Date) {
+  const now = new Date();
+  const inputTime = new Date(time);
+  const diffInSeconds = Math.floor((now.getTime() - inputTime.getTime()) / 1000); // 
+  
+  return diffInSeconds > 24 * 60 * 60 * 1000;
 }
 
 export function formatAddress(address: string | undefined, front?: number, back?: number) {
