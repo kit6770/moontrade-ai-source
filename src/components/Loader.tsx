@@ -5,3 +5,7 @@ export default function Loader() {
     <div className="w-10 h-10 border-4 border-t-transparent border-[#C8FF00] border-solid rounded-full animate-spin"></div>
   </div>
 }
+
+export const LoadingIcon = () => {
+  return <div className="w-[20px] h-[20px] border-2 border-t-transparent border-[#C8FF00] border-solid rounded-full animate-spin"></div>
+}

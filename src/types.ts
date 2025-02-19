@@ -85,3 +85,32 @@ export type SummaryInfo = {
   logo: string;
   token_address: string;
 }
+
+export interface KOLInfo {
+  id: number;
+  name: string;
+  handle?: string;
+  feed_count?: number;
+  tags?: string[];
+  avatar?: string;
+  recent_calls?: {
+    id: number;
+    name: string;
+    avatar: string;
+  }[];
+  win_rate?: number;
+  last_active?: string;
+  rating?: number;
+  isWatching?: boolean;
+  address?: string;
+}
+
+export interface SelectKOLInfo extends KOLInfo {
+  isChecked?: boolean;
+}
+
+export type TimeFilterType = {
+  value: string;
+  name: string;
+  simpleName: string;
+}
