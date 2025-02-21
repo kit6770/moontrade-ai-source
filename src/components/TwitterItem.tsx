@@ -43,7 +43,7 @@ export default function TwitterItem(
       {!(props?.isQuote || props?.isReply) && (
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-row items-center">
-            <LogoPumpIcon className="scale-[0.5] ml-[-5px]" />
+            <LogoPumpIcon className="ml-[-5px] mr-[5px]" />
             <div className="text-[16px] font-bold">Pump.now</div>
           </div>
           <BaseTooltip title="View on Twitter" placement="top">
@@ -88,7 +88,7 @@ export default function TwitterItem(
           </div>
         </div>
       </div>
-      <div className="text-[16px] text-black pb-[6px] break-all whitespace-pre-wrap">
+      <div className="text-[14px] text-black pb-[6px] break-all whitespace-pre-wrap">
         {props?.text?.replaceAll("\n\n", "\n")}
       </div>
       {props?.medias && props?.medias?.length > 0 && (

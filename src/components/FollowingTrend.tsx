@@ -1,5 +1,6 @@
 import { Button, Avatar, AvatarGroup } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { ButtonStyled } from "./Common";
 
 export default function FollowingTrend() {
   return (
@@ -17,6 +18,7 @@ export default function FollowingTrend() {
           backgroundColor: "#F4F4F4",
           borderRadius: "100px",
           fontSize: "16px",
+          ...ButtonStyled
         }}
         variant="contained"
       >
@@ -40,6 +42,9 @@ const TrendItem = () => {
             fontSize: "12px",
             fontWeight: 500,
           },
+        }}
+        renderSurplus={()=>{
+          return 30
         }}
       >
         <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />

@@ -1,6 +1,6 @@
 "use client";
 
-import { Montserrat } from "next/font/google";
+// import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { createAppKit, useAppKitAccount } from "@reown/appkit/react";
 import { SolanaAdapter } from "@reown/appkit-adapter-solana/react";
@@ -12,12 +12,12 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import GlobalContextProvider from "./app-context";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 
-const sans = Montserrat({
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  subsets: ["latin"],
-});
+// const sans = Montserrat({
+//   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+//   subsets: ["latin"],
+// });
 
 createAppKit({
   adapters: [
@@ -41,7 +41,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const router = useRouter();
+  // const router = useRouter();
   const pathname = usePathname();
   const { address, isConnected } = useAppKitAccount();
 
@@ -56,7 +56,7 @@ export default function RootLayout({
   if (pathname === "/login") {
     return (
       <html lang="en">
-        <body className={`${sans.className} antialiased`}>{children} </body>
+        <body className={``}>{children} </body>
       </html>
     );
   }
@@ -65,7 +65,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${sans.className} antialiased`}>
+      <body className={``}>
         <GlobalContextProvider>
           <main className="h-screen overflow-hidden">
             <Header />

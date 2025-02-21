@@ -1,12 +1,12 @@
 import { TimeFilterType } from "@/types";
 import { Button, Menu, MenuItem } from "@mui/material";
 import React from "react";
-import useSWR from "swr";
-import useSWRMutation from "swr/mutation";
 import {
   Check as CheckIcon,
   ArrowDropDown as ArrowDropDownIcon,
 } from "@mui/icons-material";
+import { ButtonStyled } from "./Common";
+import { useSelectedFilter } from "@/hooks/useKOL";
 
 export default function TimeFilter({
   type,
@@ -15,15 +15,10 @@ export default function TimeFilter({
   type: "watch" | "kol";
   timeList: TimeFilterType[];
 }) {
-  const { data: timeType } = useSWR(
-    type === "watch" ? "watchTimeType" : "kolTimeType"
-  );
-  const { trigger: setTimeType } = useSWRMutation(
-    type === "watch" ? "watchTimeType" : "kolTimeType"
-  );
+  const { lastTimeType, setLastTimeType } = useSelectedFilter(type);
 
   const selectedTime =
-    timeList?.find((item) => item?.value === timeType) ?? timeList[0];
+    timeList?.find((item) => item?.value === lastTimeType) ?? timeList[0];
 
   const [timeAnchorEl, setTimeAnchorEl] = React.useState<
     (EventTarget & HTMLButtonElement) | null
@@ -31,7 +26,7 @@ export default function TimeFilter({
 
   return (
     <div>
-      <div className="flex items-center justify-center cursor-pointer bg-white text-black font-semibold lg:w-[175px] rounded-[12px] opacity-50">
+      <div className="h-full flex items-center justify-center cursor-pointer bg-white text-black lg:w-[175px] rounded-[12px] opacity-50">
         <Button
           id="timeType-button"
           aria-controls={Boolean(timeAnchorEl) ? "timeType-menu" : undefined}
@@ -41,10 +36,10 @@ export default function TimeFilter({
             setTimeAnchorEl(event.currentTarget);
           }}
           className="w-full h-full"
-          sx={{ textTransform: "none" }}
+          sx={{ textTransform: "none", ...ButtonStyled }}
         >
           <div className="w-full px-[10px] flex flex-row items-center justify-between text-black">
-            <div className="flex-1 flex text-[16px]">
+            <div className="flex-1 flex text-[14px]">
               {selectedTime?.simpleName}
             </div>
             <ArrowDropDownIcon />
@@ -64,7 +59,7 @@ export default function TimeFilter({
           <MenuItem
             key={item?.value}
             onClick={() => {
-              setTimeType(item?.value);
+              setLastTimeType(item?.value);
               setTimeAnchorEl(null);
             }}
           >
@@ -72,7 +67,7 @@ export default function TimeFilter({
               <div className="w-[40px]">
                 {selectedTime?.value === item?.value && <CheckIcon />}
               </div>
-              <div className="text-[16px] text-black">{item?.name}</div>
+              <div className="text-[14px] text-black">{item?.name}</div>
             </div>
           </MenuItem>
         ))}

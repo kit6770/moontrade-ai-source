@@ -1,6 +1,6 @@
 
 // 
-export const BASE_PATH = '/moontrade-ai'
+export const BASE_PATH = '';//'/moontrade-ai'
 
 export const TWITTER_TYPE_LIST = [
   { value: 'top', name: 'TOP' },

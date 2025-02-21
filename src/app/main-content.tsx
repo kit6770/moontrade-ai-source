@@ -1,18 +1,15 @@
 import { BASE_PATH } from "@/lib/constants";
 import {
-  CopyIcon,
   LvYaIcon,
   FeedsIcon,
   FromVIcon,
   GoldSmartMoneyIcon,
   LogoIcon,
   MCIcon,
-  SearchOnXIcon,
 } from "@/lib/icons";
 import { SmartMoneyInfo } from "@/types";
 import classNames from "classnames";
 import { useEffect, useState } from "react";
-import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import {
   formatAddress,
@@ -29,13 +26,14 @@ import {
   X as XIcon,
   Language as LanguageIcon,
   Telegram as TelegramIcon,
-  Check as CheckIcon
 } from "@mui/icons-material/";
+import { CopyText, SearchOnX } from "@/components/Common";
+import { useSelectedFilter, useSelectedKOL } from "@/hooks/useKOL";
 
 export default function MainContent() {
   const isMobile = getPlatformInfo()?.isMobile;
-  const { data: timeType } = useSWR("timeType");
-  const { data: tokenAddress } = useSWR("selectedToken");
+  const { catorgy } = useSelectedFilter("ai");
+  const { selected } = useSelectedKOL("ai");
   const { trigger: tokenListTrigger, isMutating } = useSWRMutation<
     SmartMoneyInfo[]
   >(`api:/trending_tokens/rank`);
@@ -46,7 +44,7 @@ export default function MainContent() {
     tokenListTrigger({
       method: "POST",
       body: JSON.stringify({
-        category: timeType,
+        category: catorgy,
         offset: 0,
         limit: 20,
       }),
@@ -55,21 +53,19 @@ export default function MainContent() {
         setTokenData(list);
         console.log(
           "update------",
-          tokenAddress,
+          selected,
           list?.findIndex(
-            (o) =>
-              o?.token_address?.toLowerCase() === tokenAddress?.toLowerCase()
+            (o) => o?.token_address?.toLowerCase() === selected?.toLowerCase()
           )
         );
         if (
-          tokenAddress === null ||
+          selected === null ||
           list?.findIndex(
-            (o) =>
-              o?.token_address?.toLowerCase() === tokenAddress?.toLowerCase()
-          ) <= 0
+            (o) => o?.token_address?.toLowerCase() === selected?.toLowerCase()
+          ) < 0
         ) {
-          updateSelectedToken(list[0]?.token_address);
-          updateSelectedTokenInfo(JSON.stringify(list[0]));
+          setSelected(list[0]?.token_address);
+          setSelectedInfo(JSON.stringify(list[0]));
         }
       }
     });
@@ -77,24 +73,23 @@ export default function MainContent() {
 
   useEffect(() => {
     setTokenData([]);
-    if (timeType) {
+    if (catorgy) {
       getTokenList();
       const interval = setInterval(() => {
         getTokenList();
       }, 60000);
       return () => clearInterval(interval);
     }
-  }, [timeType]);
+  }, [catorgy]);
 
-  const { trigger: updateSelectedToken } =
-    useSWRMutation<string>("selectedToken");
-  const { trigger: updateSelectedTokenInfo } =
-    useSWRMutation<SmartMoneyInfo>("selectedTokenInfo");
+  const { setSelected, setSelectedInfo } = useSelectedKOL("ai");
+
+  console.log("main-content", selected);
 
   return (
     <div
       className={classNames(
-        "relative flex flex-auto flex-col gap-[16px] pb-[150px] md:pr-[16px]",
+        "relative flex flex-auto flex-col gap-[10px] pb-[150px] md:pr-[16px]",
         isMobile
           ? "h-full overflow-auto"
           : "overflow-hidden hover:overflow-auto"
@@ -108,8 +103,8 @@ export default function MainContent() {
               key={item?.id}
               className="relative"
               onClick={() => {
-                updateSelectedToken(item?.token_address);
-                updateSelectedTokenInfo(JSON.stringify(item));
+                setSelected(item?.token_address);
+                setSelectedInfo(JSON.stringify(item));
               }}
             >
               <Link href={"/summary"} className="relative">
@@ -123,8 +118,8 @@ export default function MainContent() {
               key={item?.id}
               className="relative"
               onClick={() => {
-                updateSelectedToken(item?.token_address);
-                updateSelectedTokenInfo(JSON.stringify(item));
+                setSelected(item?.token_address);
+                setSelectedInfo(JSON.stringify(item));
               }}
             >
               <Item {...item} index={index} />
@@ -138,18 +133,18 @@ export default function MainContent() {
 }
 
 function Item(props: SmartMoneyInfo & { index: number }) {
-  const { data: selectedToken } = useSWR("selectedToken");
+  const { selected } = useSelectedKOL("ai");
   return (
     <div
       className={classNames(
-        "relative flex flex-col gap-[16px] rounded-[20px] p-[20px] shadow-[0_4px_12px_0_rgba(0,0,0,0.06)] transition-colors duration-300 cursor-pointer",
-        "border-[2px] border-dashed hover:border-[#555F32] hover:bg-[#FBFFEC]",
-        selectedToken?.toLowerCase() === props?.token_address?.toLowerCase()
+        "relative flex flex-col gap-[8px] rounded-[20px] p-[16px] shadow-[0_4px_12px_0_rgba(0,0,0,0.06)] transition-colors duration-300 cursor-pointer",
+        "border-[1px] border-dashed hover:border-[#555F32] hover:bg-[#FBFFEC]",
+        selected?.toLowerCase() === props?.token_address?.toLowerCase()
           ? "border-[#555F32] bg-[#FBFFEC]"
           : "border-[#F1F1F1] bg-[#FFFFFF]"
       )}
     >
-      <div className="absolute top-[-2px] left-[-2px] bg-black text-[#C8FF00] text-[14px] font-medium rounded-tl-[20px] rounded-br-[20px] px-[12px] h-[24px] flex items-center justify-center">
+      <div className="absolute top-[-2px] left-[-2px] bg-[#C8FF00] text-[#000] text-[12px] font-medium rounded-tl-[20px] rounded-br-[20px] px-[12px] h-[20px] flex items-center justify-center">
         # {props?.index + 1}
       </div>
       <Section1 {...props} />
@@ -160,20 +155,19 @@ function Item(props: SmartMoneyInfo & { index: number }) {
 }
 
 function Section1(props: SmartMoneyInfo) {
-  const [copied, setCopied] = useState(false);
   return (
-    <div className="w-full flex-1 flex flex-row gap-[16px]">
-      <div className="relative w-[64px] h-[64px]">
+    <div className="w-full flex-1 flex flex-row gap-[8px]">
+      <div className="relative w-[50px] h-[50px]">
         {props?.logo && props?.logo !== "" ? (
           <img
             src={props?.logo}
-            width={64}
-            height={64}
-            className="rounded-full w-[64] h-[64] bg-gray-500"
+            width={50}
+            height={50}
+            className="rounded-full w-[50] h-[50] bg-gray-500"
             alt=""
           />
         ) : (
-          <div className="rounded-full w-[64] h-[64] bg-gray-500" />
+          <div className="rounded-full w-[50px] h-[50px] bg-gray-500" />
         )}
         <img
           src={BASE_PATH + "/image/solana.png"}
@@ -183,38 +177,14 @@ function Section1(props: SmartMoneyInfo) {
           className="rounded-full absolute bottom-0 right-0"
         />
       </div>
-      <div className="flex flex-col gap-[8px]">
+      <div className="flex flex-col gap-[4px]">
         <div className="text-[18px] text-black flex flex-row gap-[4px] items-center">
-          <div className="text-[24px] font-bold">{props?.symbol}</div>
+          <div className="text-[20px] font-bold">{props?.symbol}</div>
           <div className="text-[12px]">{`${props?.name} · ${formatAddress(
             props?.token_address
           )}`}</div>
-          {copied ? (
-            <div>
-              <CheckIcon />
-            </div>
-          ) : (
-            <div
-              className="cursor-pointer text-black hover:text-[#C8FF00]"
-              onClick={(e) => {
-                navigator.clipboard.writeText(props?.token_address);
-                setCopied(true);
-                setTimeout(() => setCopied(false), 1000);
-                e.stopPropagation();
-              }}
-            >
-              <CopyIcon />
-            </div>
-          )}
-          <div
-            className="cursor-pointer text-black hover:text-[#C8FF00]"
-            onClick={(e) => {
-              window.open(`https://x.com/search?q=${props?.token_address}`);
-              e.stopPropagation();
-            }}
-          >
-            <SearchOnXIcon />
-          </div>
+          <CopyText text={props?.token_address} />
+          <SearchOnX text={props?.token_address} />
         </div>
         <div className="text-[12px] font-semibold text-[#666] flex flex-row gap-[6px] justify-start flex-wrap">
           {(props?.famous_confirmed || props?.famous_twitter_name) && (
@@ -302,8 +272,8 @@ function Section1(props: SmartMoneyInfo) {
 }
 
 function Section2(props: SmartMoneyInfo) {
-  const { data: selectedToken } = useSWR("selectedToken");
-  const { trigger: updateDataType } = useSWRMutation<string>("dataType");
+  const { selected } = useSelectedKOL("ai");
+  const { setDataType } = useSelectedFilter("ai");
   const list = [
     {
       title: "SmartMoney",
@@ -313,7 +283,7 @@ function Section2(props: SmartMoneyInfo) {
       isPositive: props?.smart_wallet_count_change,
       change: props?.smart_wallet_count_change,
       onClick: () => {
-        updateDataType("smartmoney");
+        setDataType("smartmoney");
       },
     },
     {
@@ -324,7 +294,7 @@ function Section2(props: SmartMoneyInfo) {
       isPositive: props?.x_feed_num_change,
       change: props?.x_feed_num_change,
       onClick: () => {
-        updateDataType("twitter");
+        setDataType("twitter");
       },
     },
     {
@@ -349,8 +319,7 @@ function Section2(props: SmartMoneyInfo) {
             )}
             onClick={(e) => {
               if (
-                selectedToken?.toLowerCase() ===
-                props?.token_address?.toLowerCase()
+                selected?.toLowerCase() === props?.token_address?.toLowerCase()
               ) {
                 item?.onClick();
                 e.stopPropagation();
@@ -360,7 +329,7 @@ function Section2(props: SmartMoneyInfo) {
             {item?.icon}
             <div className="flex flex-col">
               <div className="text-[12px] font-semibold">{item?.title}</div>
-              <div className="flex flex-row items-center gap-[4px] text-[16px]">
+              <div className="flex flex-row items-center gap-[4px] text-[14px]">
                 <div className="font-bold text-[#000]">
                   {formatNumber(item?.value)}
                 </div>

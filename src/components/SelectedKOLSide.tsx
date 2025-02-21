@@ -1,17 +1,20 @@
-import { CallOnIcon, CopyIcon } from "@/lib/icons";
-import useSWR from "swr";
-import useSWRMutation from "swr/mutation";
+import { CallOnIcon, LaunchIcon } from "@/lib/icons";
 import TabSetItem from "./TabSetItem";
-import { useEffect, useState } from "react";
 import classNames from "classnames";
 import Loader from "./Loader";
 import TwitterItem, { QuoteTwitterItem, ReplyTwitterItem } from "./TwitterItem";
-import { TwitterFeedInfo } from "@/types";
+import { KOLTokenInfo } from "@/types";
+import { X as XIcon } from "@mui/icons-material";
+import { CopyText } from "./Common";
+import { formatAddress } from "@/lib/utils";
+import dayjs from "dayjs";
 import {
-  X as XIcon,
-  Check as CheckIcon,
-  Launch as LaunchIcon,
-} from "@mui/icons-material";
+  useSelectedFilter,
+  useSelectedKOL,
+  useTwitterByUid,
+} from "@/hooks/useKOL";
+import { useEffect } from "react";
+import { Chip } from "@mui/material";
 
 const DATA_TYPE_LIST = [
   {
@@ -22,90 +25,52 @@ const DATA_TYPE_LIST = [
   { key: "twitter", name: "X(Twitter)", icon: <XIcon /> },
 ];
 export default function SelectedKOLSide({ type }: { type: "watch" | "kol" }) {
-  const { data: KOLdataType } = useSWR(
-    type === "watch" ? "watchKOLdataType" : "KOLdataType",
-    { fallbackData: "calls" }
-  );
-  const { trigger: updateKOLDataType } = useSWRMutation<string>(
-    type === "watch" ? "watchKOLdataType" : "KOLdataType"
-  );
+  const { dataType, setDataType } = useSelectedFilter(type);
+
+  useEffect(() => {
+    if (dataType === null) {
+      setDataType("calls");
+    }
+  }, [dataType]);
 
   return (
-    <div className="flex flex-col rounded-[20px] px-[16px]">
-      <div className="flex flex-row gap-[16px] sticky top-0 bg-white pt-[16px] z-[3]">
+    <div className="flex-1 flex flex-col rounded-b-[20px] px-[16px] bg-white">
+      <div className="flex flex-row gap-[16px] sticky top-0 py-[16px] bg-white z-[3]">
         {DATA_TYPE_LIST?.map((item) => {
           return (
-            <TabSetItem
+            <div
               key={item?.key}
-              name="KOL-data-type-tab"
-              value={item?.key}
-              icon={
-                <div className="h-[36px] flex items-center">{item?.icon}</div>
-              }
-              defaultChecked={KOLdataType === item?.key}
-              onChange={() => {
+              onClick={() => {
                 console.log("change to ", item?.key);
-                updateKOLDataType(item?.key);
+                setDataType(item?.key);
               }}
-            />
+            >
+              <TabSetItem
+                name="KOL-data-type-tab"
+                value={item?.key}
+                icon={
+                  <div className="h-[36px] flex items-center">{item?.icon}</div>
+                }
+                defaultChecked={dataType === item?.key}
+              />
+            </div>
           );
         })}
       </div>
-      {KOLdataType === "calls" && <CallListContent />}
-      {KOLdataType === "twitter" && <TwitterListContent />}
+      {dataType === "calls" && <CallListContent type={type} />}
+      {dataType === "twitter" && <TwitterListContent type={type} />}
     </div>
   );
 }
 
-function TwitterListContent() {
-  const tokenAddress = "6AJcP7wuLwmRYLBNbi825wgguaPsWzPBEHcHndpRpump";
-  const { trigger: twitterTrigger, isMutating } = useSWRMutation<
-    TwitterFeedInfo[]
-  >(`api:/trending_tokens/twitter_tweets`);
-  let interval: NodeJS.Timeout;
-
-  // const [pageNo, setPageNo] = useState<number>(1)
-  const [category, setCategory] = useState<string>("top");
-  // const [hasMore, setHasMore] = useState<boolean>(true)
-  const [twitterData, setTwitterData] = useState<TwitterFeedInfo[]>([]);
-
-  const getTwitterList = () => {
-    twitterTrigger({
-      method: "POST",
-      body: JSON.stringify({
-        token_address: tokenAddress,
-        category,
-        offset: 0, //pageNo - 1,
-        limit: 50,
-      }),
-    }).then((list) => {
-      if (list && list.length > 0) {
-        // const newData = twitterData.concat(list || [])
-        const newData = list;
-        setTwitterData(newData);
-        // setPageNo(pageNo + 1)
-        // setHasMore(newData?.length < (10*pageNo) ? false : true)
-      } else {
-        // setHasMore(false)
-      }
-    });
-  };
-
-  useEffect(() => {
-    setTwitterData([]);
-    // setPageNo(1)
-    // setHasMore(false)
-    if (tokenAddress && category) {
-      getTwitterList();
-      interval = setInterval(() => {
-        getTwitterList();
-      }, 300000);
-      return () => clearInterval(interval);
-    }
-  }, [tokenAddress, category]);
+function TwitterListContent({ type }: { type: "watch" | "kol" }) {
+  const { selectedInfo } = useSelectedKOL(type);
+  const { data: twitterData, isLoading } = useTwitterByUid(
+    selectedInfo?.user_id
+  );
 
   return (
-    <div className="w-full flex flex-col mt-[16px] relative z-[1]">
+    <div className="w-full h-full bg-[white] flex flex-col relative z-[1]">
       <div className={classNames("flex flex-col gap-[16px] min-h-[160px]")}>
         {twitterData?.map((item) => {
           if (item?.related_tweets && item?.related_tweets?.length > 0) {
@@ -123,63 +88,58 @@ function TwitterListContent() {
           }
         })}
       </div>
-      {isMutating && <Loader />}
-      {/* {hasMore && twitterData?.length>0 && <div className="w-full h-[48px] text-[16px] font-bold rounded-[6px] text-black bg-[#C8FF00] flex items-center justify-center mt-[4px] cursor-pointer mb-[16px]" onClick={getTwitterList}>Learn more</div>} */}
+      {isLoading && <Loader />}
     </div>
   );
 }
 
-function CallListContent() {
+function CallListContent({ type }: { type: "watch" | "kol" }) {
+  const { selectedInfo } = useSelectedKOL(type);
+
   return (
     <div className="w-full flex flex-col relative">
       <div
-        className={classNames("w-full flex flex-col min-h-[200px] mt-[16px]")}
+        className={classNames("w-full flex flex-col gap-[16px] min-h-[200px]")}
       >
-        <CallItem />
-        <CallItem />
-        <CallItem />
-        <CallItem />
-        <CallItem />
+        {(selectedInfo?.token_info || [])?.map((item: KOLTokenInfo) => {
+          return <CallItem key={item?.token_address} {...item} />;
+        })}
       </div>
     </div>
   );
 }
 
-function CallItem() {
-  const [copied, setCopied] = useState(false);
-
+function CallItem(props: KOLTokenInfo) {
   return (
-    <div className="flex flex-col gap-[16px] border-b-[1px] py-[16px] border-[#DDDDDD]">
+    <div className="flex flex-col gap-[16px] border-b-[1px] pb-[16px] border-[#DDDDDD] last:border-0">
       <div className="w-full flex flex-row items-center justify-between">
         <div className="flex items-center gap-[8px]">
-          <div className="w-[40px] h-[40px] rounded-full bg-[gray]"></div>
+          <div className="w-[40px] h-[40px] rounded-full bg-[gray]">
+            <img
+              src={props?.logo}
+              className="w-[40px] h-[40px] rounded-full"
+              alt={props?.name}
+            />
+          </div>
           <div className="flex flex-col justify-center">
             <div className="flex flex-row items-center gap-[4px]">
-              <div className="text-[16px] font-semibold">Watson</div>
-              <div className="text-[12px] bg-[#E0F8EB] rounded-[6px] px-[4px] py-[2px]">
-                Meme
-              </div>
-              <div>
-                <LaunchIcon />
-              </div>
+              <div className="text-[16px] font-semibold">{props?.name}</div>
+              <Chip
+                label="Meme"
+                sx={{
+                  height: "18px",
+                  backgroundColor: "#E0F8EB",
+                  "&.MuiChip-root": { borderRadius: "6px" },
+                  "&.MuiChip-root .MuiChip-label": { padding: "2px 4px" },
+                }}
+              />
+              <LaunchIcon />
             </div>
             <div className="flex flex-row items-center gap-[4px]">
-              <div className="text-[12px] text-[#666]">5VwjS...ump</div>
-              {copied ? (
-                <CheckIcon />
-              ) : (
-                <div
-                  className="cursor-pointer text-black hover:text-[#C8FF00]"
-                  onClick={(e) => {
-                    // navigator.clipboard.writeText(props?.token_address)
-                    setCopied(true);
-                    setTimeout(() => setCopied(false), 1000);
-                    e.stopPropagation();
-                  }}
-                >
-                  <CopyIcon />
-                </div>
-              )}
+              <div className="text-[12px] text-[#666]">
+                {formatAddress(props?.token_address)}
+              </div>
+              <CopyText text={""} />
             </div>
           </div>
         </div>
@@ -189,30 +149,28 @@ function CallItem() {
         </div>
       </div>
       <div className="rounded-[8px] p-[12px] bg-[#F8F9F4] text-[12px] flex flex-col gap-[16px]">
-        <div>Price (SOL)</div>
-        <div className="flex flex-row gap-[10px]">
-          <div className="flex flex-col">
-            <div>Call Time</div>
-            <div>2024.09.06：</div>
-            <div>0.01706</div>
-          </div>
-          <div className="flex flex-col">
-            <div>Peak Time</div>
-            <div>2024.09.06：</div>
-            <div>0.05845</div>
-          </div>
-          <div className="flex flex-col">
-            <div>Increase：</div>
-            <div className="text-[#00B953] text-[14px] font-semibold">+21%</div>
-          </div>
-          <div className="flex flex-col">
-            <div>Current Price</div>
-            <div className="text-[14px] font-semibold">0.04678</div>
+        <div className="flex flex-row items-center justify-between">
+          <div>Price (SOL)</div>
+          <div>
+            Current Price: <span className="font-bold">0.04678</span>
           </div>
         </div>
-      </div>
-      <div className="text-[12px] text-[#999]">
-        Called at 2024.09.06 07:03 AM
+        <div className="w-full flex flex-row gap-[10px]">
+          <div className="flex-[2] flex flex-col">
+            <div>Call Time</div>
+            <div>{dayjs(props?.call_time).format("YYYY.MM.DD hh:mma")}: </div>
+            <div className="text-[14px] font-bold">0.01706</div>
+          </div>
+          <div className="flex-[2] flex flex-col">
+            <div>Peak Time</div>
+            <div>2024.10.08 08:52am: </div>
+            <div className="text-[14px] font-bold">0.05845</div>
+          </div>
+          <div className="flex-[1] flex flex-col">
+            <div>Increase: </div>
+            <div className="text-[#00B953] text-[14px] font-bold">+21%</div>
+          </div>
+        </div>
       </div>
     </div>
   );

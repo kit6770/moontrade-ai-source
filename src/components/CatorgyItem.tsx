@@ -26,7 +26,7 @@ export default function CatorgyItem({
       />
       <div
         className={classNames(
-          "text-center w-full h-full flex items-center justify-center text-[#666666] rounded-[8px] text-[16px] font-semibold transition-all duration-300 ",
+          "text-center w-full h-full flex items-center justify-center text-[#666666] rounded-[8px] text-[14px] transition-all duration-300 ",
           "peer-checked:text-[#000000] peer-checked:bg-[#C8FF00]",
           defaultChecked && "text-[#000000] bg-[#C8FF00]",
           "hover:bg-[#C8FF00] hover:text-[#000000]"
