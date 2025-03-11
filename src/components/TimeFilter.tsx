@@ -1,28 +1,28 @@
-import { TimeFilterType } from "@/types";
-import { Button, Menu, MenuItem } from "@mui/material";
-import React from "react";
+import { TimeFilterType } from "@/types"
+import { Button, Menu, MenuItem } from "@mui/material"
+import React from "react"
 import {
   Check as CheckIcon,
   ArrowDropDown as ArrowDropDownIcon,
-} from "@mui/icons-material";
-import { ButtonStyled } from "./Common";
-import { useSelectedFilter } from "@/hooks/useKOL";
+} from "@mui/icons-material"
+import { ButtonStyled } from "./Common"
+import { useSelectedFilter } from "@/hooks/useKOL"
 
 export default function TimeFilter({
   type,
   timeList,
 }: {
-  type: "watch" | "kol";
-  timeList: TimeFilterType[];
+  type: "watch" | "kol"
+  timeList: TimeFilterType[]
 }) {
-  const { lastTimeType, setLastTimeType } = useSelectedFilter(type);
+  const { lastTimeType, setLastTimeType } = useSelectedFilter(type)
 
   const selectedTime =
-    timeList?.find((item) => item?.value === lastTimeType) ?? timeList[0];
+    timeList?.find((item) => item?.value === lastTimeType) ?? timeList[0]
 
   const [timeAnchorEl, setTimeAnchorEl] = React.useState<
     (EventTarget & HTMLButtonElement) | null
-  >(null);
+  >(null)
 
   return (
     <div>
@@ -33,7 +33,7 @@ export default function TimeFilter({
           aria-haspopup="true"
           aria-expanded={Boolean(timeAnchorEl) ? "true" : undefined}
           onClick={(event) => {
-            setTimeAnchorEl(event.currentTarget);
+            setTimeAnchorEl(event.currentTarget)
           }}
           className="w-full h-full"
           sx={{ textTransform: "none", ...ButtonStyled }}
@@ -55,12 +55,12 @@ export default function TimeFilter({
           "aria-labelledby": "timeType-button",
         }}
       >
-        {timeList?.map((item) => (
+        {timeList?.map((item, index) => (
           <MenuItem
-            key={item?.value}
+            key={item?.value + "_" + index}
             onClick={() => {
-              setLastTimeType(item?.value);
-              setTimeAnchorEl(null);
+              setLastTimeType(item?.value)
+              setTimeAnchorEl(null)
             }}
           >
             <div className="flex items-center">
@@ -73,5 +73,5 @@ export default function TimeFilter({
         ))}
       </Menu>
     </div>
-  );
+  )
 }

@@ -1,101 +1,101 @@
-import { KOLItemInfo } from "@/types";
-import { useState } from "react";
-import { Close as CloseIcon, Cached as CachedIcon } from "@mui/icons-material";
-import { Button, Modal, Box, TextField, InputAdornment } from "@mui/material";
-import classNames from "classnames";
+import { KOLItemInfo } from "@/types"
+import { useState } from "react"
+import { Close as CloseIcon, Cached as CachedIcon } from "@mui/icons-material"
+import { Button, Modal, Box, TextField, InputAdornment } from "@mui/material"
+import classNames from "classnames"
 import {
   CheckCircle as CheckCircleIcon,
   RadioButtonUnchecked as UnCheckCircleIcon,
   Cancel as CancelIcon,
   Search as SearchIcon,
-} from "@mui/icons-material";
-import { ClearAllIcon } from "@/lib/icons";
-import { ButtonStyled } from "@/components/Common";
+} from "@mui/icons-material"
+import { ClearAllIcon } from "@/lib/icons"
+import { ButtonStyled } from "@/components/Common"
 
 export default function PlatformModal({
   open,
   setOpen,
 }: {
-  open: boolean;
-  setOpen: (value: boolean) => void;
+  open: boolean
+  setOpen: (value: boolean) => void
 }) {
   const [list, setList] = useState<KOLItemInfo[]>([
     {
-      user_id: '1',
+      user_id: "1",
       name: "Guy Hawkins",
       twitter_handle: "Paradigm",
       user_name: "5VwjS...ump",
       tags: ["Agent", "Cele", "Zoo"],
     },
     {
-      user_id: '2',
+      user_id: "2",
       name: "Guy Hawkins",
       twitter_handle: "Paradigm",
       user_name: "5VwjS...ump",
       tags: ["Agent", "Cele", "Zoo"],
     },
     {
-      user_id: '3',
+      user_id: "3",
       name: "Guy Hawkins",
       twitter_handle: "Paradigm",
       user_name: "5VwjS...ump",
       tags: ["Agent", "Cele", "Zoo"],
     },
     {
-      user_id: '4',
+      user_id: "4",
       name: "Guy Hawkins",
       twitter_handle: "Paradigm",
       user_name: "5VwjS...ump",
       tags: ["Agent", "Cele", "Zoo"],
     },
     {
-      user_id: '5',
+      user_id: "5",
       name: "Guy Hawkins",
       twitter_handle: "Paradigm",
       user_name: "5VwjS...ump",
       tags: ["Agent", "Cele", "Zoo"],
     },
     {
-      user_id: '6',
+      user_id: "6",
       name: "Guy Hawkins",
       twitter_handle: "Paradigm",
       user_name: "5VwjS...ump",
       tags: ["Agent", "Cele", "Zoo"],
     },
     {
-      user_id: '7',
+      user_id: "7",
       name: "Guy Hawkins",
       twitter_handle: "Paradigm",
       user_name: "5VwjS...ump",
       tags: ["Agent", "Cele", "Zoo"],
     },
     {
-      user_id: '8',
+      user_id: "8",
       name: "Guy Hawkins",
       twitter_handle: "Paradigm",
       user_name: "5VwjS...ump",
       tags: ["Agent", "Cele", "Zoo"],
     },
     {
-      user_id: '9',
+      user_id: "9",
       name: "Guy Hawkins",
       twitter_handle: "Paradigm",
       user_name: "5VwjS...ump",
       tags: ["Agent", "Cele", "Zoo"],
     },
-  ]);
-  const [selectedItems, setSelectedItems] = useState<KOLItemInfo[]>([]);
-  const [searchKeyword, setSearchKeyword] = useState<string>("");
+  ])
+  const [selectedItems, setSelectedItems] = useState<KOLItemInfo[]>([])
+  const [searchKeyword, setSearchKeyword] = useState<string>("")
 
   const handleCheckboxChange = (value: KOLItemInfo) => {
     setSelectedItems((prevSelectedItems) => {
       if (prevSelectedItems.includes(value)) {
-        return prevSelectedItems.filter((i) => i?.user_id !== value?.user_id);
+        return prevSelectedItems.filter((i) => i?.user_id !== value?.user_id)
       } else {
-        return [...prevSelectedItems, value];
+        return [...prevSelectedItems, value]
       }
-    });
-  };
+    })
+  }
 
   return (
     <Modal
@@ -129,7 +129,10 @@ export default function PlatformModal({
           <div className="h-[45px] px-[30px] flex flex-row items-center justify-between border-b-[1px] boprder-[#00000026] text-[16px] font-semibold">
             From Platform ({selectedItems?.length}/100)
           </div>
-          <div className="flex flex-row justify-between" style={{ height: "calc(80vh - 82px - 45px)" }}>
+          <div
+            className="flex flex-row justify-between"
+            style={{ height: "calc(80vh - 82px - 45px)" }}
+          >
             <div
               className="w-[450px] h-full flex flex-col bg-[#FAFAFA] overflow-hidden"
               style={{ boxShadow: "1px 0px 0px 0px #97979733" }}
@@ -157,15 +160,15 @@ export default function PlatformModal({
                 }}
               />
               <div className="flex-1 h-full flex flex-col gap-[20px] overflow-auto hide-scrollbar">
-                {list?.map((item) => {
+                {list?.map((item, index) => {
                   return (
                     <KOLItem
-                      key={item?.user_id}
+                      key={item?.user_id + "_" + index}
                       {...item}
                       selectedItems={selectedItems}
                       onClick={() => handleCheckboxChange(item)}
                     />
-                  );
+                  )
                 })}
               </div>
             </div>
@@ -177,16 +180,16 @@ export default function PlatformModal({
                 </div>
               </div>
               <div className="flex flex-col gap-[20px] overflow-auto hide-scrollbar">
-                {selectedItems?.map((item) => {
+                {selectedItems?.map((item, index) => {
                   return (
                     <KOLItem
-                      key={item?.user_id}
+                      key={item?.user_id + "_" + index}
                       {...item}
                       selectedItems={selectedItems}
                       onClick={(value) => handleCheckboxChange(item)}
                       action={"delete"}
                     />
-                  );
+                  )
                 })}
               </div>
             </div>
@@ -204,7 +207,7 @@ export default function PlatformModal({
               fontSize: "16px",
               fontWeight: "600",
               padding: "0 50px",
-              ...ButtonStyled
+              ...ButtonStyled,
             }}
             onClick={() => setOpen(false)}
           >
@@ -221,7 +224,7 @@ export default function PlatformModal({
               fontSize: "16px",
               fontWeight: "600",
               padding: "0 50px",
-              ...ButtonStyled
+              ...ButtonStyled,
             }}
           >
             Confirm
@@ -229,23 +232,25 @@ export default function PlatformModal({
         </div>
       </Box>
     </Modal>
-  );
+  )
 }
 
 const KOLItem = (
   props: KOLItemInfo & {
-    selectedItems: KOLItemInfo[];
-    onClick?: (value: string) => void;
-    action?: "delete";
+    selectedItems: KOLItemInfo[]
+    onClick?: (value: string) => void
+    action?: "delete"
   }
 ) => {
-  const isChecked = props?.selectedItems?.find((o) => o?.user_id === props?.user_id);
+  const isChecked = props?.selectedItems?.find(
+    (o) => o?.user_id === props?.user_id
+  )
   return (
     <div
       className={classNames(
         "w-full px-[16px] rounded-[6px] flex flex-row items-center justify-between gap-[10px] cursor-pointer hover:bg-[#FBFFEC]"
       )}
-      onClick={() => props?.onClick?.(props?.user_id ?? '')}
+      onClick={() => props?.onClick?.(props?.user_id ?? "")}
     >
       <div className="flex flex-row items-center gap-[10px]">
         <div className="w-[48px] h-[48px] rounded-full bg-[gray]"></div>
@@ -269,5 +274,5 @@ const KOLItem = (
         </div>
       )}
     </div>
-  );
-};
+  )
+}

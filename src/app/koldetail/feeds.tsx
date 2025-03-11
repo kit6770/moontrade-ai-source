@@ -1,28 +1,28 @@
-import Loader from "@/components/Loader";
-import TabSetItem from "@/components/TabSetItem";
+import Loader from "@/components/Loader"
+import TabSetItem from "@/components/TabSetItem"
 import TwitterItem, {
   QuoteTwitterItem,
   ReplyTwitterItem,
-} from "@/components/TwitterItem";
-import { TwitterFeedInfo } from "@/types";
-import classNames from "classnames";
-import { useEffect, useState } from "react";
-import useSWRMutation from "swr/mutation";
+} from "@/components/TwitterItem"
+import { TwitterFeedInfo } from "@/types"
+import classNames from "classnames"
+import { useEffect, useState } from "react"
+import useSWRMutation from "swr/mutation"
 
 const TWITTER_TYPE_LIST = [
   { value: "top", name: "TOP" },
   { value: "latest", name: "Latest" },
-];
+]
 
 export default function Feeds() {
   const { trigger: twitterTrigger, isMutating } = useSWRMutation<
     TwitterFeedInfo[]
-  >(`api:/trending_tokens/twitter_tweets`);
+  >(`api:/trending_tokens/twitter_tweets`)
 
-  const [pageNo, setPageNo] = useState<number>(1);
-  const [category, setCategory] = useState<string>("top");
-  const [hasMore, setHasMore] = useState<boolean>(true);
-  const [twitterData, setTwitterData] = useState<TwitterFeedInfo[]>([]);
+  const [pageNo, setPageNo] = useState<number>(1)
+  const [category, setCategory] = useState<string>("top")
+  const [hasMore, setHasMore] = useState<boolean>(true)
+  const [twitterData, setTwitterData] = useState<TwitterFeedInfo[]>([])
 
   const getTwitterList = () => {
     twitterTrigger({
@@ -35,24 +35,24 @@ export default function Feeds() {
       }),
     }).then((list) => {
       if (list && list.length > 0) {
-        const newData = twitterData.concat(list || []);
-        setTwitterData(newData);
-        setPageNo(pageNo + 1);
-        setHasMore(newData?.length < 10 * pageNo ? false : true);
+        const newData = twitterData.concat(list || [])
+        setTwitterData(newData)
+        setPageNo(pageNo + 1)
+        setHasMore(newData?.length < 10 * pageNo ? false : true)
       } else {
-        setHasMore(false);
+        setHasMore(false)
       }
-    });
-  };
+    })
+  }
 
   useEffect(() => {
-    setTwitterData([]);
-    setPageNo(1);
-    setHasMore(false);
+    setTwitterData([])
+    setPageNo(1)
+    setHasMore(false)
     if (category) {
-      getTwitterList();
+      getTwitterList()
     }
-  }, [category]);
+  }, [category])
 
   return (
     <div className="w-full flex flex-col">
@@ -77,23 +77,27 @@ export default function Feeds() {
               }
               onChange={() => setCategory(item?.value)}
             />
-          );
+          )
         })}
       </div>
       <div className={classNames("flex flex-col gap-[16px] min-h-[160px]")}>
-        {twitterData?.map((item) => {
+        {twitterData?.map((item, index) => {
           if (item?.related_tweets && item?.related_tweets?.length > 0) {
             if (item?.related_tweets?.length === 1) {
               if (item?.related_tweets?.[0]?.type === "replied_to") {
-                return <ReplyTwitterItem key={item?.id} {...item} />;
+                return (
+                  <ReplyTwitterItem key={item?.id + "_" + index} {...item} />
+                )
               } else {
-                return <QuoteTwitterItem key={item?.id} {...item} />;
+                return (
+                  <QuoteTwitterItem key={item?.id + "_" + index} {...item} />
+                )
               }
             } else {
-              return <QuoteTwitterItem key={item?.id} {...item} />;
+              return <QuoteTwitterItem key={item?.id + "_" + index} {...item} />
             }
           } else {
-            return <TwitterItem key={item?.id} {...item} />;
+            return <TwitterItem key={item?.id + "_" + index} {...item} />
           }
         })}
       </div>
@@ -107,5 +111,5 @@ export default function Feeds() {
         </div>
       )}
     </div>
-  );
+  )
 }

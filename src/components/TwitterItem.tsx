@@ -5,12 +5,12 @@ import {
   LogoPumpIcon,
   ShareIcon,
   TwitterVIcon,
-} from "@/lib/icons";
-import { FeedInfo, TwitterFeedInfo } from "@/types";
-import classNames from "classnames";
-import { BaseTooltip } from "./BaseTooltip";
-import { formatNumber, timeAgo } from "@/lib/utils";
-import XIcon from '@mui/icons-material/X';
+} from "@/lib/icons"
+import { FeedInfo, TwitterFeedInfo } from "@/types"
+import classNames from "classnames"
+import { BaseTooltip } from "./BaseTooltip"
+import { formatNumber, timeAgo } from "@/lib/utils"
+import XIcon from "@mui/icons-material/X"
 
 export default function TwitterItem(
   props: FeedInfo & { isQuote?: boolean; isReply?: boolean }
@@ -31,8 +31,8 @@ export default function TwitterItem(
       icon: <LikeIcon />,
       value: props?.favorite_count,
     },
-  ];
-  const mediaLength = (props?.medias || [])?.length;
+  ]
+  const mediaLength = (props?.medias || [])?.length
   return (
     <div
       className={classNames(
@@ -50,7 +50,7 @@ export default function TwitterItem(
             <div
               className="cursor-pointer"
               onClick={() => {
-                window.open(props?.text_url, "_blank");
+                window.open(props?.text_url, "_blank")
               }}
             >
               <XIcon />
@@ -94,10 +94,10 @@ export default function TwitterItem(
       {props?.medias && props?.medias?.length > 0 && (
         <div className="grid grid-cols-2 gap-[8px] pb-[6px]">
           {props?.medias?.map((item, index) => {
-            const isLast = mediaLength % 2 === 1 && index === mediaLength - 1;
+            const isLast = mediaLength % 2 === 1 && index === mediaLength - 1
             return (
               <img
-                key={item?.media_key}
+                key={item?.media_key + "_" + index}
                 src={item?.url}
                 alt=""
                 className={classNames(
@@ -106,7 +106,7 @@ export default function TwitterItem(
                 )}
                 onClick={() => openModal(item?.url)}
               />
-            );
+            )
           })}
         </div>
       )}
@@ -115,7 +115,7 @@ export default function TwitterItem(
           {actionList?.map((item, index) => {
             return (
               <div
-                key={item?.key}
+                key={item?.key + "_" + index}
                 className={classNames(
                   "flex flex-row items-center gap-[4px]",
                   index === 2 ? "" : "flex-1"
@@ -124,57 +124,80 @@ export default function TwitterItem(
                 <div>{item?.icon}</div>
                 <div className="text-[14px]">{formatNumber(item?.value)}</div>
               </div>
-            );
+            )
           })}
         </div>
       )}
     </div>
-  );
+  )
 }
 
 function openModal(imageUrl: string) {
-  if (!imageUrl || imageUrl === "") return;
-  const modal = document.getElementById("modal");
-  const modalImage = document.getElementById("modal-image") as HTMLImageElement;
-  modal?.classList.remove("hidden");
-  modalImage!.src = imageUrl;
+  if (!imageUrl || imageUrl === "") return
+  const modal = document.getElementById("modal")
+  const modalImage = document.getElementById("modal-image") as HTMLImageElement
+  modal?.classList.remove("hidden")
+  modalImage!.src = imageUrl
 }
 
 export function QuoteTwitterItem(props: TwitterFeedInfo) {
-  const actionList = [{
-    key: 'relpy',
-    icon: <CommentIcon/>,
-    value: props?.reply_count
-  }, {
-    key: 'share',
-    icon: <ShareIcon/>,
-    value: ((props?.quote_count ?? 0) + (props?.retweet_count ?? 0))
-  }, {
-    key: 'like',
-    icon: <LikeIcon/>,
-    value: props?.favorite_count
-  }]
-  return <div className="flex flex-col p-[20px] gap-[10px] bg-[#F9F9F9]">
-    <div className="flex flex-row items-center justify-between">
-      <div className="flex flex-row gap-[8px] items-center">
-        <div className="w-[16px] h-[16px] rounded-full bg-black flex items-center justify-center"><LogoIcon/></div>
-        <div className="text-[16px] font-bold">PeerX</div>
-      </div>
-      <div className="cursor-pointer" onClick={()=>{window.open(props?.text_url, '_blank')}}><XIcon/></div>
-    </div>
-    <TwitterItem {...props} isQuote />
-    <div className="flex mb-[10px] p-[10px] rounded-[6px] border-[1px] border-[#DEDEDE]">
-      <TwitterItem {...props?.related_tweets?.[0]} isQuote/>
-    </div>
-    <div className="flex flex-row items-center gap-[16px]">
-      {actionList?.map((item, index)=>{
-        return <div key={item?.key} className={classNames("flex flex-row items-center gap-[4px]", index===2 ? '': 'flex-1')}>
-          <div>{item?.icon}</div>
-          <div className="text-[14px]">{formatNumber(item?.value)}</div>
+  const actionList = [
+    {
+      key: "relpy",
+      icon: <CommentIcon />,
+      value: props?.reply_count,
+    },
+    {
+      key: "share",
+      icon: <ShareIcon />,
+      value: (props?.quote_count ?? 0) + (props?.retweet_count ?? 0),
+    },
+    {
+      key: "like",
+      icon: <LikeIcon />,
+      value: props?.favorite_count,
+    },
+  ]
+  return (
+    <div className="flex flex-col p-[20px] gap-[10px] bg-[#F9F9F9]">
+      <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-row gap-[8px] items-center">
+          <div className="w-[16px] h-[16px] rounded-full bg-black flex items-center justify-center">
+            <LogoIcon />
+          </div>
+          <div className="text-[16px] font-bold">PeerX</div>
         </div>
-      })}
+        <div
+          className="cursor-pointer"
+          onClick={() => {
+            window.open(props?.text_url, "_blank")
+          }}
+        >
+          <XIcon />
+        </div>
+      </div>
+      <TwitterItem {...props} isQuote />
+      <div className="flex mb-[10px] p-[10px] rounded-[6px] border-[1px] border-[#DEDEDE]">
+        <TwitterItem {...props?.related_tweets?.[0]} isQuote />
+      </div>
+      <div className="flex flex-row items-center gap-[16px]">
+        {actionList?.map((item, index) => {
+          return (
+            <div
+              key={item?.key + "_" + index}
+              className={classNames(
+                "flex flex-row items-center gap-[4px]",
+                index === 2 ? "" : "flex-1"
+              )}
+            >
+              <div>{item?.icon}</div>
+              <div className="text-[14px]">{formatNumber(item?.value)}</div>
+            </div>
+          )
+        })}
+      </div>
     </div>
-  </div>
+  )
 }
 
 export function ReplyTwitterItem(
@@ -193,7 +216,7 @@ export function ReplyTwitterItem(
           <div
             className="cursor-pointer"
             onClick={() => {
-              window.open(props?.text_url, "_blank");
+              window.open(props?.text_url, "_blank")
             }}
           >
             <XIcon />
@@ -226,5 +249,5 @@ export function ReplyTwitterItem(
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,17 +1,17 @@
-import { CallOnIcon, RateIcon, RatingIcon } from "@/lib/icons";
-import { KOLItemInfo } from "@/types";
-import classNames from "classnames";
-import { Rating, Avatar, AvatarGroup, Checkbox, Chip } from "@mui/material";
-import React from "react";
-import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
-import Favorite from "@mui/icons-material/Favorite";
-import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
-import { TagList } from "@/components/Common";
-import { useSelectedKOL } from "@/hooks/useKOL";
-import { timeAgo } from "@/lib/utils";
+import { CallOnIcon, RateIcon, RatingIcon } from "@/lib/icons"
+import { KOLItemInfo } from "@/types"
+import classNames from "classnames"
+import { Rating, Avatar, AvatarGroup, Checkbox, Chip } from "@mui/material"
+import React from "react"
+import FavoriteBorder from "@mui/icons-material/FavoriteBorder"
+import Favorite from "@mui/icons-material/Favorite"
+import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled"
+import { TagList } from "@/components/Common"
+import { useSelectedKOL } from "@/hooks/useKOL"
+import { timeAgo } from "@/lib/utils"
 
 export const KOLItem = (props: KOLItemInfo & { index: number }) => {
-  const { selected } = useSelectedKOL("kol");
+  const { selected } = useSelectedKOL("kol")
 
   return (
     <div
@@ -29,11 +29,11 @@ export const KOLItem = (props: KOLItemInfo & { index: number }) => {
       <Section1 {...props} />
       <KOLDataInfo {...props} />
     </div>
-  );
-};
+  )
+}
 
 function Section1(props: KOLItemInfo) {
-  const { selected } = useSelectedKOL("kol");
+  const { selected } = useSelectedKOL("kol")
 
   return (
     <div className="flex flex-row gap-[8px] justify-between">
@@ -85,11 +85,13 @@ function Section1(props: KOLItemInfo) {
         </div>
       )}
     </div>
-  );
+  )
 }
 
 export function KOLDataInfo(props: KOLItemInfo) {
-  const [rateValue, setRateValue] = React.useState<number | null | undefined>(props?.rate);
+  const [rateValue, setRateValue] = React.useState<number | null | undefined>(
+    props?.rate
+  )
 
   return (
     <div className="flex flex-row justify-between gap-[16px] items-center">
@@ -118,14 +120,14 @@ export function KOLDataInfo(props: KOLItemInfo) {
                 justifyContent: "start",
               }}
             >
-              {props?.token_info?.map((tokenItem) => {
+              {props?.token_info?.map((tokenItem, tokenIndex) => {
                 return (
                   <Avatar
-                    key={tokenItem?.token_address}
+                    key={tokenItem?.token_address + "_" + tokenIndex}
                     alt={tokenItem?.name}
                     src={tokenItem?.logo}
                   />
-                );
+                )
               })}
             </AvatarGroup>
           </div>
@@ -140,7 +142,9 @@ export function KOLDataInfo(props: KOLItemInfo) {
         <RateIcon />
         <div className="flex flex-col font-semibold">
           <div className="text-[12px]">Win Rate(30D)</div>
-          <div className="text-[14px]">{(props?.winning_rate_30d ?? 0) * 100}%</div>
+          <div className="text-[14px]">
+            {(props?.winning_rate_30d ?? 0) * 100}%
+          </div>
         </div>
       </div>
       {/* Last Active */}
@@ -176,7 +180,7 @@ export function KOLDataInfo(props: KOLItemInfo) {
               name="simple-controlled"
               value={rateValue}
               onChange={(event, newValue) => {
-                setRateValue(newValue);
+                setRateValue(newValue)
               }}
               readOnly
               sx={{ color: "#FF5900", fontSize: "14px" }}
@@ -185,5 +189,5 @@ export function KOLDataInfo(props: KOLItemInfo) {
         </div>
       </div>
     </div>
-  );
+  )
 }

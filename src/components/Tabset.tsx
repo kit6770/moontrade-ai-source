@@ -1,19 +1,19 @@
-import { useEffect, useRef } from "react";
-import CatorgyItem from "./CatorgyItem";
-import TimeFilter from "./TimeFilter";
-import Filter from "./Filter";
-import { ClearAllIcon } from "@/lib/icons";
-import { CloseOutlined } from "@mui/icons-material";
-import { PageType } from "@/types";
-import { useSelectedFilter, useSelectedKOL } from "@/hooks/useKOL";
-import { Chip } from "@mui/material";
+import { useEffect, useRef } from "react"
+import CatorgyItem from "./CatorgyItem"
+import TimeFilter from "./TimeFilter"
+import Filter from "./Filter"
+import { ClearAllIcon } from "@/lib/icons"
+import { CloseOutlined } from "@mui/icons-material"
+import { PageType } from "@/types"
+import { useSelectedFilter, useSelectedKOL } from "@/hooks/useKOL"
+import { Chip } from "@mui/material"
 
 export default function TabSet({ type }: { type: PageType }) {
-  const containerRef = useRef(null);
+  const containerRef = useRef(null)
 
-  const { setSelected, setSelectedInfo } = useSelectedKOL(type);
+  const { setSelected, setSelectedInfo } = useSelectedKOL(type)
   const { filterOptions, catorgy, setCatorgy, setFilterOptions } =
-    useSelectedFilter(type);
+    useSelectedFilter(type)
 
   const catorgyList = {
     watch: [
@@ -39,7 +39,7 @@ export default function TabSet({ type }: { type: PageType }) {
       { key: "6h", value: "6h" },
       { key: "24h", value: "24h" },
     ],
-  };
+  }
 
   const timeList = {
     watch: [
@@ -51,13 +51,13 @@ export default function TabSet({ type }: { type: PageType }) {
       { value: "last7d", name: "Last 7 Days", simpleName: "Last 7D" },
       { value: "last30d", name: "Last 30 Days", simpleName: "Last 30D" },
     ],
-  };
+  }
 
   useEffect(() => {
     if (catorgy === null) {
-      setCatorgy(catorgyList[type][0]?.value);
+      setCatorgy(catorgyList[type][0]?.value)
     }
-  }, [catorgy]);
+  }, [catorgy])
 
   return (
     <div
@@ -66,16 +66,16 @@ export default function TabSet({ type }: { type: PageType }) {
     >
       <div className="w-full flex flex-row justify-between gap-[19px] h-[40px] leading-[40px]">
         <div className="flex flex-auto flex-row justify-between items-stretch bg-white rounded-[12px] p-[4px] gap-[4px]">
-          {catorgyList[type]?.map((item) => (
+          {catorgyList[type]?.map((item, index) => (
             <CatorgyItem
-              key={item?.key}
+              key={item?.key + "_" + index}
               value={item?.value}
               name={item?.key}
               defaultChecked={catorgy === item?.value}
               onChange={(value) => {
-                setCatorgy(value);
-                setSelected(null);
-                setSelectedInfo(null);
+                setCatorgy(value)
+                setSelected(null)
+                setSelectedInfo(null)
               }}
             />
           ))}
@@ -94,7 +94,7 @@ export default function TabSet({ type }: { type: PageType }) {
                   type={type}
                   tagType={key}
                 />
-              ));
+              ))
             } else {
               return (
                 <SelectedFilterItem
@@ -103,13 +103,13 @@ export default function TabSet({ type }: { type: PageType }) {
                   type={type}
                   tagType={key}
                 />
-              );
+              )
             }
           })}
           <div
             className="w-[40px] h-[32px] rounded-[6px] bg-[#FF4F4F] flex items-center justify-center cursor-pointer"
             onClick={() => {
-              setFilterOptions("{}");
+              setFilterOptions("{}")
             }}
           >
             <ClearAllIcon />
@@ -117,7 +117,7 @@ export default function TabSet({ type }: { type: PageType }) {
         </div>
       )}
     </div>
-  );
+  )
 }
 
 function SelectedFilterItem({
@@ -125,33 +125,33 @@ function SelectedFilterItem({
   type,
   tagType,
 }: {
-  value: string;
-  type: PageType;
-  tagType: string;
+  value: string
+  type: PageType
+  tagType: string
 }) {
-  const { filterOptions, setFilterOptions } = useSelectedFilter(type);
+  const { filterOptions, setFilterOptions } = useSelectedFilter(type)
 
   const handleDelete = () => {
     if (tagType === "tag") {
       const nextTag = (filterOptions?.tag ?? []).filter(
         (i: string) => i !== value
-      );
+      )
       if (nextTag?.length === 0) {
-        delete filterOptions[tagType];
-        setFilterOptions(JSON.stringify(filterOptions));
+        delete filterOptions[tagType]
+        setFilterOptions(JSON.stringify(filterOptions))
       } else {
         setFilterOptions(
           JSON.stringify({
             ...filterOptions,
             tag: nextTag,
           })
-        );
+        )
       }
     } else {
-      delete filterOptions[tagType];
-      setFilterOptions(JSON.stringify(filterOptions));
+      delete filterOptions[tagType]
+      setFilterOptions(JSON.stringify(filterOptions))
     }
-  };
+  }
 
   return (
     <Chip
@@ -178,5 +178,5 @@ function SelectedFilterItem({
         },
       }}
     />
-  );
+  )
 }

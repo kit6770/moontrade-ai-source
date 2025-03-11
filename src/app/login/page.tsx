@@ -1,14 +1,14 @@
-"use client";
+"use client"
 
-import { VerticalLogo } from "@/lib/icons";
-import { useAppKitAccount } from "@reown/appkit/react";
-import { useAppKitWallet, Wallet } from "@reown/appkit-wallet-button/react";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { LoadingIcon } from "@/components/Loader";
-import { BASE_PATH } from "@/lib/constants";
+import { VerticalLogo } from "@/lib/icons"
+import { useAppKitAccount } from "@reown/appkit/react"
+import { useAppKitWallet, Wallet } from "@reown/appkit-wallet-button/react"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { LoadingIcon } from "@/components/Loader"
+import { BASE_PATH } from "@/lib/constants"
 
-type WalletItem = { name: string; icon: string; adapter: Wallet };
+type WalletItem = { name: string; icon: string; adapter: Wallet }
 
 const baseWallets: WalletItem[] = [
   {
@@ -26,7 +26,7 @@ const baseWallets: WalletItem[] = [
     icon: BASE_PATH + "/image/wallet_bitget.png",
     adapter: "bitget",
   },
-];
+]
 const extraWallets: WalletItem[] = [
   {
     name: "OKX Wallet",
@@ -48,22 +48,22 @@ const extraWallets: WalletItem[] = [
     icon: BASE_PATH + "/image/wallet_solfare.png",
     adapter: "solflare",
   },
-];
+]
 
 export default function Login() {
-  const router = useRouter();
+  const router = useRouter()
 
-  const [showExtra, setShowExtra] = useState<boolean>(false);
-  const [selectedWallet, setSelectedWallet] = useState<string>();
-  const { address, isConnected } = useAppKitAccount();
+  const [showExtra, setShowExtra] = useState<boolean>(false)
+  const [selectedWallet, setSelectedWallet] = useState<string>()
+  const { address, isConnected } = useAppKitAccount()
 
   useEffect(() => {
     if (isConnected && address) {
-      router.push("/");
+      router.push("/")
     }
-  }, [isConnected]);
+  }, [isConnected])
 
-  console.log("login", address);
+  console.log("login", address)
 
   return (
     <main className='h-screen overflow-hidden bg-[#F2F3F7] bg-[url(BASE_PATH + "/image/login_bg.png")] flex items-center justify-center'>
@@ -80,9 +80,9 @@ export default function Login() {
           </div>
           {!isConnected ? (
             <div className="flex flex-col gap-[16px]">
-              {baseWallets?.map((item) => (
+              {baseWallets?.map((item, index) => (
                 <WalletConnectItem
-                  key={item?.name}
+                  key={item?.name + "_" + index}
                   {...item}
                   selectedWallet={selectedWallet}
                   setSelectedWallet={setSelectedWallet}
@@ -97,9 +97,9 @@ export default function Login() {
                 </button>
               ) : (
                 <>
-                  {extraWallets?.map((item) => (
+                  {extraWallets?.map((item, index) => (
                     <WalletConnectItem
-                      key={item?.name}
+                      key={item?.name + "_" + index}
                       {...item}
                       selectedWallet={selectedWallet}
                       setSelectedWallet={setSelectedWallet}
@@ -114,26 +114,26 @@ export default function Login() {
         </div>
       </div>
     </main>
-  );
+  )
 }
 
 const WalletConnectItem = (
   props: WalletItem & {
-    selectedWallet: string | undefined;
-    setSelectedWallet: (name: string) => void;
+    selectedWallet: string | undefined
+    setSelectedWallet: (name: string) => void
   }
 ) => {
   const { isReady, isPending, connect } = useAppKitWallet({
     onSuccess() {},
     onError() {},
-  });
+  })
 
   return (
     <button
       className="h-[45px] rounded-[12px] bg-[#FCFCFC] text-[15px] font-bold text-[#666] flex items-center justify-between px-[24px] border-[1px] border-[#E0DEDE] hover:border-[#C8FF00]"
       onClick={() => {
-        props?.setSelectedWallet(props?.name);
-        connect(props?.adapter);
+        props?.setSelectedWallet(props?.name)
+        connect(props?.adapter)
       }}
       disabled={!isReady && isPending}
     >
@@ -143,5 +143,5 @@ const WalletConnectItem = (
       </div>
       <img src={props?.icon} alt={props?.name} width={28} height={28} />
     </button>
-  );
-};
+  )
+}

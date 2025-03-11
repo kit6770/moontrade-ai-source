@@ -1,26 +1,26 @@
-import { Modal, Box } from "@mui/material";
-import { useState } from "react";
+import { Modal, Box } from "@mui/material"
+import { useState } from "react"
 import {
   FilterAltOutlined as FilterAltOutlinedIcon,
   ArrowDropDown as ArrowDropDownIcon,
-} from "@mui/icons-material";
-import classNames from "classnames";
-import { PageType } from "@/types";
-import { useSelectedFilter } from "@/hooks/useKOL";
+} from "@mui/icons-material"
+import classNames from "classnames"
+import { PageType } from "@/types"
+import { useSelectedFilter } from "@/hooks/useKOL"
 
 export default function Filter({
   containerRef,
   type,
 }: {
-  containerRef: React.RefObject<null>;
-  type: PageType;
+  containerRef: React.RefObject<null>
+  type: PageType
 }) {
-  const { filterOptions, setFilterOptions } = useSelectedFilter(type);
+  const { filterOptions, setFilterOptions } = useSelectedFilter(type)
 
-  const [filterOpen, setFilterOpen] = useState<boolean>(false);
-  const sortList = ["Top Mention", "XFeed", "Last Active"];
-  const tagList = ["DEV", "Builder", "KOL"];
-  const importList = ["PUMP.NOW", "X(Twitter)"];
+  const [filterOpen, setFilterOpen] = useState<boolean>(false)
+  const sortList = ["Top Mention", "XFeed", "Last Active"]
+  const tagList = ["DEV", "Builder", "KOL"]
+  const importList = ["PUMP.NOW", "X(Twitter)"]
 
   return (
     <div>
@@ -55,14 +55,12 @@ export default function Filter({
           <div className="flex flex-row items-center gap-[40px]">
             <div>Sort:</div>
             <div className="flex flex-row items-center gap-[10px]">
-              {sortList?.map((item) => (
+              {sortList?.map((item, index) => (
                 <div
-                  key={item}
+                  key={item + "_" + index}
                   className={classNames(
                     "h-[32px] text-[#000]  border-[1px] border-[#eee] rounded-[6px] px-[16px] flex items-center justify-center cursor-pointer",
-                    filterOptions?.sort === item
-                      ? "bg-[#C8FF00]"
-                      : "bg-white"
+                    filterOptions?.sort === item ? "bg-[#C8FF00]" : "bg-white"
                   )}
                   onClick={() => {
                     setFilterOptions(
@@ -70,7 +68,7 @@ export default function Filter({
                         ...filterOptions,
                         sort: item,
                       })
-                    );
+                    )
                   }}
                 >
                   {item}
@@ -81,32 +79,29 @@ export default function Filter({
           <div className="flex flex-row items-center gap-[40px]">
             <div>Tag:</div>
             <div className="flex flex-row items-center gap-[10px]">
-              {tagList?.map((item) => (
+              {tagList?.map((item, index) => (
                 <div
-                  key={item}
+                  key={item + "_" + index}
                   className={classNames(
                     "h-[32px] text-[#000] border-[1px] border-[#eee] rounded-[6px] px-[16px] flex items-center justify-center cursor-pointer",
-                    (filterOptions?.tag || [])?.includes(
-                      item
-                    )
+                    (filterOptions?.tag || [])?.includes(item)
                       ? "bg-[#C8FF00]"
                       : "bg-white"
                   )}
                   onClick={() => {
-                    let nextTag: string[] = [];
-                    const preTag = (filterOptions?.tag ??
-                      []) as string[];
+                    let nextTag: string[] = []
+                    const preTag = (filterOptions?.tag ?? []) as string[]
                     if (preTag.includes(item)) {
-                      nextTag = preTag.filter((i) => i !== item);
+                      nextTag = preTag.filter((i) => i !== item)
                     } else {
-                      nextTag = [...preTag, item];
+                      nextTag = [...preTag, item]
                     }
                     setFilterOptions(
                       JSON.stringify({
                         ...filterOptions,
                         tag: nextTag,
                       })
-                    );
+                    )
                   }}
                 >
                   {item}
@@ -118,9 +113,9 @@ export default function Filter({
             <div className="flex flex-row items-center gap-[40px]">
               <div>Import: </div>
               <div className="flex flex-row items-center gap-[10px]">
-                {importList?.map((item) => (
+                {importList?.map((item, index) => (
                   <div
-                    key={item}
+                    key={item + "_" + index}
                     className={classNames(
                       "h-[32px] text-[#000] border-[1px] border-[#eee] rounded-[6px] px-[16px] flex items-center justify-center cursor-pointer",
                       filterOptions?.import === item
@@ -133,7 +128,7 @@ export default function Filter({
                           ...filterOptions,
                           import: item,
                         })
-                      );
+                      )
                     }}
                   >
                     {item}
@@ -145,5 +140,5 @@ export default function Filter({
         </Box>
       </Modal>
     </div>
-  );
+  )
 }

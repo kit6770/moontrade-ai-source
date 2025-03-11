@@ -1,28 +1,28 @@
-import { CallAginstIcon, CallOnIcon } from "@/lib/icons";
-import { Avatar, AvatarGroup, Button, LinearProgress } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { linearProgressClasses } from "@mui/material/LinearProgress";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { X as XIcon } from "@mui/icons-material";
-import { ButtonStyled, CopyText, TagList } from "./Common";
-import { MentionItemInfo, PageType } from "@/types";
-import { formatAddress } from "@/lib/utils";
-import Loader from "./Loader";
-import { useEffect, useState } from "react";
-import useSWRMutation from "swr/mutation";
+import { CallAginstIcon, CallOnIcon } from "@/lib/icons"
+import { Avatar, AvatarGroup, Button, LinearProgress } from "@mui/material"
+import { styled } from "@mui/material/styles"
+import { linearProgressClasses } from "@mui/material/LinearProgress"
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
+import { X as XIcon } from "@mui/icons-material"
+import { ButtonStyled, CopyText, TagList } from "./Common"
+import { MentionItemInfo, PageType } from "@/types"
+import { formatAddress } from "@/lib/utils"
+import Loader from "./Loader"
+import { useEffect, useState } from "react"
+import useSWRMutation from "swr/mutation"
 
 export default function TopMention({
   addresses,
 }: {
-  type?: PageType;
-  addresses: string;
+  type?: PageType
+  addresses: string
 }) {
   const { trigger, isMutating } = useSWRMutation<MentionItemInfo[]>(
     `api:/kol_top_mentions`
-  );
+  )
 
-  const [mentionList, setMentionList] = useState<MentionItemInfo[]>([]);
-  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [mentionList, setMentionList] = useState<MentionItemInfo[]>([])
+  const [hasMore, setHasMore] = useState<boolean>(true)
 
   const getTopMentionList = (limit?: number) => {
     trigger({
@@ -34,29 +34,29 @@ export default function TopMention({
       }),
     }).then((list) => {
       if (list && list.length > 0) {
-        const newData = mentionList.concat(list || []);
-        setMentionList(newData);
-        setHasMore(true);
+        const newData = mentionList.concat(list || [])
+        setMentionList(newData)
+        setHasMore(true)
       } else {
-        setHasMore(false);
+        setHasMore(false)
       }
-    });
-  };
+    })
+  }
 
   useEffect(() => {
-    setMentionList([]);
-    setHasMore(false);
+    setMentionList([])
+    setHasMore(false)
     if (addresses?.length) {
-      getTopMentionList(3);
+      getTopMentionList(3)
     }
-  }, [addresses]);
+  }, [addresses])
 
   return (
     <div className="flex flex-col px-[16px] gap-[16px] relative">
       <div className="text-[16px] font-bold">Top Mentions:</div>
       <div className="flex flex-col gap-[8px]">
-        {(mentionList || [])?.map((item) => (
-          <MetionItem key={item?.token_address} {...item} />
+        {(mentionList || [])?.map((item, index) => (
+          <MetionItem key={item?.token_address + "_" + index} {...item} />
         ))}
       </div>
       {isMutating && <Loader />}
@@ -77,7 +77,7 @@ export default function TopMention({
         </Button>
       )}
     </div>
-  );
+  )
 }
 
 const MetionItem = (props: MentionItemInfo) => {
@@ -146,9 +146,9 @@ const MetionItem = (props: MentionItemInfo) => {
             justifyContent: "start",
           }}
         >
-          {props?.rise_list?.map((riseItem) => (
+          {props?.rise_list?.map((riseItem, riseIndex) => (
             <Avatar
-              key={riseItem?.name}
+              key={riseItem?.name + "_" + riseIndex}
               alt={riseItem?.name}
               src={riseItem?.profile_image_url}
             />
@@ -169,9 +169,9 @@ const MetionItem = (props: MentionItemInfo) => {
             justifyContent: "start",
           }}
         >
-          {props?.fall_list?.map((riseItem) => (
+          {props?.fall_list?.map((riseItem, riseIndex) => (
             <Avatar
-              key={riseItem?.name}
+              key={riseItem?.name + "_" + riseIndex}
               alt={riseItem?.name}
               src={riseItem?.profile_image_url}
             />
@@ -179,8 +179,8 @@ const MetionItem = (props: MentionItemInfo) => {
         </AvatarGroup>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
@@ -198,4 +198,4 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
       backgroundColor: "#3AEB4F",
     }),
   },
-}));
+}))

@@ -1,25 +1,25 @@
-import { BASE_PATH, TWITTER_TYPE_LIST } from "@/lib/constants";
-import { SmartMoneyIcon } from "@/lib/icons";
-import { formatAddress, timeAgo } from "@/lib/utils";
-import { TradeInfo, TwitterFeedInfo } from "@/types";
-import classNames from "classnames";
-import React, { useEffect, useState } from "react";
-import useSWRMutation from "swr/mutation";
-import { getPlatformInfo } from "@/lib/getPlatformInfo";
-import Loader from "@/components/Loader";
-import { BaseTooltip } from "@/components/BaseTooltip";
+import { BASE_PATH, TWITTER_TYPE_LIST } from "@/lib/constants"
+import { SmartMoneyIcon } from "@/lib/icons"
+import { formatAddress, timeAgo } from "@/lib/utils"
+import { TradeInfo, TwitterFeedInfo } from "@/types"
+import classNames from "classnames"
+import React, { useEffect, useState } from "react"
+import useSWRMutation from "swr/mutation"
+import { getPlatformInfo } from "@/lib/getPlatformInfo"
+import Loader from "@/components/Loader"
+import { BaseTooltip } from "@/components/BaseTooltip"
 import TwitterItem, {
   QuoteTwitterItem,
   ReplyTwitterItem,
-} from "@/components/TwitterItem";
-import TabSetItem from "@/components/TabSetItem";
+} from "@/components/TwitterItem"
+import TabSetItem from "@/components/TabSetItem"
 import {
   X as XIcon,
   ArrowBackIosNew as ArrowBackIosNewIcon,
   Clear as CloseIcon,
-} from "@mui/icons-material";
-import { CopyText, SummaryCopyRight } from "@/components/Common";
-import { useSelectedFilter, useSelectedKOL } from "@/hooks/useKOL";
+} from "@mui/icons-material"
+import { CopyText, SummaryCopyRight } from "@/components/Common"
+import { useSelectedFilter, useSelectedKOL } from "@/hooks/useKOL"
 
 const DATA_TYPE_LIST = [
   {
@@ -32,15 +32,15 @@ const DATA_TYPE_LIST = [
     name: "X(Twitter)",
     icon: <XIcon />,
   },
-];
+]
 
 export default function SideContent() {
-  const isMobile = getPlatformInfo()?.isMobile;
+  const isMobile = getPlatformInfo()?.isMobile
 
-  const { selected, selectedInfo } = useSelectedKOL("ai");
-  const { dataType, setDataType } = useSelectedFilter("ai");
+  const { selected, selectedInfo } = useSelectedKOL("ai")
+  const { dataType, setDataType } = useSelectedFilter("ai")
 
-  const [highlighted, setHighlighted] = useState<boolean>(false);
+  const [highlighted, setHighlighted] = useState<boolean>(false)
 
   // const { trigger: summaryTrigger, data: summaryData } = useSWRMutation<SummaryInfo>(`api:/trending_tokens/summary`)
 
@@ -57,16 +57,16 @@ export default function SideContent() {
 
   useEffect(() => {
     if (dataType === null) {
-      setDataType("smartmoney");
+      setDataType("smartmoney")
     }
-  }, [dataType]);
+  }, [dataType])
 
   useEffect(() => {
-    setHighlighted(true);
+    setHighlighted(true)
     setTimeout(() => {
-      setHighlighted(false);
-    }, 1000);
-  }, [selected]);
+      setHighlighted(false)
+    }, 1000)
+  }, [selected])
 
   return (
     <aside
@@ -87,7 +87,7 @@ export default function SideContent() {
               <button
                 className="text-black rounded-full w-[24px] h-[24px] flex items-center justify-center cursor-pointer"
                 onClick={() => {
-                  window.history.back();
+                  window.history.back()
                 }}
               >
                 <ArrowBackIosNewIcon className="w-[24px] h-[24px]" />
@@ -111,8 +111,8 @@ export default function SideContent() {
                 <BaseTooltip key={item?.key} title={item?.name} placement="top">
                   <div
                     onClick={(e) => {
-                      setDataType(item?.key);
-                      e.preventDefault();
+                      setDataType(item?.key)
+                      e.preventDefault()
                     }}
                   >
                     <TabSetItem
@@ -127,7 +127,7 @@ export default function SideContent() {
                     />
                   </div>
                 </BaseTooltip>
-              );
+              )
             })}
           </div>
           {dataType === "smartmoney" && <TradeListContent />}
@@ -162,61 +162,61 @@ export default function SideContent() {
         </div>
       </div>
     </aside>
-  );
+  )
 }
 
 function TradeListContent() {
-  const { selected } = useSelectedKOL("ai");
+  const { selected } = useSelectedKOL("ai")
   // const [pageNo, setPageNo] = useState<number>(1)
-  const [tradeList, setTradeList] = React.useState<TradeInfo[]>([]);
+  const [tradeList, setTradeList] = React.useState<TradeInfo[]>([])
   // const [hasMore, setHasMore] = useState<boolean>(false)
 
   const { trigger: tradeListTrigger, isMutating } = useSWRMutation<{
-    trans_list: TradeInfo[];
+    trans_list: TradeInfo[]
   }>(
     `api:/ai/trending_tokens/token_last_trades?token_address=${selected}&trans_type=1&address_filter=1&page_no=1&page_size=50`
-  );
+  )
 
   const getTradeList = () => {
     tradeListTrigger().then(({ trans_list: list }) => {
       if (list && list.length > 0) {
         // const newData = tradeList.concat(list || [])
-        const newData = list;
-        setTradeList(newData);
+        const newData = list
+        setTradeList(newData)
         // setPageNo(pageNo + 1)
         // setHasMore(newData?.length < (10*pageNo) ? false : true)
       } else {
         // setHasMore(false)
       }
-    });
-  };
+    })
+  }
 
   React.useEffect(() => {
-    setTradeList([]);
+    setTradeList([])
     // setPageNo(1)
     // setHasMore(false)
     if (selected) {
-      getTradeList();
+      getTradeList()
       const interval = setInterval(() => {
-        getTradeList();
-      }, 300000);
-      return () => clearInterval(interval);
+        getTradeList()
+      }, 300000)
+      return () => clearInterval(interval)
     }
-  }, [selected]);
+  }, [selected])
 
   return (
     <div className="w-full flex flex-col relative">
       <div
         className={classNames("w-full flex flex-col min-h-[200px] mt-[16px]")}
       >
-        {tradeList?.map((item) => {
-          return <TradeItem key={item?.tx_id} {...item} />;
+        {tradeList?.map((item, index) => {
+          return <TradeItem key={item?.tx_id + "_" + index} {...item} />
         })}
       </div>
       {isMutating && <Loader />}
       {/* {hasMore && tradeList?.length>0 && <div className="w-full h-[48px] text-[16px] font-bold rounded-[6px] text-black bg-[#C8FF00] flex items-center justify-center mt-[4px] mb-[16px] cursor-pointer" onClick={getTradeList}>Learn more</div>} */}
     </div>
-  );
+  )
 }
 
 function TradeItem(props: TradeInfo) {
@@ -263,20 +263,20 @@ function TradeItem(props: TradeInfo) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function TwitterListContent() {
-  const { selected } = useSelectedKOL("ai");
+  const { selected } = useSelectedKOL("ai")
   const { trigger: twitterTrigger, isMutating } = useSWRMutation<
     TwitterFeedInfo[]
-  >(`api:/ai/trending_tokens/twitter_tweets`);
-  let interval: NodeJS.Timeout;
+  >(`api:/ai/trending_tokens/twitter_tweets`)
+  let interval: NodeJS.Timeout
 
   // const [pageNo, setPageNo] = useState<number>(1)
-  const [category, setCategory] = useState<string>("top");
+  const [category, setCategory] = useState<string>("top")
   // const [hasMore, setHasMore] = useState<boolean>(true)
-  const [twitterData, setTwitterData] = useState<TwitterFeedInfo[]>([]);
+  const [twitterData, setTwitterData] = useState<TwitterFeedInfo[]>([])
 
   const getTwitterList = () => {
     twitterTrigger({
@@ -290,30 +290,30 @@ function TwitterListContent() {
     }).then((list) => {
       if (list && list.length > 0) {
         // const newData = twitterData.concat(list || [])
-        const newData = list;
-        setTwitterData(newData);
+        const newData = list
+        setTwitterData(newData)
         // setPageNo(pageNo + 1)
         // setHasMore(newData?.length < (10*pageNo) ? false : true)
       } else {
         // setHasMore(false)
       }
-    });
-  };
+    })
+  }
 
   useEffect(() => {
-    setTwitterData([]);
+    setTwitterData([])
     // setPageNo(1)
     // setHasMore(false)
     if (selected && category) {
-      getTwitterList();
+      getTwitterList()
       interval = setInterval(() => {
-        getTwitterList();
-      }, 300000);
-      return () => clearInterval(interval);
+        getTwitterList()
+      }, 300000)
+      return () => clearInterval(interval)
     }
-  }, [selected, category]);
+  }, [selected, category])
 
-  console.log("twitterData", selected);
+  console.log("twitterData", selected)
 
   return (
     <div className="w-full flex flex-col relative z-[1] mt-[10px]">
@@ -337,34 +337,38 @@ function TwitterListContent() {
               }
               onChange={() => setCategory(item?.value)}
             />
-          );
+          )
         })}
       </div>
       <div className={classNames("flex flex-col gap-[8px] min-h-[160px]")}>
-        {twitterData?.map((item) => {
+        {twitterData?.map((item, index) => {
           if (item?.related_tweets && item?.related_tweets?.length > 0) {
             if (item?.related_tweets?.length === 1) {
               if (item?.related_tweets?.[0]?.type === "replied_to") {
-                return <ReplyTwitterItem key={item?.id} {...item} />;
+                return (
+                  <ReplyTwitterItem key={item?.id + "_" + index} {...item} />
+                )
               } else {
-                return <QuoteTwitterItem key={item?.id} {...item} />;
+                return (
+                  <QuoteTwitterItem key={item?.id + "_" + index} {...item} />
+                )
               }
             } else {
-              return <QuoteTwitterItem key={item?.id} {...item} />;
+              return <QuoteTwitterItem key={item?.id + "_" + index} {...item} />
             }
           } else {
-            return <TwitterItem key={item?.id} {...item} />;
+            return <TwitterItem key={item?.id + "_" + index} {...item} />
           }
         })}
       </div>
       {isMutating && <Loader />}
       {/* {hasMore && twitterData?.length>0 && <div className="w-full h-[48px] text-[16px] font-bold rounded-[6px] text-black bg-[#C8FF00] flex items-center justify-center mt-[4px] cursor-pointer mb-[16px]" onClick={getTwitterList}>Learn more</div>} */}
     </div>
-  );
+  )
 }
 
 // Function to close the modal
 function closeModal() {
-  const modal = document.getElementById("modal");
-  modal?.classList.add("hidden");
+  const modal = document.getElementById("modal")
+  modal?.classList.add("hidden")
 }

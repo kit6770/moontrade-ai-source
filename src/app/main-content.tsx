@@ -1,4 +1,4 @@
-import { BASE_PATH } from "@/lib/constants";
+import { BASE_PATH } from "@/lib/constants"
 import {
   LvYaIcon,
   FeedsIcon,
@@ -6,39 +6,39 @@ import {
   GoldSmartMoneyIcon,
   LogoIcon,
   MCIcon,
-} from "@/lib/icons";
-import { SmartMoneyInfo } from "@/types";
-import classNames from "classnames";
-import { useEffect, useState } from "react";
-import useSWRMutation from "swr/mutation";
+} from "@/lib/icons"
+import { SmartMoneyInfo } from "@/types"
+import classNames from "classnames"
+import { useEffect, useState } from "react"
+import useSWRMutation from "swr/mutation"
 import {
   formatAddress,
   formatNumber,
   isTimeExceed24Hours,
   timeAgo,
-} from "@/lib/utils";
-import React from "react";
-import Link from "next/link";
-import { getPlatformInfo } from "@/lib/getPlatformInfo";
-import { BaseTooltip } from "@/components/BaseTooltip";
-import Loader from "@/components/Loader";
+} from "@/lib/utils"
+import React from "react"
+import Link from "next/link"
+import { getPlatformInfo } from "@/lib/getPlatformInfo"
+import { BaseTooltip } from "@/components/BaseTooltip"
+import Loader from "@/components/Loader"
 import {
   X as XIcon,
   Language as LanguageIcon,
   Telegram as TelegramIcon,
-} from "@mui/icons-material/";
-import { CopyText, SearchOnX } from "@/components/Common";
-import { useSelectedFilter, useSelectedKOL } from "@/hooks/useKOL";
+} from "@mui/icons-material/"
+import { CopyText, SearchOnX } from "@/components/Common"
+import { useSelectedFilter, useSelectedKOL } from "@/hooks/useKOL"
 
 export default function MainContent() {
-  const isMobile = getPlatformInfo()?.isMobile;
-  const { catorgy } = useSelectedFilter("ai");
-  const { selected } = useSelectedKOL("ai");
+  const isMobile = getPlatformInfo()?.isMobile
+  const { catorgy } = useSelectedFilter("ai")
+  const { selected } = useSelectedKOL("ai")
   const { trigger: tokenListTrigger, isMutating } = useSWRMutation<
     SmartMoneyInfo[]
-  >(`api:/ai/trending_tokens/rank`);
+  >(`api:/ai/trending_tokens/rank`)
 
-  const [tokenData, setTokenData] = useState<SmartMoneyInfo[]>([]);
+  const [tokenData, setTokenData] = useState<SmartMoneyInfo[]>([])
 
   const getTokenList = () => {
     tokenListTrigger({
@@ -50,49 +50,47 @@ export default function MainContent() {
       }),
     }).then((list) => {
       if (list && list.length > 0) {
-        setTokenData(list);
+        setTokenData(list)
         console.log(
           "update------",
           selected,
           list?.findIndex(
             (o) => o?.token_address?.toLowerCase() === selected?.toLowerCase()
           )
-        );
+        )
         if (
           selected === null ||
           list?.findIndex(
             (o) => o?.token_address?.toLowerCase() === selected?.toLowerCase()
           ) < 0
         ) {
-          setSelected(list[0]?.token_address);
-          setSelectedInfo(JSON.stringify(list[0]));
+          setSelected(list[0]?.token_address)
+          setSelectedInfo(JSON.stringify(list[0]))
         }
       }
-    });
-  };
+    })
+  }
 
   useEffect(() => {
-    setTokenData([]);
+    setTokenData([])
     if (catorgy) {
-      getTokenList();
+      getTokenList()
       const interval = setInterval(() => {
-        getTokenList();
-      }, 60000);
-      return () => clearInterval(interval);
+        getTokenList()
+      }, 60000)
+      return () => clearInterval(interval)
     }
-  }, [catorgy]);
+  }, [catorgy])
 
-  const { setSelected, setSelectedInfo } = useSelectedKOL("ai");
+  const { setSelected, setSelectedInfo } = useSelectedKOL("ai")
 
-  console.log("main-content", selected);
+  console.log("main-content", selected)
 
   return (
     <div
       className={classNames(
         "relative flex flex-auto flex-col gap-[10px] pb-[150px] md:pr-[16px] overflow-auto hide-scrollbar",
-        isMobile
-          ? "h-full"
-          : ""
+        isMobile ? "h-full" : ""
       )}
       style={{ height: `calc(100vh - 144px)` }}
     >
@@ -100,40 +98,40 @@ export default function MainContent() {
         if (isMobile) {
           return (
             <div
-              key={item?.id}
+              key={item?.id + "_" + index}
               className="relative"
               onClick={() => {
-                setSelected(item?.token_address);
-                setSelectedInfo(JSON.stringify(item));
+                setSelected(item?.token_address)
+                setSelectedInfo(JSON.stringify(item))
               }}
             >
               <Link href={"/summary"} className="relative">
                 <Item {...item} index={index} />
               </Link>
             </div>
-          );
+          )
         } else {
           return (
             <div
               key={item?.id}
               className="relative"
               onClick={() => {
-                setSelected(item?.token_address);
-                setSelectedInfo(JSON.stringify(item));
+                setSelected(item?.token_address)
+                setSelectedInfo(JSON.stringify(item))
               }}
             >
               <Item {...item} index={index} />
             </div>
-          );
+          )
         }
       })}
       {isMutating && <Loader />}
     </div>
-  );
+  )
 }
 
 function Item(props: SmartMoneyInfo & { index: number }) {
-  const { selected } = useSelectedKOL("ai");
+  const { selected } = useSelectedKOL("ai")
   return (
     <div
       className={classNames(
@@ -151,7 +149,7 @@ function Item(props: SmartMoneyInfo & { index: number }) {
       <Section2 {...props} />
       <Section3 {...props} />
     </div>
-  );
+  )
 }
 
 function Section1(props: SmartMoneyInfo) {
@@ -226,8 +224,8 @@ function Section1(props: SmartMoneyInfo) {
                 window.open(
                   `https://pump.fun/coin/${props?.token_address}`,
                   "_blank"
-                );
-                e.stopPropagation();
+                )
+                e.stopPropagation()
               }}
             />
           </div>
@@ -237,8 +235,8 @@ function Section1(props: SmartMoneyInfo) {
                 htmlColor={"#666666"}
                 sx={{ width: 16, height: 16 }}
                 onClick={(e) => {
-                  window.open(props?.twitter_link, "_blank");
-                  e.stopPropagation();
+                  window.open(props?.twitter_link, "_blank")
+                  e.stopPropagation()
                 }}
               />
             </div>
@@ -247,8 +245,8 @@ function Section1(props: SmartMoneyInfo) {
             <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
               <LanguageIcon
                 onClick={(e) => {
-                  window.open(props?.home_page, "_blank");
-                  e.stopPropagation();
+                  window.open(props?.home_page, "_blank")
+                  e.stopPropagation()
                 }}
                 sx={{ width: 18, height: 18 }}
               />
@@ -258,8 +256,8 @@ function Section1(props: SmartMoneyInfo) {
             <div className="flex items-center justify-center px-[4px] bg-[#EAEAEA] rounded-[6px] h-[22px] min-w-[22px]">
               <TelegramIcon
                 onClick={(e) => {
-                  window.open(props?.telegram_link, "_blank");
-                  e.stopPropagation();
+                  window.open(props?.telegram_link, "_blank")
+                  e.stopPropagation()
                 }}
                 sx={{ width: 18, height: 18 }}
               />
@@ -268,12 +266,12 @@ function Section1(props: SmartMoneyInfo) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function Section2(props: SmartMoneyInfo) {
-  const { selected } = useSelectedKOL("ai");
-  const { setDataType } = useSelectedFilter("ai");
+  const { selected } = useSelectedKOL("ai")
+  const { setDataType } = useSelectedFilter("ai")
   const list = [
     {
       title: "SmartMoney",
@@ -283,7 +281,7 @@ function Section2(props: SmartMoneyInfo) {
       isPositive: props?.smart_wallet_count_change,
       change: props?.smart_wallet_count_change,
       onClick: () => {
-        setDataType("smartmoney");
+        setDataType("smartmoney")
       },
     },
     {
@@ -294,7 +292,7 @@ function Section2(props: SmartMoneyInfo) {
       isPositive: props?.x_feed_num_change,
       change: props?.x_feed_num_change,
       onClick: () => {
-        setDataType("twitter");
+        setDataType("twitter")
       },
     },
     {
@@ -306,13 +304,13 @@ function Section2(props: SmartMoneyInfo) {
       change: props?.market_value_change,
       onClick: () => {},
     },
-  ];
+  ]
   return (
     <div className="flex flex-row justify-start gap-[16px] flex-wrap cursor-pointer">
-      {list?.map((item) => {
+      {list?.map((item, index) => {
         return (
           <div
-            key={item?.title}
+            key={item?.title + "_" + index}
             className={classNames(
               "flex flex-row gap-[4px] justify-center p-[8px] h-[51px] rounded-[6px]",
               item?.type !== "mc" && "hover:bg-[#F2FEC5]"
@@ -321,8 +319,8 @@ function Section2(props: SmartMoneyInfo) {
               if (
                 selected?.toLowerCase() === props?.token_address?.toLowerCase()
               ) {
-                item?.onClick();
-                e.stopPropagation();
+                item?.onClick()
+                e.stopPropagation()
               }
             }}
           >
@@ -347,10 +345,10 @@ function Section2(props: SmartMoneyInfo) {
               </div>
             </div>
           </div>
-        );
+        )
       })}
     </div>
-  );
+  )
 }
 
 function Section3(props: SmartMoneyInfo) {
@@ -381,24 +379,24 @@ function Section3(props: SmartMoneyInfo) {
         </BaseTooltip>
       </div>
     </div>
-  );
+  )
 }
 
 const TextDisplay = ({ text }: { text: string }) => {
-  const [shown, setShown] = useState(false);
-  const [showBtn, setShowBtn] = useState(false);
-  const textRef = React.useRef<HTMLDivElement>(null);
+  const [shown, setShown] = useState(false)
+  const [showBtn, setShowBtn] = useState(false)
+  const textRef = React.useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (textRef.current) {
-      const pHeight = textRef.current.offsetHeight;
-      const totalHeight = textRef.current?.scrollHeight;
+      const pHeight = textRef.current.offsetHeight
+      const totalHeight = textRef.current?.scrollHeight
       if (totalHeight > pHeight) {
-        setShowBtn(true);
+        setShowBtn(true)
       } else {
-        setShowBtn(false);
+        setShowBtn(false)
       }
     }
-  }, [textRef.current]);
+  }, [textRef.current])
 
   return (
     <div className="flex flex-row w-full text-[14px] mr-[16px]">
@@ -413,13 +411,13 @@ const TextDisplay = ({ text }: { text: string }) => {
         <div
           className="ml-[5px] underline underline-offset-1 cursor-pointer hover:text-[#C8FF00]"
           onClick={(e) => {
-            setShown(!shown);
-            e.stopPropagation();
+            setShown(!shown)
+            e.stopPropagation()
           }}
         >
           {!shown ? "more" : "less"}
         </div>
       )}
     </div>
-  );
-};
+  )
+}

@@ -1,50 +1,50 @@
-import { LogoWithTextIcon } from "@/lib/icons";
-import { formatAddress } from "@/lib/utils";
-import { useAppKitAccount, useDisconnect } from "@reown/appkit/react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Button, Menu, MenuItem } from "@mui/material";
-import React from "react";
-import classNames from "classnames";
+import { LogoWithTextIcon } from "@/lib/icons"
+import { formatAddress } from "@/lib/utils"
+import { useAppKitAccount, useDisconnect } from "@reown/appkit/react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { Button, Menu, MenuItem } from "@mui/material"
+import React from "react"
+import classNames from "classnames"
 import {
   ExpandMore as ExpandMoreIcon,
   Notifications as NotificationsIcon,
   Logout as LogoutIcon,
-} from "@mui/icons-material/";
-import { ButtonStyled } from "./Common";
+} from "@mui/icons-material/"
+import { ButtonStyled } from "./Common"
 
 export default function Header() {
-  const pathname = usePathname();
-  const { address } = useAppKitAccount();
-  const { disconnect } = useDisconnect();
+  const pathname = usePathname()
+  const { address } = useAppKitAccount()
+  const { disconnect } = useDisconnect()
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
 
   const handleDisconnect = async () => {
     try {
-      await disconnect();
+      await disconnect()
     } catch (error) {
-      console.error("Failed to disconnect:", error);
+      console.error("Failed to disconnect:", error)
     }
-  };
+  }
 
   const links = [
     { name: "AI Rank", path: "/" },
     { name: "KOL Rank", path: "/kol" },
     { name: "Watchlist", path: "/watchlist" },
-  ];
+  ]
 
   return (
     <header className="flex flex-row h-[50px] bg-white justify-between items-stretch border-b border-[#F3F3F3] lg:min-w-[1176px]">
       <div className="flex items-center gap-[16px] px-[16px]">
         <LogoWithTextIcon className="scale-[0.8]" />
         <div className="h-[50px] ml-[50px] flex gap-[50px] relative text-[#666666]">
-          {links?.map((item) => {
+          {links?.map((item, index) => {
             return (
               <Link
                 href={item?.path}
-                key={item?.path}
+                key={item?.path + "_" + index}
                 className="flex flex-col items-center justify-center"
               >
                 <div
@@ -59,7 +59,7 @@ export default function Header() {
                   <div className="absolute bottom-0 w-[60px] h-[2px] bg-[#000] rounded-[30px]"></div>
                 )}
               </Link>
-            );
+            )
           })}
         </div>
       </div>
@@ -99,8 +99,8 @@ export default function Header() {
         >
           <MenuItem
             onClick={() => {
-              setAnchorEl(null);
-              handleDisconnect();
+              setAnchorEl(null)
+              handleDisconnect()
             }}
           >
             <div className="w-[120px] gap-[12px] flex items-center">
@@ -116,5 +116,5 @@ export default function Header() {
         </div>
       </div>
     </header>
-  );
+  )
 }
