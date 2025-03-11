@@ -1,20 +1,20 @@
-import { CallOnIcon, LaunchIcon } from "@/lib/icons";
-import TabSetItem from "./TabSetItem";
-import classNames from "classnames";
-import Loader from "./Loader";
-import TwitterItem, { QuoteTwitterItem, ReplyTwitterItem } from "./TwitterItem";
-import { KOLTokenInfo } from "@/types";
-import { X as XIcon } from "@mui/icons-material";
-import { CopyText } from "./Common";
-import { formatAddress } from "@/lib/utils";
-import dayjs from "dayjs";
+import { CallOnIcon, LaunchIcon } from "@/lib/icons"
+import TabSetItem from "./TabSetItem"
+import classNames from "classnames"
+import Loader from "./Loader"
+import TwitterItem, { QuoteTwitterItem, ReplyTwitterItem } from "./TwitterItem"
+import { KOLTokenInfo } from "@/types"
+import { X as XIcon } from "@mui/icons-material"
+import { CopyText } from "./Common"
+import { formatAddress } from "@/lib/utils"
+import dayjs from "dayjs"
 import {
   useSelectedFilter,
   useSelectedKOL,
   useTwitterByUid,
-} from "@/hooks/useKOL";
-import { useEffect } from "react";
-import { Chip } from "@mui/material";
+} from "@/hooks/useKOL"
+import { useEffect } from "react"
+import { Chip } from "@mui/material"
 
 const DATA_TYPE_LIST = [
   {
@@ -23,15 +23,15 @@ const DATA_TYPE_LIST = [
     icon: <CallOnIcon className="scale-[1.5] text-[#000]" />,
   },
   { key: "twitter", name: "X(Twitter)", icon: <XIcon /> },
-];
+]
 export default function SelectedKOLSide({ type }: { type: "watch" | "kol" }) {
-  const { dataType, setDataType } = useSelectedFilter(type);
+  const { dataType, setDataType } = useSelectedFilter(type)
 
   useEffect(() => {
     if (dataType === null) {
-      setDataType("calls");
+      setDataType("calls")
     }
-  }, [dataType]);
+  }, [dataType])
 
   return (
     <div className="flex-1 flex flex-col rounded-b-[20px] px-[16px] bg-white">
@@ -41,8 +41,8 @@ export default function SelectedKOLSide({ type }: { type: "watch" | "kol" }) {
             <div
               key={item?.key}
               onClick={() => {
-                console.log("change to ", item?.key);
-                setDataType(item?.key);
+                console.log("change to ", item?.key)
+                setDataType(item?.key)
               }}
             >
               <TabSetItem
@@ -54,59 +54,61 @@ export default function SelectedKOLSide({ type }: { type: "watch" | "kol" }) {
                 defaultChecked={dataType === item?.key}
               />
             </div>
-          );
+          )
         })}
       </div>
       {dataType === "calls" && <CallListContent type={type} />}
       {dataType === "twitter" && <TwitterListContent type={type} />}
     </div>
-  );
+  )
 }
 
 function TwitterListContent({ type }: { type: "watch" | "kol" }) {
-  const { selectedInfo } = useSelectedKOL(type);
+  const { selectedInfo } = useSelectedKOL(type)
   const { data: twitterData, isLoading } = useTwitterByUid(
     selectedInfo?.user_id
-  );
+  )
 
   return (
     <div className="w-full h-full bg-[white] flex flex-col relative z-[1]">
       <div className={classNames("flex flex-col gap-[16px] min-h-[160px]")}>
-        {twitterData?.map((item) => {
+        {twitterData?.map((item, index) => {
           if (item?.related_tweets && item?.related_tweets?.length > 0) {
             if (item?.related_tweets?.length === 1) {
               if (item?.related_tweets?.[0]?.type === "replied_to") {
-                return <ReplyTwitterItem key={item?.id} {...item} />;
+                return (
+                  <ReplyTwitterItem key={item?.id + "_" + index} {...item} />
+                )
               } else {
-                return <QuoteTwitterItem key={item?.id} {...item} />;
+                return (
+                  <QuoteTwitterItem key={item?.id + "_" + index} {...item} />
+                )
               }
             } else {
-              return <QuoteTwitterItem key={item?.id} {...item} />;
+              return <QuoteTwitterItem key={item?.id + "_" + index} {...item} />
             }
           } else {
-            return <TwitterItem key={item?.id} {...item} />;
+            return <TwitterItem key={item?.id + "_" + index} {...item} />
           }
         })}
       </div>
       {isLoading && <Loader />}
     </div>
-  );
+  )
 }
 
 function CallListContent({ type }: { type: "watch" | "kol" }) {
-  const { selectedInfo } = useSelectedKOL(type);
+  const { selectedInfo } = useSelectedKOL(type)
 
   return (
-    <div className="w-full flex flex-col relative">
-      <div
-        className={classNames("w-full flex flex-col gap-[16px] min-h-[200px]")}
-      >
-        {(selectedInfo?.token_info || [])?.map((item: KOLTokenInfo) => {
-          return <CallItem key={item?.token_address} {...item} />;
-        })}
-      </div>
+    <div className="w-full flex flex-col  gap-[16px] min-h-[200px] relative">
+      {(selectedInfo?.token_info || [])?.map(
+        (item: KOLTokenInfo, index: number) => {
+          return <CallItem key={item?.token_address + "_" + index} {...item} />
+        }
+      )}
     </div>
-  );
+  )
 }
 
 function CallItem(props: KOLTokenInfo) {
@@ -123,7 +125,12 @@ function CallItem(props: KOLTokenInfo) {
           </div>
           <div className="flex flex-col justify-center">
             <div className="flex flex-row items-center gap-[4px]">
-              <div className="text-[16px] font-semibold">{props?.name}</div>
+              <div
+                title={props?.name}
+                className="text-[16px] font-semibold max-w-[100px] truncate text-ellipsis"
+              >
+                {props?.name}
+              </div>
               <Chip
                 label="Meme"
                 sx={{
@@ -173,5 +180,5 @@ function CallItem(props: KOLTokenInfo) {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -20,7 +20,7 @@ import {
 import React from "react";
 import Link from "next/link";
 import { getPlatformInfo } from "@/lib/getPlatformInfo";
-import { BaseTooltip } from "@/components/ToolTip";
+import { BaseTooltip } from "@/components/BaseTooltip";
 import Loader from "@/components/Loader";
 import {
   X as XIcon,
@@ -36,7 +36,7 @@ export default function MainContent() {
   const { selected } = useSelectedKOL("ai");
   const { trigger: tokenListTrigger, isMutating } = useSWRMutation<
     SmartMoneyInfo[]
-  >(`api:/trending_tokens/rank`);
+  >(`api:/ai/trending_tokens/rank`);
 
   const [tokenData, setTokenData] = useState<SmartMoneyInfo[]>([]);
 
@@ -89,10 +89,10 @@ export default function MainContent() {
   return (
     <div
       className={classNames(
-        "relative flex flex-auto flex-col gap-[10px] pb-[150px] md:pr-[16px]",
+        "relative flex flex-auto flex-col gap-[10px] pb-[150px] md:pr-[16px] overflow-auto hide-scrollbar",
         isMobile
-          ? "h-full overflow-auto"
-          : "overflow-hidden hover:overflow-auto"
+          ? "h-full"
+          : ""
       )}
       style={{ height: `calc(100vh - 144px)` }}
     >

@@ -20,10 +20,10 @@ export default function KOLRank() {
       <section className="flex flex-row justify-start items-start">
         <div
           className={classNames(
-            "relative flex flex-auto flex-col gap-[10px] pb-[16px] md:pr-[16px]",
+            "relative flex flex-auto flex-col gap-[10px] pb-[16px] md:pr-[16px] overflow-auto hide-scrollbar",
             isMobile
-              ? "h-full overflow-auto"
-              : "overflow-hidden hover:overflow-auto"
+              ? "h-full"
+              : ""
           )}
           style={{ height: `calc(100vh - 144px)` }}
         >

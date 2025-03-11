@@ -156,7 +156,7 @@ export default function PlatformModal({
                   padding: "16px",
                 }}
               />
-              <div className="flex-1 h-full flex flex-col gap-[20px] overflow-auto">
+              <div className="flex-1 h-full flex flex-col gap-[20px] overflow-auto hide-scrollbar">
                 {list?.map((item) => {
                   return (
                     <KOLItem
@@ -176,7 +176,7 @@ export default function PlatformModal({
                   <ClearAllIcon onClick={() => setSelectedItems([])} />
                 </div>
               </div>
-              <div className="flex flex-col gap-[20px] overflow-auto">
+              <div className="flex flex-col gap-[20px] overflow-auto hide-scrollbar">
                 {selectedItems?.map((item) => {
                   return (
                     <KOLItem
@@ -245,7 +245,7 @@ const KOLItem = (
       className={classNames(
         "w-full px-[16px] rounded-[6px] flex flex-row items-center justify-between gap-[10px] cursor-pointer hover:bg-[#FBFFEC]"
       )}
-      onClick={() => props?.onClick?.(props?.user_id)}
+      onClick={() => props?.onClick?.(props?.user_id ?? '')}
     >
       <div className="flex flex-row items-center gap-[10px]">
         <div className="w-[48px] h-[48px] rounded-full bg-[gray]"></div>

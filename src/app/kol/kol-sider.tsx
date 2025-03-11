@@ -31,7 +31,7 @@ export default function KOLRankSideContent({
   return (
     <aside
       className={classNames(
-        "flex flex-none flex-col justify-between md:w-[452px] rounded-[20px] bg-[white] shadow-md border-[1px] border-dashed overflow-hidden hover:overflow-auto",
+        "flex flex-none flex-col justify-between md:w-[452px] rounded-[20px] bg-[white] shadow-md border-[1px] border-dashed overflow-auto hide-scrollbar",
         selected ? "border-[#555F32]" : "border-[transparent]"
       )}
       style={{
@@ -40,7 +40,7 @@ export default function KOLRankSideContent({
         animation: highlighted ? "scaleUp 500ms ease forwards" : "none",
       }}
     >
-      <div className="flex-1 flex flex-col justify-between overflow-auto">
+      <div className="flex-1 flex flex-col justify-between overflow-auto hide-scrollbar">
         <div
           className="flex flex-col gap-[4px] rounded-t-[20px] px-[16px] py-[12px]"
           style={{

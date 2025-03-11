@@ -97,16 +97,17 @@ export type KOLTokenInfo = {
 };
 
 export interface KOLItemInfo {
-  twitter_handle: string;
-  user_id: string;
+  twitter_handle?: string;
+  user_id?: string;
   tweet_count?: number;
   rate?: number;
-  user_name: string;
-  name: string;
+  user_name?: string;
+  name?: string;
   profile_image_url?: string;
   token_info?: KOLTokenInfo[];
   winning_rate_30d?: number;
   tags?: string[];
+  last_call_time?: string;
 
   winRate?: number;
   lastActive?: number;

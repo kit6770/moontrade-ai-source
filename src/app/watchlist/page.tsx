@@ -1,33 +1,33 @@
-"use client";
+"use client"
 
-import { BASE_PATH } from "@/lib/constants";
+import { BASE_PATH } from "@/lib/constants"
 import {
   Autocomplete,
   Button,
   Divider,
   InputAdornment,
   TextField,
-} from "@mui/material";
-import React, { useState } from "react";
-import { X as XIcon, Cancel as CancelIcon } from "@mui/icons-material";
-import RecoImportModal from "./recommend-modal";
-import PlatformImportModal from "./platform-modal";
-import { ButtonStyled } from "@/components/Common";
-import TabSet from "@/components/Tabset";
-import { useKOLList } from "@/hooks/useKOL";
-import classNames from "classnames";
-import { getPlatformInfo } from "@/lib/getPlatformInfo";
-import { Search as SearchIcon, Add as AddIcon } from "@mui/icons-material";
-import ListTable from "./list-table";
-import Loader from "@/components/Loader";
-import KOLRankSideContent from "../kol/kol-sider";
+} from "@mui/material"
+import React, { useState } from "react"
+import { X as XIcon, Cancel as CancelIcon } from "@mui/icons-material"
+import RecoImportModal from "./recommend-modal"
+import PlatformImportModal from "./platform-modal"
+import { ButtonStyled } from "@/components/Common"
+import TabSet from "@/components/Tabset"
+import { useKOLList } from "@/hooks/useKOL"
+import classNames from "classnames"
+import { getPlatformInfo } from "@/lib/getPlatformInfo"
+import { Search as SearchIcon, Add as AddIcon } from "@mui/icons-material"
+import ListTable from "./list-table"
+// import Loader from "@/components/Loader";
+import KOLRankSideContent from "../kol/kol-sider"
 
 export default function Watchlist() {
-  const isMobile = getPlatformInfo()?.isMobile;
-  const [platImportOpen, setPlatImportOpen] = useState(false);
-  const [recoOpen, setRecoOpen] = useState(false);
+  const isMobile = getPlatformInfo()?.isMobile
+  const [platImportOpen, setPlatImportOpen] = useState(false)
+  const [recoOpen, setRecoOpen] = useState(false)
 
-  const { data: KOLList, isLoading } = useKOLList();
+  const { data: KOLList, isLoading } = useKOLList()
 
   // show recom first time
   // const showRecoKOl = localStorage.getItem('showRecoKOl')
@@ -46,10 +46,10 @@ export default function Watchlist() {
       <section className="flex flex-row justify-start items-start">
         <div
           className={classNames(
-            "relative flex flex-auto flex-col gap-[16px] pb-[16px] md:pr-[16px]",
+            "relative flex flex-auto flex-col gap-[16px] pb-[16px] md:pr-[16px] overflow-auto hide-scrollbar",
             isMobile
-              ? "h-full overflow-auto"
-              : "overflow-hidden hover:overflow-auto"
+              ? "h-full"
+              : ""
           )}
           style={{ height: `calc(100vh - 144px)` }}
         >
@@ -175,10 +175,10 @@ export default function Watchlist() {
               )}
             </div>
             <div className="flex-1 h-full">
-              <ListTable KOLList={KOLList} />
+              <ListTable KOLList={KOLList} loading={isLoading} />
             </div>
           </div>
-          {isLoading && <Loader />}
+          {/* {isLoading && <Loader />} */}
         </div>
         <KOLRankSideContent type="watch" KOLList={KOLList} />
       </section>
@@ -187,13 +187,13 @@ export default function Watchlist() {
       <RecoImportModal open={recoOpen} setOpen={setRecoOpen} />
       <PlatformImportModal open={platImportOpen} setOpen={setPlatImportOpen} />
     </div>
-  );
+  )
 }
 
 const EmptyContent = ({
   setPlatImportOpen,
 }: {
-  setPlatImportOpen: (value: boolean) => void;
+  setPlatImportOpen: (value: boolean) => void
 }) => {
   return (
     <div className="h-full w-full flex items-center justify-center">
@@ -249,5 +249,5 @@ const EmptyContent = ({
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}

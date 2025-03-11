@@ -8,13 +8,13 @@ import {
   TagList,
 } from "@/components/Common";
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
-import { KOLDataInfo } from "../kol/main-content";
 import { SummaryIcon } from "@/lib/icons";
 import { styled } from "@mui/material/styles";
-import { Tabs, Tab, Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Tabs, Tab } from "@mui/material";
+import React from "react";
 import { ScatterChart } from "@mui/x-charts/ScatterChart";
 import Feeds from "./feeds";
+import { KOLDataInfo } from "../kol/kol-item";
 
 const StyledTabs = styled(
   (props: {
@@ -229,7 +229,7 @@ export default function Koldetail() {
   ];
 
   return (
-    <div className="h-screen flex flex-col lg:w-[960px] px-[10px] mx-auto gap-[16px] pt-[20px] overflow-auto">
+    <div className="h-screen flex flex-col lg:w-[960px] px-[10px] mx-auto gap-[16px] pt-[20px] overflow-auto hide-scrollbar">
       <div className="flex flex-row items-center gap-[8px]">
         <div className="w-[20px] h-[20px] rounded-full border-[1px] border-[#000] flex items-center justify-center">
           <ArrowBackIosNewOutlinedIcon sx={{ width: "12px", height: "12px" }} />

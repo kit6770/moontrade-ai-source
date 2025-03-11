@@ -47,3 +47,7 @@ export function isTimeExceed24Hours(time: string | Date) {
 export function formatAddress(address: string | undefined, front?: number, back?: number) {
   return address ? `${address?.slice(0, front || 4)}...${address?.substring(address?.length - (back || 3))}` : '';
 }
+
+export function toFixedNumber(value: number, fixed: number) {
+  return value?.toFixed(fixed)?.replace(/\.?0+$/, "")
+}

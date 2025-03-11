@@ -8,7 +8,7 @@ import {
 } from "@/lib/icons";
 import { FeedInfo, TwitterFeedInfo } from "@/types";
 import classNames from "classnames";
-import { BaseTooltip } from "./ToolTip";
+import { BaseTooltip } from "./BaseTooltip";
 import { formatNumber, timeAgo } from "@/lib/utils";
 import XIcon from '@mui/icons-material/X';
 

@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import useSWRMutation from "swr/mutation";
 import { getPlatformInfo } from "@/lib/getPlatformInfo";
 import Loader from "@/components/Loader";
-import { BaseTooltip } from "@/components/ToolTip";
+import { BaseTooltip } from "@/components/BaseTooltip";
 import TwitterItem, {
   QuoteTwitterItem,
   ReplyTwitterItem,
@@ -71,7 +71,7 @@ export default function SideContent() {
   return (
     <aside
       className={classNames(
-        "flex flex-none flex-col justify-between md:w-[452px] rounded-[20px] shadow-md border-[1px] border-dashed bg-white overflow-hidden hover:overflow-auto",
+        "flex flex-none flex-col justify-between md:w-[452px] rounded-[20px] shadow-md border-[1px] border-dashed bg-white overflow-auto hide-scrollbar",
         selected ? "border-[#555F32]" : "border-[transparent]"
       )}
       style={{
@@ -174,7 +174,7 @@ function TradeListContent() {
   const { trigger: tradeListTrigger, isMutating } = useSWRMutation<{
     trans_list: TradeInfo[];
   }>(
-    `api:/trending_tokens/token_last_trades?token_address=${selected}&trans_type=1&address_filter=1&page_no=1&page_size=50`
+    `api:/ai/trending_tokens/token_last_trades?token_address=${selected}&trans_type=1&address_filter=1&page_no=1&page_size=50`
   );
 
   const getTradeList = () => {
@@ -270,7 +270,7 @@ function TwitterListContent() {
   const { selected } = useSelectedKOL("ai");
   const { trigger: twitterTrigger, isMutating } = useSWRMutation<
     TwitterFeedInfo[]
-  >(`api:/trending_tokens/twitter_tweets`);
+  >(`api:/ai/trending_tokens/twitter_tweets`);
   let interval: NodeJS.Timeout;
 
   // const [pageNo, setPageNo] = useState<number>(1)

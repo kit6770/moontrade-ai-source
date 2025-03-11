@@ -13,11 +13,35 @@
     --foreground: #ededed;
   }
 } */
+@layer utilities {
+  .hide-scrollbar {
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+    /* Safari 和 Chrome */
+  }
+}
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+@font-face {
+  font-family: "ProtoMono-Regular";
+  src: url('../../public/fonts/ProtoMono-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.font-protomono {
+  font-family: "ProtoMono-Regular", sans-serif;
 }
 
 @keyframes scaleUp {
